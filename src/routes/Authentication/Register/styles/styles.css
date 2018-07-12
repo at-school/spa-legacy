@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css?family=EB+Garamond");
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+#RegisterForm {
+  margin-bottom: 30px;
+}
+#RegisterForm .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+  margin-top: 30px;
+  z-index: 1;
+}
+#RegisterForm .form {
+  padding: 20px;
+  text-align: left;
+}
+#RegisterForm h1 {
+  font-family: "EB Garamond", serif;
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+#RegisterForm i {
+  font-size: 35px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  transition: linear 0.3s;
+}
+#RegisterForm i:hover {
+  opacity: 0.8;
+}
+#RegisterForm .anticon-facebook {
+  color: #3b5998;
+}
+#RegisterForm .anticon-twitter {
+  color: #1da1f2;
+}
+#RegisterForm .anticon-google {
+  color: #db4437;
+}
+#RegisterForm h4 {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  font-weight: 300;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin-bottom: 0.8rem;
+}
+#RegisterForm .ant-form-item {
+  margin-bottom: 20px;
+}
+#RegisterForm .ant-form-item-label {
+  line-height: 0;
+}
+
+/*# sourceMappingURL=styles.css.map */
