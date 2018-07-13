@@ -14,9 +14,18 @@
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
   margin-top: 30px;
   z-index: 1;
+  word-break: break-all;
+  width: 100%;
+}
+#RegisterForm .main-container .ant-row {
+  min-width: 90%;
+}
+#RegisterForm .main-container input {
+  min-width: 100%;
+  max-width: 100%;
 }
 #RegisterForm .form {
-  padding: 20px;
+  padding: 20px !important;
   text-align: left;
 }
 #RegisterForm h1 {
