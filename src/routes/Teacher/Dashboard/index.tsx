@@ -1,10 +1,8 @@
 import React from "react";
+import MainLayout from "../../../layouts/AppLayout/MainLayout"
 
 const Dashboard = () => (
-  <div>
-    <h1>HSDf</h1>
-    <h2>sdfkljsdlkfjsldkf</h2>
-  </div>
+  <MainLayout />
 );
 
 export default Dashboard;
