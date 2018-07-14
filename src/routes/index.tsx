@@ -1,6 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { BrowserRouter, Route } from "react-router-dom";
 import AppContext from "../contexts/AppContext";
 import Authentication from "./Authentication";
 import Landing from "./Landing";
@@ -12,21 +11,13 @@ export default class AppNavigator extends React.Component {
     return (
       <AppContext.Provider value={{}}>
         <BrowserRouter>
-          <Route render={App} />
+          <React.Fragment>
+            <Route exact={true} path="/" component={Landing} />
+            <Route path="/teacher" component={Teacher} />
+            <Route path="/authentication" component={Authentication} />
+          </React.Fragment>
         </BrowserRouter>
       </AppContext.Provider>
     );
   }
 }
-
-const App = ({ location }: any) => (
-  <TransitionGroup>
-    <CSSTransition key={location.key} classNames="fade" timeout={300}>
-      <Switch location={location}>
-        <Route exact={true} path="/" component={Landing} />
-        <Route path="/teacher" component={Teacher} />
-        <Route path="/authentication" component={Authentication} />
-      </Switch>
-    </CSSTransition>
-  </TransitionGroup>
-);
