@@ -1,0 +1,115 @@
+.real-time-marking-card {
+  margin-bottom: 24px;
+}
+.real-time-marking-card .real-time-marking-container {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.real-time-marking-card .real-time-marking-container .camera-loading {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  position: relative;
+}
+.real-time-marking-card .real-time-marking-container .camera-loading .circle {
+  background: none;
+  width: 100px;
+  height: 100px;
+  border: 2px solid transparent;
+  border-radius: 100%;
+  border-color: #1890ff transparent transparent;
+  position: absolute;
+  overflow: hidden;
+}
+.real-time-marking-card .real-time-marking-container .camera-loading .camera-loading-space {
+  position: absolute;
+  color: #1890ff;
+  height: 106px;
+  width: 106px;
+  text-align: center;
+  line-height: 80px;
+  font-size: 5em;
+}
+.real-time-marking-card .real-time-marking-container .camera-loading .flip {
+  -webkit-animation: rolling 3s linear 0s infinite normal;
+  -moz-animation: rolling 3s linear 0s infinite normal;
+  -o-animation: rolling 3s linear 0s infinite normal;
+  animation: rolling 3s linear 0s infinite normal;
+}
+.real-time-marking-card .real-time-marking-container .camera-loading .ani-spin {
+  -webkit-animation: spin 1.5s linear 0s infinite normal;
+  -moz-animation: spin 1.5s linear 0s infinite normal;
+  -o-animation: spin 1.5s linear 0s infinite normal;
+  animation: spin 1.5s linear 0s infinite normal;
+}
+@-webkit-keyframes rolling {
+  0% {
+    -webkit-transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes rolling {
+  0% {
+    -moz-transform: rotate(0);
+  }
+  100% {
+    -moztransform: rotate(360deg);
+  }
+}
+@-o-keyframes rolling {
+  0% {
+    -o-transform: rotate(0);
+  }
+  100% {
+    -o-transform: rotate(360deg);
+  }
+}
+@keyframes rolling {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0);
+  }
+  100% {
+    -o-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.real-time-marking-card .status-text {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/*# sourceMappingURL=styles.css.map */

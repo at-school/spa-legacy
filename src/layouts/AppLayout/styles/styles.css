@@ -145,6 +145,11 @@
   margin-left: 8px;
   color: rgba(0, 0, 0, 0.65);
 }
+#main-layout .main-layout-layout .layout-content,
+#main-layout .main-layout-layout-collapsed .layout-content {
+  margin: 24px 16px 0;
+  overflow: initial;
+}
 
 .notification-box {
   font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;

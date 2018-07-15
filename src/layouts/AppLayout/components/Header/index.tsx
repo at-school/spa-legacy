@@ -1,4 +1,14 @@
-import { Avatar, Badge, Icon, Input, Layout, List, Menu, Popover, Tabs } from "antd";
+import {
+  Avatar,
+  Badge,
+  Icon,
+  Input,
+  Layout,
+  List,
+  Menu,
+  Popover,
+  Tabs
+} from "antd";
 import React from "react";
 
 interface IHeaderProps {
@@ -25,11 +35,10 @@ const Header: React.SFC<IHeaderProps> = ({
       <Menu mode="horizontal" selectedKeys={["-1"]}>
         <Menu.Item className="no-style">
           <div className="search">
-            <div>
-              <Icon onClick={toggleSearch} type="search" />
+            <div onClick={toggleSearch}>
+              <Icon type="search" />
             </div>
             <Input
-              autoFocus={true}
               ref={searchInputHeaderRef}
               className={searchVisible ? "input-show" : ""}
               placeholder="Search..."

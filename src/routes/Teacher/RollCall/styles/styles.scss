@@ -1,0 +1,133 @@
+.real-time-marking-card {
+  margin-bottom: 24px;
+  .real-time-marking-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    .camera-loading {
+      $loading-color: rgb(24, 144, 255);
+
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      position: relative;
+
+      .circle {
+        background: none;
+        width: 100px;
+        height: 100px;
+        border: 2px solid transparent;
+        border-radius: 100%;
+        border-color: $loading-color transparent transparent;
+        position: absolute;
+        overflow: hidden;
+      }
+
+      .camera-loading-space {
+        position: absolute;
+        color: $loading-color;
+        height: 106px;
+        width: 106px;
+        //bottom: 10%;
+        text-align: center;
+        line-height: 80px;
+        font-size: 5em;
+        //background: #fff;
+      }
+
+      .flip {
+        -webkit-animation: rolling 3s linear 0s infinite normal;
+        -moz-animation: rolling 3s linear 0s infinite normal;
+        -o-animation: rolling 3s linear 0s infinite normal;
+        animation: rolling 3s linear 0s infinite normal;
+      }
+
+      .ani-spin {
+        -webkit-animation: spin 1.5s linear 0s infinite normal;
+        -moz-animation: spin 1.5s linear 0s infinite normal;
+        -o-animation: spin 1.5s linear 0s infinite normal;
+        animation: spin 1.5s linear 0s infinite normal;
+      }
+
+      @-webkit-keyframes rolling {
+        0% {
+          -webkit-transform: rotate(0);
+        }
+
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @-moz-keyframes rolling {
+        0% {
+          -moz-transform: rotate(0);
+        }
+        100% {
+          -moztransform: rotate(360deg);
+        }
+      }
+
+      @-o-keyframes rolling {
+        0% {
+          -o-transform: rotate(0);
+        }
+        100% {
+          -o-transform: rotate(360deg);
+        }
+      }
+      @keyframes rolling {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0);
+        }
+
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @-moz-keyframes spin {
+        0% {
+          -moz-transform: rotate(0);
+        }
+
+        100% {
+          -moz-transform: rotate(360deg);
+        }
+      }
+
+      @-o-keyframes spin {
+        0% {
+          -o-transform: rotate(0);
+        }
+
+        100% {
+          -o-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+  .status-text {
+    margin-top: 20px;
+    text-align: center;
+  }
+}

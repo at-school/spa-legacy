@@ -11,7 +11,7 @@ const Navigation = () => (
       </Link>
     </Menu.Item>
     <Menu.Item key="2">
-      <Link to="/teacher/message">
+      <Link to="/teacher/rollcall">
         <Icon type="video-camera" />
         <span className="nav-text">Roll Call</span>
       </Link>

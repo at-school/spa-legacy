@@ -33,7 +33,7 @@ const MainContent: React.SFC<IMainContentProps> = ({
         <Content />
       </Layout.Content>
       <Layout.Footer style={{ textAlign: "center" }}>
-        Ant Design ©2016 Created by Ant UED
+        At School ©2018 Created by Anh Pham
       </Layout.Footer>
     </Layout>
   );
