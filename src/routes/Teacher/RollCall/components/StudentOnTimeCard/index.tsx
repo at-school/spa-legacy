@@ -7,7 +7,7 @@ const COLORS = ["rgb(24, 144, 255)", "rgb(250, 250, 250)"];
 export default class StudentOnTimeCard extends React.Component {
   public render() {
     return (
-      <Card title="Student On Time">
+      <Card className="student-ontime-card" bordered={false} title="Student On Time">
         <div style={{ width: "100%" }}>
           <ResponsiveContainer height={200} width="100%">
             <PieChart>
@@ -16,13 +16,13 @@ export default class StudentOnTimeCard extends React.Component {
                 data={data}
                 startAngle={180}
                 endAngle={0}
-                innerRadius={70}
-                outerRadius={80}
+                innerRadius={80}
+                outerRadius={100}
                 fill="#8884d8"
                 paddingAngle={-1}
               >
                 {data.map((entry, index) => (
-                  <Cell fill={COLORS[index % COLORS.length]} />
+                  <Cell key={index.toString()} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
             </PieChart>

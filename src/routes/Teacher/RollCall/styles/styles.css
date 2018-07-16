@@ -1,3 +1,97 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300");
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.overview-info-card-container {
+  margin-bottom: 6px;
+}
+.overview-info-card-container .overview-info-column-container {
+  margin-bottom: 30px;
+}
+.overview-info-card-container .ant-card-head {
+  padding: 0 8px;
+  border-bottom-width: 0;
+}
+.overview-info-card-container .ant-card-head .head-container {
+  display: flex;
+  flex-direction: row;
+}
+.overview-info-card-container .ant-card-head .ant-card-head-title {
+  padding-top: 5px;
+  border: 0px solid #eeeeee;
+  border-bottom-width: 1px;
+  height: 90px;
+}
+.overview-info-card-container .ant-card-head .icon-container {
+  height: 75px;
+  width: 75px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -20px;
+  background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+  box-shadow: 0 12px 20px -10px rgba(0, 188, 212, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(0, 188, 212, 0.2);
+}
+.overview-info-card-container .ant-card-head i {
+  color: white;
+  font-size: 30px;
+}
+.overview-info-card-container .ant-card-head .overview-info-card-text-container {
+  float: right;
+  margin-left: auto;
+  text-align: right;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.overview-info-card-container .ant-card-head .overview-info-card-text-container p {
+  color: #999999;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 1.3em;
+  word-wrap: break-word;
+}
+.overview-info-card-container .ant-card-head .overview-info-card-text-container h3 {
+  color: #3c4858;
+  min-height: auto;
+  font-weight: 300;
+  line-height: 1.4em;
+  font-size: 23px;
+}
+.overview-info-card-container .ant-card-head .overview-info-card-text-container h3 small {
+  color: #777;
+  font-size: 58%;
+}
+.overview-info-card-container .ant-card-body {
+  padding: 10px 8px;
+}
+.overview-info-card-container .ant-card-body .content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.overview-info-card-container .ant-card-body .content .icon {
+  margin-left: auto;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s linear;
+  opacity: 1;
+  background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+}
+.overview-info-card-container .ant-card-body .content .icon:hover {
+  opacity: 0.9;
+}
+.overview-info-card-container .ant-card-body .content .description {
+  color: #999999;
+}
+
 .real-time-marking-card {
   margin-bottom: 24px;
 }
@@ -110,6 +204,37 @@
 .real-time-marking-card .status-text {
   margin-top: 20px;
   text-align: center;
+}
+
+.activity-card {
+  margin-bottom: 36px;
+}
+.activity-card .activity-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.activity-card .activity-card-header .activity-card-header-text {
+  font-size: 18px;
+}
+.activity-card .activity-card-header .activity-card-header-update {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 200;
+}
+.activity-card .ant-card-body {
+  padding-top: 0px;
+}
+.activity-card .ant-card-body .ant-list-item-meta-description {
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  line-height: 22px;
+  font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.student-ontime-card .ant-card-body {
+  padding: 40px 0;
+  height: 202.89px !important;
 }
 
 /*# sourceMappingURL=styles.css.map */

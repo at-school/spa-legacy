@@ -24,7 +24,7 @@ export default class StatusText extends React.Component<
   }
 
   public render() {
-    return <p className="status-text">Status text {this.state.currentDots}</p>;
+    return <p className="status-text">Detecting {this.state.currentDots}</p>;
   }
 
   /** Function that handles add or remove dot from the text/state */

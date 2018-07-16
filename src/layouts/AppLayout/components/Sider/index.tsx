@@ -19,7 +19,7 @@ const Sider: React.SFC<ISiderProps> = ({
   const Navigation = navigation;
   return (
     <Layout.Sider
-      breakpoint="md"
+      breakpoint="lg"
       collapsed={collapsed}
       onCollapse={onCollapse}
       collapsible={true}

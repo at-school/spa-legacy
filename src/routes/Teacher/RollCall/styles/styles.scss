@@ -1,3 +1,113 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300");
+
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.overview-info-card-container {
+  margin-bottom: 6px;
+
+  .overview-info-column-container {
+    margin-bottom: 30px;
+  }
+
+  .ant-card-head {
+    padding: 0 8px;
+    border-bottom-width: 0;
+
+    .head-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .ant-card-head-title {
+      padding-top: 5px;
+      border: 0px solid rgb(238, 238, 238);
+      border-bottom-width: 1px;
+      height: 90px;
+    }
+    .icon-container {
+      height: 75px;
+      width: 75px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -20px;
+      background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+      box-shadow: 0 12px 20px -10px rgba(0, 188, 212, 0.28),
+        0 4px 20px 0px rgba(0, 0, 0, 0.12),
+        0 7px 8px -5px rgba(0, 188, 212, 0.2);
+    }
+
+    i {
+      color: white;
+      font-size: 30px;
+    }
+
+    .overview-info-card-text-container {
+      float: right;
+      margin-left: auto;
+      text-align: right;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+
+      p {
+        color: #999999;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 100;
+        line-height: 1.3em;
+        word-wrap: break-word;
+      }
+
+      h3 {
+        color: rgb(60, 72, 88);
+        min-height: auto;
+        font-weight: 300;
+        line-height: 1.4em;
+        font-size: 23px;
+        small {
+          color: #777;
+          font-size: 58%;
+        }
+      }
+    }
+  }
+
+  .ant-card-body {
+    padding: 10px 8px;
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .icon {
+        margin-left: auto;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s linear;
+        opacity: 1;
+        background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+      }
+
+      .icon:hover {
+        opacity: 0.9;
+      }
+
+      .description {
+        color: rgb(153, 153, 153);
+      }
+    }
+  }
+}
+
 .real-time-marking-card {
   margin-bottom: 24px;
   .real-time-marking-container {
@@ -131,3 +241,45 @@
     text-align: center;
   }
 }
+
+.activity-card {
+  margin-bottom: 36px;
+
+  .activity-card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .activity-card-header-text {
+      font-size: 18px;
+    }
+
+    .activity-card-header-update {
+      margin-left: auto;
+      font-size: 14px;
+      font-weight: 200;
+    }
+  }
+
+  .ant-card-body {
+    padding-top: 0px;
+
+    .ant-list-item-meta-description {
+      color: rgba(0, 0, 0, 0.25);
+      font-size: 14px;
+      line-height: 22px;
+      font-family: "Monospaced Number", "Chinese Quote", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica,
+        Arial, sans-serif;
+    }
+  }
+}
+
+.student-ontime-card {
+  .ant-card-body {
+    padding: 40px 0;
+    height: 202.89px !important;
+  }
+}
+

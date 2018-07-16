@@ -11,6 +11,7 @@ export default class RealTimeMarkingCard extends React.Component {
         title="Real-time marking"
         className="real-time-marking-card"
         style={{ width: "100%" }}
+        bordered={false}
       >
         {/* <Camera /> */}
         <Spinner />

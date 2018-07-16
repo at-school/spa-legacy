@@ -1,6 +1,13 @@
 $blue-hover-color: rgba(230, 247, 255, 0.745);
 
+.ant-layout, .ant-layout * {
+  overflow: visible;
+}
+
 #main-layout {
+
+  min-height: 100vh;
+
   .main-layout-sider {
     position: fixed;
     left: 0;
@@ -166,7 +173,7 @@ $blue-hover-color: rgba(230, 247, 255, 0.745);
     }
 
     .layout-content {
-      margin: 24px 16px 0;
+      margin: 48px 18px 0;
       overflow: initial;
     }
   }

@@ -1,3 +1,10 @@
+.ant-layout, .ant-layout * {
+  overflow: visible;
+}
+
+#main-layout {
+  min-height: 100vh;
+}
 #main-layout .main-layout-sider {
   position: fixed;
   left: 0;
@@ -147,7 +154,7 @@
 }
 #main-layout .main-layout-layout .layout-content,
 #main-layout .main-layout-layout-collapsed .layout-content {
-  margin: 24px 16px 0;
+  margin: 48px 18px 0;
   overflow: initial;
 }
 
