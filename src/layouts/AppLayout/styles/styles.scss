@@ -1,0 +1,220 @@
+$blue-hover-color: rgba(230, 247, 255, 0.745);
+
+.ant-layout, .ant-layout * {
+  overflow: visible;
+}
+
+#main-layout {
+
+  min-height: 100vh;
+
+  .main-layout-sider {
+    position: fixed;
+    left: 0;
+    min-height: 100vh !important;
+    overflow: auto;
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+
+    .logo {
+      background: #002140;
+      width: 300px;
+
+      a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        vertical-align: middle;
+        text-align: middle;
+        padding-top: 18px;
+      }
+
+      h1 {
+        color: #fff;
+        margin: 0 0 0 12px;
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+
+    .ant-menu {
+      padding: 16px 0;
+    }
+  }
+
+  .ant-layout-sider-collapsed {
+    h1 {
+      transition: font-size 100ms linear;
+      font-size: 0px !important;
+    }
+  }
+
+  .main-layout-layout {
+    margin-left: 200px;
+  }
+
+  .main-layout-layout-collapsed {
+    margin-left: 80px;
+  }
+
+  .main-layout-layout,
+  .main-layout-layout-collapsed {
+    -webkit-transition: margin 0.2s;
+    transition: margin 0.2s;
+
+    .main-layout-layout-header {
+      background: #fff;
+      padding: 0 12px 0 0;
+      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+      height: 64px !important;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .main-layout-layout-header-left {
+        h1 {
+          margin-top: 0;
+        }
+
+        ul {
+          font-size: 20px;
+          line-height: 60.99999809269px;
+        }
+      }
+
+      .main-layout-layout-header-right {
+        // icon in general in the header
+        ul,
+        li {
+          height: 64px;
+          border-bottom: 0;
+        }
+
+        li {
+          padding-top: 9px;
+        }
+
+        li:hover {
+          color: inherit;
+          background-color: $blue-hover-color;
+        }
+
+        .anticon {
+          font-size: 16px;
+          margin-right: 0px;
+        }
+
+        // the search icon in the header
+        .no-style:hover {
+          background-color: #fff;
+        }
+
+        .search {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
+
+        .anticon-search {
+          margin-top: 17px;
+        }
+
+        // the search box in the header
+        input {
+          border-radius: 0;
+          border-top: 0;
+          border-right: 0;
+          border-left: 0;
+          padding-left: 0;
+          padding-right: 0;
+          width: 0;
+          transition: width 0.3s, margin-left 0.3s;
+        }
+
+        input:hover,
+        input:focus {
+          border-bottom-color: rgb(217, 217, 217);
+          box-shadow: none;
+        }
+
+        .input-show {
+          width: 200px;
+          margin-left: 10px;
+        }
+
+        // styling the notifications badge in the header
+        .menu-item-bell-badge {
+          padding-top: 0px;
+          padding-right: 0px;
+          padding-left: 0px;
+        }
+
+        .bell-badge-container {
+          height: 64px !important;
+          width: 56px !important;
+          display: flex;
+          vertical-align: center;
+          align-items: center;
+          justify-content: center;
+        }
+
+        // the user options in the header
+        .user-avatar {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          p {
+            margin-bottom: 0;
+            margin-left: 8px;
+            color: rgba(0, 0, 0, 0.65);
+          }
+        }
+      }
+    }
+
+    .layout-content {
+      margin: 48px 18px 0;
+      overflow: initial;
+    }
+  }
+}
+
+// pop-up when clicking on the bell icon in header
+.notification-box {
+  font-family: "Monospaced Number", "Chinese Quote", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  .ant-popover-inner-content {
+    padding: 0;
+    width: 336px;
+  }
+
+  .ant-tabs-bar {
+    margin-bottom: 0;
+  }
+
+  .ant-list-item {
+    cursor: pointer;
+    padding: 12px 24px;
+  }
+
+  .ant-list-item:hover {
+    background-color: $blue-hover-color;
+  }
+
+  .ant-list-item-meta-title {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    outline-color: rgba(0, 0, 0, 0.65);
+    text-size-adjust: 100%;
+  }
+
+  .timestamp, .chat-content {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+  }
+
+}
