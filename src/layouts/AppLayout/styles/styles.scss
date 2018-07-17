@@ -1,11 +1,16 @@
 $blue-hover-color: rgba(230, 247, 255, 0.745);
 
-.ant-layout, .ant-layout * {
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.ant-layout,
+.ant-layout * {
   overflow: visible;
 }
 
 #main-layout {
-
   min-height: 100vh;
 
   .main-layout-sider {
@@ -62,9 +67,12 @@ $blue-hover-color: rgba(230, 247, 255, 0.745);
     transition: margin 0.2s;
 
     .main-layout-layout-header {
+      z-index: 999;
       background: #fff;
       padding: 0 12px 0 0;
       box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+      border-bottom-color: rgba(0, 0, 0, 0.65);
+      border-bottom-width: 1px;
       height: 64px !important;
       display: flex;
       justify-content: space-between;
@@ -173,7 +181,7 @@ $blue-hover-color: rgba(230, 247, 255, 0.745);
     }
 
     .layout-content {
-      margin: 48px 18px 0;
+      margin: 48px 24px 0;
       overflow: initial;
     }
   }
@@ -212,9 +220,9 @@ $blue-hover-color: rgba(230, 247, 255, 0.745);
     text-size-adjust: 100%;
   }
 
-  .timestamp, .chat-content {
+  .timestamp,
+  .chat-content {
     color: rgba(0, 0, 0, 0.45);
     font-size: 12px;
   }
-
 }

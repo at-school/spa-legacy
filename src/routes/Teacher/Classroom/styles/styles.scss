@@ -1,0 +1,129 @@
+.classroom {
+  margin: -48px -28px 0 -28px;
+  .classroom-introduction {
+    width: 100%;
+    background-color: white;
+
+    .classroom-introduction-container {
+      padding: 18px 32px;
+      display: flex;
+      flex-direction: row;
+
+      .classroom-title {
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 30px;
+        margin-bottom: 16px;
+      }
+
+      .classroom-description {
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 1.5em;
+        font-size: 14px;
+      }
+    }
+
+    img {
+      height: 180px;
+      margin-left: auto;
+    }
+  }
+
+  .class-list {
+    display: grid;
+    padding: 25px;
+    grid-template-columns: repeat(auto-fit, 350px);
+    grid-gap: 0.8rem;
+    justify-content: space-between;
+    align-content: flex-start;
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 14px;
+    line-height: 1.5em;
+
+    .class-card {
+      margin: 0.5em;
+      height: 200px;
+      // -webkit-box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
+      // -moz-box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
+      // box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
+
+      .ant-card-meta-detail * {
+        word-wrap: break-word;
+        white-space: normal;
+      }
+
+      .ant-card {
+        min-width: 300px;
+        height: 180px;
+      }
+    }
+
+    .add-class-card {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background-color: #fff;
+      border-color: #d9d9d9;
+      border-radius: 2px;
+      color: rgba(0, 0, 0, 0.45);
+      outline: none;
+      border-style: dashed;
+    }
+
+    .add-class-card:hover {
+      color: #40a9ff;
+      border-color: #40a9ff;
+    }
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .classroom {
+    .class-list {
+      grid-template-columns: repeat(auto-fit, 100%);
+      grid-gap: 0.8rem;
+      justify-content: space-between;
+      align-content: flex-start;
+    }
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .classroom {
+    .class-list {
+      grid-template-columns: repeat(auto-fit, 100%);
+      grid-gap: 0.8rem;
+      justify-content: space-between;
+      align-content: flex-start;
+    }
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .classroom {
+    .class-list {
+      grid-template-columns: repeat(auto-fit, 100%);
+      grid-gap: 0.8rem;
+      justify-content: space-between;
+      align-content: flex-start;
+    }
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .classroom {
+    .class-list {
+      grid-template-columns: repeat(auto-fit, 250px);
+      grid-gap: 0.8rem;
+      justify-content: space-between;
+      align-content: flex-start;
+    }
+  }
+}
