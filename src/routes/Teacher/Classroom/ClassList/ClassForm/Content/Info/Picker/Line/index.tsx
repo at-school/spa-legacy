@@ -1,5 +1,6 @@
 import { Select } from "antd";
 import React from "react";
+import "../styles/styles.css";
 
 /**
  * A list of selections for lines: 1, 2, 3,...
@@ -8,8 +9,8 @@ const LinePicker: React.SFC<{
   onChange?: (value: string) => void;
   className?: string;
   style?: object;
-}> = ({ onChange, className, style }) => (
-  <div className={"Picker" + className} style={style}>
+}> = ({ onChange, className = "", style }) => (
+  <div className={"picker" + className} style={style}>
     <p>Line:</p>
     <Select onChange={onChange} defaultValue="1">
       <Select.Option value="1">1</Select.Option>

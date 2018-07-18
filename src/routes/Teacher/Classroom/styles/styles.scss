@@ -80,6 +80,33 @@
   }
 }
 
+.class-form {
+  .ant-modal-body {
+    padding: 20px;
+
+    .ant-steps {
+      margin-bottom: 20px;
+    }
+
+    .class-form-info {
+      p {
+        margin-bottom: 8px;
+      }
+
+      .ant-input {
+        margin-bottom: 20px;
+      }
+    }
+
+    .class-form-picture-upload {
+      .ant-upload-list-item {
+        margin-top: 10px;
+      }
+      margin-bottom: 110px;
+    }
+  }
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   .classroom {

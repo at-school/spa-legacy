@@ -5,6 +5,7 @@ import FormHeader from "../ClassForm/Header";
 
 interface IClassFormProps {
   visible: boolean;
+  toggleAddClassForm: () => void;
 }
 
 interface IClassFormState {
@@ -12,6 +13,7 @@ interface IClassFormState {
   classDescription: string;
   classFalcuty: string;
   classLine: string;
+  imageData: string;
   onSendingData: boolean;
   current: number;
 }
@@ -20,13 +22,14 @@ export default class NewClassForm extends React.Component<
   IClassFormProps,
   IClassFormState
 > {
-  public steps = ["first", "second", "third"];
+  public steps = ["Basic Info", "Set Avatar", "Confirm"];
 
   public state = {
     className: "",
     classDescription: "",
     classFalcuty: "0",
     classLine: "1",
+    imageData: "",
     onSendingData: false,
     current: 0
   };
@@ -46,6 +49,9 @@ export default class NewClassForm extends React.Component<
     this.setState({ [fieldChange]: value } as any);
   };
 
+  public handleImageDataChange = (imageData: string) =>
+    this.setState({ imageData });
+
   public render() {
     return (
       <div>
@@ -57,11 +63,13 @@ export default class NewClassForm extends React.Component<
           onCancel={this.onClickCancel}
           cancelText={this.state.current > 0 ? "Previous" : "Cancel"}
           confirmLoading={this.state.onSendingData}
+          className="class-form"
         >
           <FormHeader steps={this.steps} current={this.state.current} />
           <FormContent
             handlePickerChange={this.handlePickerChange}
             handleInputChange={this.handleInputChange}
+            handleImageDataChange={this.handleImageDataChange}
             current={this.state.current}
           />
         </Modal>
@@ -71,15 +79,15 @@ export default class NewClassForm extends React.Component<
 
   private onClickOk = () => {
     if (this.state.current === this.steps.length) {
-      // send request to the server here
+      this.props.toggleAddClassForm();
     } else {
       this.setState({ current: this.state.current + 1 });
     }
   };
 
-  private onClickCancel = () => {
-    if (this.state.current === 0) {
-      // handle closing the form here
+  private onClickCancel = (e: React.MouseEvent<any>) => {
+    if (this.state.current === 0 || e.currentTarget.type !== "button") {
+      this.props.toggleAddClassForm();
     } else {
       this.setState({ current: this.state.current - 1 });
     }

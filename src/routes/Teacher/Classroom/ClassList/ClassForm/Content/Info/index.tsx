@@ -11,7 +11,7 @@ const FormInfo: React.SFC<{
   handlePickerChange: (fieldChagne: string) => (value: string) => void;
 }> = ({ handleInputChange, handlePickerChange }) => (
   <React.Fragment>
-    <div className="ClassFormInfo">
+    <div className="class-form-info">
       <div>
         <p>Class name</p>
         <Input

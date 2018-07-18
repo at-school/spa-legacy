@@ -30,7 +30,7 @@ export default class ClassList extends React.Component {
             Card content
           </Card>
         </div>
-        <AddClassForm visible={this.state.newClassFormVisible} />
+        <AddClassForm visible={this.state.newClassFormVisible} toggleAddClassForm={this.toggleAddClassForm} />
       </div>
     );
   }

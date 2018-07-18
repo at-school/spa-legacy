@@ -1,28 +1,23 @@
-import { Icon, message, Modal, Upload } from "antd";
+import { Icon, Modal, Upload } from "antd";
+import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
+
+interface IPictureUploadProps {
+  handleImageDataChange: (imageData: string) => void;
+}
 
 /**
  * This lets the users upload picture of the classroom in the class form.
  */
-export default class PictureUpload extends React.Component {
+export default class PictureUpload extends React.Component<
+  IPictureUploadProps
+> {
   public state = {
     previewVisible: false,
     previewImage: "",
+    imageFile: null,
     name: "classroom-picture",
-    action: "//jsonplaceholder.typicode.com/posts/",
-    onChange(info: any) {
-      const status = info.file.status;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onPreview: (file: any) => {
-      console.log(this.state.previewImage);
+    onPreview: (file: UploadFile) => {
       this.setState({
         previewImage: file.url || file.thumbUrl,
         previewVisible: true
@@ -30,18 +25,36 @@ export default class PictureUpload extends React.Component {
     }
   };
 
+  /** stop the default value of action in the Upload.Dragger */
+  public beforeUploadToServer = (file: File) => {
+    this.setState({ imageFile: file }, () => {
+      const formData = new FormData();
+      formData.append("file", file);
+    });
+
+    // get base64 from the image file then update the parent's state
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.props.handleImageDataChange(reader.result);
+    };
+
+    return false;
+  };
+
   public handleCancel = () => this.setState({ previewVisible: false });
 
   public render() {
     return (
-      <div className="ClassFormPictureUpload">
+      <div className="class-form-picture-upload">
         <Upload.Dragger
+          action={""}
+          beforeUpload={this.beforeUploadToServer}
           name={this.state.name}
           multiple={false}
-          action={this.state.action}
-          onChange={this.state.onChange}
           listType="picture-card"
           onPreview={this.state.onPreview}
+          className="upload-section"
         >
           <p className="ant-upload-drag-icon">
             <Icon type="inbox" />
