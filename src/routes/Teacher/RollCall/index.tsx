@@ -7,7 +7,7 @@ import "./styles/styles.css";
 export default class RollCall extends React.Component {
   public render() {
     return (
-      <div>
+      <div className="rollcall">
         <OverviewCard />
         <ActivityCard />
         <Row gutter={16}>
@@ -45,31 +45,17 @@ const ActivityList = () => {
     {
       title: (
         <div>
-          Student <a>Ben Berneet</a> just got in
+          Student <a>Ben Berneet</a> just got in the class
         </div>
-      )
+      ),
     },
     {
       title: (
         <div>
-          Student <a>Ben Berneet</a> just got in
+          Student <a>James Cant</a> just got in the class
         </div>
-      )
+      ),
     },
-    {
-      title: (
-        <div>
-          Student <a>Ben Berneet</a> just got in
-        </div>
-      )
-    },
-    {
-      title: (
-        <div>
-          Student <a>Ben Berneet</a> just got in
-        </div>
-      )
-    }
   ];
   return (
     <List

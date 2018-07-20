@@ -28,7 +28,7 @@ const Header: React.SFC<IHeaderProps> = ({
   <Layout.Header className="main-layout-layout-header">
     <div className="main-layout-layout-header-left">
       <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
-        <Menu.Item key="1">Dashboard</Menu.Item>
+        <Menu.Item key="1">Roll Call</Menu.Item>
       </Menu>
     </div>
     <div className="main-layout-layout-header-right">
@@ -80,7 +80,7 @@ const Header: React.SFC<IHeaderProps> = ({
           title={
             <div className="user-avatar">
               <Avatar icon="user" size="small" />
-              <p>sdfsd</p>
+              <p>User</p>
             </div>
           }
         >

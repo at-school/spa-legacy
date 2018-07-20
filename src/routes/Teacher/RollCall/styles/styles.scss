@@ -4,6 +4,10 @@ body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
+.layout-content {
+  height: 100%;
+}
+
 .overview-info-card-container {
   margin-bottom: 6px;
 
@@ -242,8 +246,16 @@ body {
   }
 }
 
+.rollcall {
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+  height: 100%;
+}
+
 .activity-card {
   margin-bottom: 36px;
+  flex: 1;
 
   .activity-card-header {
     display: flex;

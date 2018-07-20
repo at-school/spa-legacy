@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css?family=Heebo:300");
+
+.landing-page {
+  @mixin cloud($className) {
+    .#{$className} {
+      animation: moveclouds ((random(40) + 40) + s) linear infinite;
+      opacity: random(100) / 100;
+      top: random(200) + px;
+      left: - random(2000) + 400 + px;
+    }
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+  }
+
+  .ant-layout {
+    background-color: white;
+  }
+
+  font-family: Heebo, sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  .ant-layout-header {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+
+  .navigation {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 48px;
+
+    .logo {
+      a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        z-index: 3;
+
+        img {
+          height: 60px;
+          margin-right: 10px;
+        }
+
+        h1 {
+          color: white;
+          font-size: 35px;
+          margin-top: 0;
+          margin-bottom: 12px;
+          .at {
+            font-size: 45px;
+          }
+        }
+      }
+      flex-grow: 1;
+    }
+
+    ul {
+      background-color: transparent;
+      border-bottom: 0;
+      display: flex;
+
+      * {
+        line-height: 48px;
+      }
+
+      .ant-menu-item {
+        color: white;
+
+        * {
+          color: white !important;
+        }
+      }
+
+      .ant-menu-item:hover {
+        border-bottom-color: white;
+        border-bottom-width: 2px;
+      }
+
+      .ant-menu-item-selected {
+        border-bottom-color: white;
+      }
+    }
+  }
+
+  #clouds {
+    overflow: hidden;
+    height: 100vh;
+    background-image: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
+    .main-intro {
+      font-size: 40px;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 20vh;
+      color: white;
+
+      button {
+        margin-top: 30px;
+        border-color: transparent;
+
+        &:hover {
+          background-color: transparent;
+          color: white;
+          border-color: white;
+        }
+      }
+    }
+  }
+
+  .cloud {
+    background-color: #fff;
+    width: 130px;
+    height: 130px;
+    border-top-right-radius: 130px;
+    border-top-left-radius: 130px;
+    border-bottom-right-radius: 35px;
+    border-bottom-left-radius: 35px;
+    position: relative;
+    &:after {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      background-color: #fff;
+      left: 80%;
+      bottom: 0;
+      width: 65px;
+      height: 65%;
+      border-top-right-radius: 65px;
+      border-bottom-right-radius: 65px;
+    }
+    &:before {
+      content: "";
+      z-index: -1;
+      width: 100px;
+      height: 60%;
+      position: absolute;
+      background-color: #fff;
+      left: -25px;
+      bottom: 20px;
+      border-top-left-radius: 45px;
+      border-bottom-left-radius: 45px;
+    }
+  }
+
+  $i: 1;
+  @while $i < 100 {
+    @include cloud(c#{$i});
+    $i: $i + 1;
+  }
+
+  @keyframes moveclouds {
+    0% {
+      margin-left: 1200px;
+    }
+  }
+
+  .main-content {
+    padding: 20px 100px;
+
+    .intro-details {
+      color: rgb(29, 31, 34);
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 500;
+      line-height: 48px;
+      padding: 40px 160px 60px 160px;
+      border-bottom: 1px solid #dfe4f3;
+    }
+
+    .intro-rollcall {
+      padding-top: 60px;
+      padding-bottom: 60px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      border-bottom: 1px solid #dfe4f3;
+
+      & > div {
+        color: #1d1f22;
+        .intro-rollcall-title {
+          margin-bottom: 12px;
+          font-size: 1.75rem;
+          font-weight: 500;
+        }
+
+        .intro-rollcall-content {
+          font-size: 1rem;
+          font-weight: 300;
+          line-height: 1.83;
+          margin-right: 20px;
+          max-width: 400px;
+        }
+      }
+
+      img {
+        margin-left: auto;
+        height: 600px;
+        border-radius: 9px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+    }
+
+    .intro-email {
+      padding-top: 60px;
+      padding-bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+
+      .intro-email-content {
+        font-size: 1.75rem;
+        font-weight: 600;
+
+        .intro-email-content-subtitle {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+      }
+
+      .intro-email-form {
+        width: 100%;
+        margin-top: 20px;
+        .ant-input-search {
+          width: 50%;
+          height: 60px;
+          button {
+            height: 60px;
+          }
+        }
+      }
+    }
+  }
+}
