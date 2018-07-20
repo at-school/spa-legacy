@@ -11,7 +11,7 @@ const Intro: React.SFC<{ scrollIntoIntro: () => void }> = ({
         Discover more
       </Button>
     </div>
-    {Array.from(Array(100).keys()).map(index => (
+    {Array.from(Array(198).keys()).map(index => (
       <div key={index} className={`cloud c${index + 1}`} />
     ))}
   </div>
