@@ -1,5 +1,6 @@
 import { Input, Layout } from "antd";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import MainContent from "./components/MainContent";
 import Sider from "./components/Sider";
 import "./styles/styles.css";
@@ -38,23 +39,27 @@ const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
     };
 
     public render() {
-      return (
+      const MainLayoutWithRouter = withRouter(({ location }) => (
         <div>
           <Layout id="main-layout">
             <Sider
               navigation={Navigation}
               collapsed={this.state.collapsed}
               onCollapse={this.onCollapse}
+              pathname={location.pathname}
             />
             <MainContent
               {...this.state}
               searchInputHeaderRef={this.searchInputHeaderRef}
               toggleSearch={this.toggleSearch}
               content={Content}
+              pathname={location.pathname}
             />
           </Layout>
         </div>
-      );
+      ));
+
+      return <MainLayoutWithRouter />;
     }
   };
 };

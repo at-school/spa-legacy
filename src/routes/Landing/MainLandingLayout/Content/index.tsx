@@ -7,7 +7,7 @@ const Content: React.SFC<{ setIntroRef: (ref: HTMLDivElement) => void }> = ({
   setIntroRef
 }) => (
   <div className="main-content">
-    <Details setIntroRef={setIntroRef}/>
+    <Details setIntroRef={setIntroRef} />
     <RollCall />
     <Email />
   </div>

@@ -8,6 +8,7 @@ interface IMainContentProps {
   toggleSearch: () => void;
   searchVisible: boolean;
   content: React.SFC;
+  pathname: string;
 }
 
 const MainContent: React.SFC<IMainContentProps> = ({
@@ -15,9 +16,11 @@ const MainContent: React.SFC<IMainContentProps> = ({
   searchInputHeaderRef,
   toggleSearch,
   searchVisible,
-  content
+  content,
+  pathname
 }) => {
   const Content = content;
+
   return (
     <Layout
       className={
@@ -28,6 +31,7 @@ const MainContent: React.SFC<IMainContentProps> = ({
         searchInputHeaderRef={searchInputHeaderRef}
         toggleSearch={toggleSearch}
         searchVisible={searchVisible}
+        pathname={pathname}
       />
       <Layout.Content className="layout-content">
         <Content />
