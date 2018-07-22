@@ -1,6 +1,9 @@
-import { Button, Checkbox, Form, Input, Select } from "antd";
+import { Button, Checkbox, Form, Input, message as notification, Select } from "antd";
 import React from "react";
+import { withRouter } from 'react-router-dom';
+import { checkDuplicateUsername, register } from "../../../../api/auth";
 import { IError } from "../../IFormError";
+
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -60,6 +63,17 @@ class RegisterForm extends React.Component<any> {
             }
           });
         }
+        if (!err) {
+          try {
+            register(values).then(() => {
+              notification.success("Create account successfully!", 4)
+              this.props.history.push('/authentication/signin')
+            });
+          } catch (err) {
+            const message = JSON.parse(err.message);
+            console.log(message.message);
+          }
+        }
       }
     );
   };
@@ -68,6 +82,7 @@ class RegisterForm extends React.Component<any> {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
+
   public compareToFirstPassword = (
     {},
     value: any,
@@ -213,9 +228,9 @@ class RegisterForm extends React.Component<any> {
     );
   }
 
-  private checkDuplicatedUsername = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void | undefined => {
+  private checkDuplicatedUsername = async (
+    e: React.ChangeEvent<HTMLInputElement>
+   ) => {
     // const username = event.currentTarget.value;
 
     // new state so that there is loading spinner in the input
@@ -226,8 +241,30 @@ class RegisterForm extends React.Component<any> {
       }
     });
 
-    // do some fetching here
+    try {
+      const duplicated = await checkDuplicateUsername(e.target.value)
+      if (duplicated) {
+        this.setState({
+          usernameValidate: {
+            status: "error",
+            errMessage: "Username already exists!"
+          }
+        })
+      }
+      else {
+        this.setState({
+          usernameValidate: {
+            status: "success",
+            errMessage: "",
+            success: true
+          }
+        })
+      }
+    } catch(err) {
+      console.log(err)
+    }
   };
 }
 
-export default Form.create()(RegisterForm)
+const RegisterFormNoRouter = Form.create()(RegisterForm)
+export default withRouter(RegisterFormNoRouter as any)

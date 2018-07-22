@@ -25,6 +25,7 @@ const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
     public searchInputHeaderRef = React.createRef<Input>() as any;
 
     public onCollapse = (collapsed: boolean) => {
+      console.log(this.state.collapsed)
       this.setState({ collapsed });
     };
 

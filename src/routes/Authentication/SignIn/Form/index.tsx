@@ -1,5 +1,8 @@
 import { Button, Form, Icon, Input } from "antd";
 import * as React from "react";
+import { withRouter } from "react-router-dom";
+import { signin } from "../../../../api/auth";
+import AppContext from "../../../../contexts/AppContext";
 import { IError } from "../../IFormError";
 
 interface IFormData {
@@ -13,11 +16,20 @@ interface IFormError {
 }
 
 class SignInForm extends React.Component<any> {
+  public state = {
+    loading: false
+  };
+
   public handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     this.props.form.validateFields((err: IFormError, values: IFormData) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        this.setState({ loading: true });
+        signin(values.username, values.password).then((res) => {
+          this.setState({ loading: false });
+          this.props.signinUser(res)
+          this.props.history.push("/teacher/dashboard");
+        });
       }
     });
   };
@@ -60,7 +72,7 @@ class SignInForm extends React.Component<any> {
         </Form.Item>
         <Form.Item className="signinFormButton">
           <Button
-            loading={true}
+            loading={this.state.loading}
             type="primary"
             htmlType="submit"
             className="loginFormButton"
@@ -73,4 +85,10 @@ class SignInForm extends React.Component<any> {
   }
 }
 
-export default Form.create()(SignInForm);
+const SignInFormWithContext = (props: any) => (
+  <AppContext.Consumer>
+    {value => <SignInForm {...props} {...value} />}
+  </AppContext.Consumer>
+);
+const SignInFormNoRouter = Form.create()(SignInFormWithContext);
+export default withRouter(SignInFormNoRouter as any);

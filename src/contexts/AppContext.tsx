@@ -3,15 +3,14 @@ import React from "react";
 const AppContext = React.createContext({} as IAppProviderStore);
 
 interface IAppProviderStore {
-  userInfo?: IUserInfo;
-}
-
-interface IUserInfo {
   /** Private key for user to get data from the server */
-  token: string;
-  userAvatar: string;
+  token: string | null;
+  avatarUrl: string | null;
   /** Access level of the user: 1 is student, 2 is teacher */
-  accessLevel: number;
+  accessLevel: number | null;
+  fullname: string | null;
+  signinUser: (userInfo: any) => void;
+  signoutUser: () => void;
 }
 
 export default AppContext;
