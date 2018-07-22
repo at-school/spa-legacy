@@ -9,6 +9,7 @@
     "@types/react-webcam": "^0.3.0",
     "@types/recharts": "^1.0.24",
     "antd": "^3.6.6",
+    "gh-pages": "^1.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-particles-js": "^2.2.0",
@@ -22,7 +23,9 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/jest": "^23.1.5",
@@ -30,5 +33,6 @@
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
     "typescript": "^2.9.2"
-  }
+  },
+  "homepage": "https://anhphamduy.github.io/at-school-web/"
 }

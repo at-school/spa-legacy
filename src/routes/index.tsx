@@ -10,7 +10,7 @@ export default class AppNavigator extends React.Component {
   public render() {
     return (
       <AppContext.Provider value={{}}>
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <React.Fragment>
             <Route exact={true} path="/" component={Landing} />
             <Route path="/teacher" component={Teacher} />

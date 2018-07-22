@@ -11,9 +11,27 @@ const Intro: React.SFC<{ scrollIntoIntro: () => void }> = ({
         Discover more
       </Button>
     </div>
-    {Array.from(Array(198).keys()).map(index => (
-      <div key={index} className={`cloud c${index + 1}`} />
-    ))}
+    <div id="background-wrap">
+      <div className="x1">
+        <div className="cloud" />
+      </div>
+
+      <div className="x2">
+        <div className="cloud" />
+      </div>
+
+      <div className="x3">
+        <div className="cloud" />
+      </div>
+
+      <div className="x4">
+        <div className="cloud" />
+      </div>
+
+      <div className="x5">
+        <div className="cloud" />
+      </div>
+    </div>
   </div>
 );
 

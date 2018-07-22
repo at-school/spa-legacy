@@ -4,7 +4,8 @@ import React from "react";
 interface ISiderProps {
   collapsed: boolean;
   onCollapse: (collapsed: boolean) => void;
-  navigation: React.SFC;
+  navigation: React.SFC<{ pathname: string }>;
+  pathname: string;
 }
 
 /**
@@ -14,7 +15,8 @@ interface ISiderProps {
 const Sider: React.SFC<ISiderProps> = ({
   collapsed,
   onCollapse,
-  navigation
+  navigation,
+  pathname
 }) => {
   const Navigation = navigation;
   return (
@@ -31,7 +33,7 @@ const Sider: React.SFC<ISiderProps> = ({
           <h1>@ School</h1>
         </a>
       </div>
-      <Navigation />
+      <Navigation pathname={pathname} />
     </Layout.Sider>
   );
 };
