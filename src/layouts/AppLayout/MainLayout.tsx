@@ -11,8 +11,8 @@ import "./styles/styles.css";
  * for the app.
  */
 const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
-  return class extends React.Component<
-    {},
+  class MainLayout extends React.Component<
+    { pathname: string },
     { collapsed: boolean; searchVisible: boolean }
   > {
     public state = {
@@ -25,7 +25,7 @@ const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
     public searchInputHeaderRef = React.createRef<Input>() as any;
 
     public onCollapse = (collapsed: boolean) => {
-      console.log(this.state.collapsed)
+      console.log(this.state.collapsed);
       this.setState({ collapsed });
     };
 
@@ -40,29 +40,31 @@ const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
     };
 
     public render() {
-      const MainLayoutWithRouter = withRouter(({ location }) => (
+      return (
         <div>
           <Layout id="main-layout">
             <Sider
               navigation={Navigation}
               collapsed={this.state.collapsed}
               onCollapse={this.onCollapse}
-              pathname={location.pathname}
+              pathname={this.props.pathname}
             />
             <MainContent
               {...this.state}
               searchInputHeaderRef={this.searchInputHeaderRef}
               toggleSearch={this.toggleSearch}
               content={Content}
-              pathname={location.pathname}
+              pathname={this.props.pathname}
             />
           </Layout>
         </div>
-      ));
-
-      return <MainLayoutWithRouter />;
+      );
     }
-  };
+  }
+
+  return withRouter(({ location }) => (
+    <MainLayout pathname={location.pathname} />
+  ));
 };
 
 export default createMainLayout;
