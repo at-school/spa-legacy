@@ -9,10 +9,11 @@ const LinePicker: React.SFC<{
   onChange?: (value: string) => void;
   className?: string;
   style?: object;
-}> = ({ onChange, className = "", style }) => (
+  value: string;
+}> = ({ onChange, className = "", style, value }) => (
   <div className={"picker" + className} style={style}>
     <p>Line:</p>
-    <Select onChange={onChange} defaultValue="1">
+    <Select onChange={onChange} value={value}>
       <Select.Option value="1">1</Select.Option>
       <Select.Option value="2">2</Select.Option>
       <Select.Option value="3">3</Select.Option>

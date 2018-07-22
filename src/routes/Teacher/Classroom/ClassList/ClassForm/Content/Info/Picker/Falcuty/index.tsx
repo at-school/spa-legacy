@@ -2,7 +2,6 @@ import { Select } from "antd";
 import React from "react";
 import "../styles/styles.css";
 
-
 /**
  * A list of selections for falcuties: Arts, Languages,...
  */
@@ -10,10 +9,11 @@ const FalcutyPicker: React.SFC<{
   className?: string;
   onChange?: (value: string) => void;
   style?: object;
-}> = ({ className = "", onChange, style }) => (
+  value: string;
+}> = ({ className = "", onChange, style, value }) => (
   <div className={"picker" + className} style={style}>
     <p>Falcuty: </p>
-    <Select onChange={onChange} defaultValue="0">
+    <Select onChange={onChange} value={value}>
       <Select.Option value="0">Arts</Select.Option>
       <Select.Option value="1">English and Humanities</Select.Option>
       <Select.Option value="2">Languages</Select.Option>

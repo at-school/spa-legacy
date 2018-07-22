@@ -1,4 +1,5 @@
 import { Modal } from "antd";
+import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
 import FormContent from "../ClassForm/Content";
 import FormHeader from "../ClassForm/Header";
@@ -13,7 +14,7 @@ interface IClassFormState {
   classDescription: string;
   classFalcuty: string;
   classLine: string;
-  imageData: string;
+  imageFile: UploadFile[] | undefined;
   onSendingData: boolean;
   current: number;
 }
@@ -29,7 +30,7 @@ export default class NewClassForm extends React.Component<
     classDescription: "",
     classFalcuty: "0",
     classLine: "1",
-    imageData: "",
+    imageFile: undefined,
     onSendingData: false,
     current: 0
   };
@@ -49,8 +50,10 @@ export default class NewClassForm extends React.Component<
     this.setState({ [fieldChange]: value } as any);
   };
 
-  public handleImageDataChange = (imageData: string) =>
-    this.setState({ imageData });
+  public handleImageDataChange = (imageFile: UploadFile) =>
+    this.setState({ imageFile: [imageFile] });
+
+  public removeImage = () => this.setState({ imageFile: undefined });
 
   public render() {
     return (
@@ -64,6 +67,8 @@ export default class NewClassForm extends React.Component<
           cancelText={this.state.current > 0 ? "Previous" : "Cancel"}
           confirmLoading={this.state.onSendingData}
           className="class-form"
+          afterClose={this.resetFormData}
+          destroyOnClose={true}
         >
           <FormHeader steps={this.steps} current={this.state.current} />
           <FormContent
@@ -71,6 +76,14 @@ export default class NewClassForm extends React.Component<
             handleInputChange={this.handleInputChange}
             handleImageDataChange={this.handleImageDataChange}
             current={this.state.current}
+            formData={{
+              className: this.state.className,
+              classDescription: this.state.classDescription,
+              classFalcuty: this.state.classFalcuty,
+              classLine: this.state.classLine,
+              imageFile: this.state.imageFile
+            }}
+            removeImage={this.removeImage}
           />
         </Modal>
       </div>
@@ -92,4 +105,13 @@ export default class NewClassForm extends React.Component<
       this.setState({ current: this.state.current - 1 });
     }
   };
+
+  private resetFormData = () =>
+    this.setState({
+      className: "",
+      classDescription: "",
+      classFalcuty: "0",
+      classLine: "1",
+      imageFile: undefined
+    });
 }

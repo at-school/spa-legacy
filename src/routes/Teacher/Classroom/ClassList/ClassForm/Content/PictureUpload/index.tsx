@@ -3,7 +3,9 @@ import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
 
 interface IPictureUploadProps {
-  handleImageDataChange: (imageData: string) => void;
+  handleImageDataChange: (imageFile: UploadFile) => void;
+  removeImage: () => void;
+  imageFile: UploadFile[] | undefined;
 }
 
 /**
@@ -15,7 +17,6 @@ export default class PictureUpload extends React.Component<
   public state = {
     previewVisible: false,
     previewImage: "",
-    imageFile: null,
     name: "classroom-picture",
     onPreview: (file: UploadFile) => {
       this.setState({
@@ -27,16 +28,22 @@ export default class PictureUpload extends React.Component<
 
   /** stop the default value of action in the Upload.Dragger */
   public beforeUploadToServer = (file: File) => {
-    this.setState({ imageFile: file }, () => {
-      const formData = new FormData();
-      formData.append("file", file);
-    });
-
     // get base64 from the image file then update the parent's state
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.props.handleImageDataChange(reader.result);
+      // convert the file into UploadFile interface
+      const imageFile = {
+        uid: -1,
+        name: file.name,
+        status: "done" as any,
+        url: reader.result,
+        size: file.size,
+        type: file.type
+      };
+
+      // add it to the form state
+      this.props.handleImageDataChange(imageFile);
     };
 
     return false;
@@ -55,6 +62,8 @@ export default class PictureUpload extends React.Component<
           listType="picture-card"
           onPreview={this.state.onPreview}
           className="upload-section"
+          fileList={this.props.imageFile as any}
+          onRemove={this.props.removeImage}
         >
           <p className="ant-upload-drag-icon">
             <Icon type="inbox" />
@@ -75,7 +84,7 @@ export default class PictureUpload extends React.Component<
           <img
             alt="Uploaded Image"
             style={{ width: "100%" }}
-            src={this.state.previewImage}
+            src={this.props.imageFile ? this.props.imageFile[0].url : undefined}
           />
         </Modal>
       </div>
