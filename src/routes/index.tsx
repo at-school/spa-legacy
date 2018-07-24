@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
+import { signout } from "../api/auth";
 import AppContext from "../contexts/AppContext";
 import Authentication from "./Authentication";
 import Landing from "./Landing";
@@ -19,12 +20,16 @@ export default class AppNavigator extends React.Component {
   };
 
   public singoutUser = () => {
-    this.setState({
-      token: null,
-      avatarUrl: null,
-      accessLevel: null,
-      fullname: null
-    });
+    if (this.state.token) {
+      signout(this.state.token).then(() =>
+        this.setState({
+          token: null,
+          avatarUrl: null,
+          accessLevel: null,
+          fullname: null
+        })
+      );
+    }
   };
 
   public render() {

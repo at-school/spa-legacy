@@ -10,6 +10,7 @@ import {
   Tabs
 } from "antd";
 import React from "react";
+import AppContext from "../../../../contexts/AppContext";
 
 interface IHeaderProps {
   /** toggle the search bar */
@@ -19,13 +20,19 @@ interface IHeaderProps {
   /** reference to the search input bar */
   searchInputHeaderRef: React.RefObject<Input>;
   pathname: string;
+  signoutUser: () => void;
+  fullname: string;
+  avatarUrl: string;
 }
 
 const Header: React.SFC<IHeaderProps> = ({
   toggleSearch,
   searchVisible,
   searchInputHeaderRef,
-  pathname
+  pathname,
+  signoutUser,
+  fullname,
+  avatarUrl
 }) => {
   let headerDisplayText = "";
   switch (pathname) {
@@ -98,8 +105,11 @@ const Header: React.SFC<IHeaderProps> = ({
           <Menu.SubMenu
             title={
               <div className="user-avatar">
-                <Avatar icon="user" size="small" />
-                <p>User</p>
+                <Avatar
+                  src={avatarUrl}
+                  size="small"
+                />
+                <p>{fullname}</p>
               </div>
             }
           >
@@ -110,7 +120,7 @@ const Header: React.SFC<IHeaderProps> = ({
               <Icon type="setting" />Settings
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="setting:3">
+            <Menu.Item key="setting:3" onClick={signoutUser}>
               <Icon type="logout" />Sign Out
             </Menu.Item>
           </Menu.SubMenu>
@@ -201,4 +211,15 @@ const MessageListItem = (item: any) => (
   </List.Item>
 );
 
-export default Header;
+export default (props: any) => (
+  <AppContext.Consumer>
+    {value => (
+      <Header
+        {...props}
+        fullname={value.fullname}
+        avatarUrl={value.avatarUrl}
+        signoutUser={value.signoutUser}
+      />
+    )}
+  </AppContext.Consumer>
+);

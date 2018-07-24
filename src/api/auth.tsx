@@ -67,3 +67,24 @@ export const signin = async (username: string, password: string) => {
   const errMessage = await response.text();
   throw new Error(errMessage);
 }
+
+/**
+ * 
+ * @param token access token of the user
+ * 
+ * @returns nothing upon success
+ * 
+ */
+export const signout = async (token: string | null) => {
+  const response = await fetch("http://127.0.0.1:5000/auth/signout", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ token })
+  });
+  if (response.ok) {
+    return;
+  }
+
+  const errMessage = await response.text();
+  throw new Error(errMessage);
+}

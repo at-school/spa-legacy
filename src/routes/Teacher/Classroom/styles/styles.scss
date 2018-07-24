@@ -8,6 +8,7 @@
       padding: 18px 32px;
       display: flex;
       flex-direction: row;
+      font-family: "Roboto", sans-serif;
 
       .classroom-title {
         color: rgba(0, 0, 0, 0.85);
@@ -30,52 +31,63 @@
     }
   }
 
-  .class-list {
-    display: grid;
-    padding: 25px;
-    grid-template-columns: repeat(auto-fit, 350px);
-    grid-gap: 0.8rem;
-    justify-content: space-between;
-    align-content: flex-start;
-    color: rgba(0, 0, 0, 0.65);
-    font-size: 14px;
-    line-height: 1.5em;
+  .class-list-container {
+    padding: 32px;
+    .class-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-gap: 20px;
+      align-items: stretch;
 
-    .class-card {
-      margin: 0.5em;
-      height: 200px;
-      // -webkit-box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
-      // -moz-box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
-      // box-shadow: -1px -1px 15px -10px rgba(0, 0, 0, 1);
+      .add-class-card {
+        min-height: 178px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        background-color: #fff;
+        border-color: #d9d9d9;
+        border-radius: 2px;
+        color: rgba(0, 0, 0, 0.45);
+        outline: none;
+        border-style: dashed;
 
-      .ant-card-meta-detail * {
-        word-wrap: break-word;
-        white-space: normal;
+        &:hover {
+          color: #40a9ff;
+          border-color: #40a9ff;
+        }
       }
 
-      .ant-card {
-        min-width: 300px;
-        height: 180px;
+      .class-card {
+        min-height: 178px;
+        display: flex;
+        flex-direction: column;
+        font-family: "Roboto", sans-serif;
+
+        .ant-card-body {
+          flex-grow: 1;
+          .class-card-body {
+            display: flex;
+            flex-direction: row;
+          }
+
+          .class-card-avatar {
+            margin-right: 18px;
+          }
+
+          .class-card-content-title {
+            font-weight: 400;
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+          }
+
+          .class-card-content-description {
+            font-weight: 300;
+            font-size: 0.9rem;
+          }
+        }
       }
-    }
-
-    .add-class-card {
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      background-color: #fff;
-      border-color: #d9d9d9;
-      border-radius: 2px;
-      color: rgba(0, 0, 0, 0.45);
-      outline: none;
-      border-style: dashed;
-    }
-
-    .add-class-card:hover {
-      color: #40a9ff;
-      border-color: #40a9ff;
     }
   }
 }
@@ -107,50 +119,17 @@
   }
 }
 
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-  .classroom {
-    .class-list {
-      grid-template-columns: repeat(auto-fit, 100%);
-      grid-gap: 0.8rem;
-      justify-content: space-between;
-      align-content: flex-start;
-    }
-  }
+.fade-enter {
+  opacity: 0.01;
 }
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .classroom {
-    .class-list {
-      grid-template-columns: repeat(auto-fit, 100%);
-      grid-gap: 0.8rem;
-      justify-content: space-between;
-      align-content: flex-start;
-    }
-  }
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
 }
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-  .classroom {
-    .class-list {
-      grid-template-columns: repeat(auto-fit, 100%);
-      grid-gap: 0.8rem;
-      justify-content: space-between;
-      align-content: flex-start;
-    }
-  }
+.fade-exit {
+  opacity: 1;
 }
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-  .classroom {
-    .class-list {
-      grid-template-columns: repeat(auto-fit, 250px);
-      grid-gap: 0.8rem;
-      justify-content: space-between;
-      align-content: flex-start;
-    }
-  }
+.fade-exit-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
 }

@@ -1,29 +1,32 @@
-import { Icon, Modal, Upload } from "antd";
 import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
+import PreviewModal from "./PreviewModal";
+import UploadDragger from "./UploadDragger";
 
 interface IPictureUploadProps {
+  // will be invoked once prevents image uploaded to the server
   handleImageDataChange: (imageFile: UploadFile) => void;
+  // use when remove image from the upload
   removeImage: () => void;
+  // imageFile for rendering image file in the upload
   imageFile: UploadFile[] | undefined;
+}
+
+interface IPictureUploadState {
+  previewVisible: boolean;
 }
 
 /**
  * This lets the users upload picture of the classroom in the class form.
+ * The file list is handled by the parent's component
  */
 export default class PictureUpload extends React.Component<
-  IPictureUploadProps
+  IPictureUploadProps,
+  IPictureUploadState
 > {
   public state = {
-    previewVisible: false,
-    previewImage: "",
-    name: "classroom-picture",
-    onPreview: (file: UploadFile) => {
-      this.setState({
-        previewImage: file.url || file.thumbUrl,
-        previewVisible: true
-      });
-    }
+    // switch between preview the image
+    previewVisible: false
   };
 
   /** stop the default value of action in the Upload.Dragger */
@@ -49,44 +52,26 @@ export default class PictureUpload extends React.Component<
     return false;
   };
 
-  public handleCancel = () => this.setState({ previewVisible: false });
+  // cancel preview the image, which means close the image modal
+  public togglePreviewModal = () =>
+    this.setState(prevState => ({ previewVisible: !prevState.previewVisible }));
 
   public render() {
     return (
       <div className="class-form-picture-upload">
-        <Upload.Dragger
-          action={""}
-          beforeUpload={this.beforeUploadToServer}
-          name={this.state.name}
-          multiple={false}
-          listType="picture-card"
-          onPreview={this.state.onPreview}
-          className="upload-section"
-          fileList={this.props.imageFile as any}
-          onRemove={this.props.removeImage}
-        >
-          <p className="ant-upload-drag-icon">
-            <Icon type="inbox" />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag image to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload. Strictly prohibit from
-            uploading company data or other band files
-          </p>
-        </Upload.Dragger>
-        <Modal
-          visible={this.state.previewVisible}
-          footer={null}
-          onCancel={this.handleCancel}
-        >
-          <img
-            alt="Uploaded Image"
-            style={{ width: "100%" }}
-            src={this.props.imageFile ? this.props.imageFile[0].url : undefined}
-          />
-        </Modal>
+        <UploadDragger
+          beforeUploadToServer={this.beforeUploadToServer}
+          onPreview={this.togglePreviewModal}
+          imageFile={this.props.imageFile}
+          removeImage={this.props.removeImage}
+        />
+        <PreviewModal
+          imageFileData={
+            this.props.imageFile ? this.props.imageFile[0].url : undefined
+          }
+          closePreviewModal={this.togglePreviewModal}
+          previewVisible={this.state.previewVisible}
+        />
       </div>
     );
   }
