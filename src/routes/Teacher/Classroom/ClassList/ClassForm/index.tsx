@@ -10,8 +10,9 @@ import FormHeader from "../ClassForm/Header";
 interface IClassFormProps {
   visible: boolean;
   toggleClassForm: () => void;
-  addNewClass: (newClass: IClassData) => void;
-  // if the class data is not null, then it means the component 
+  // add class could be a function be either modifying the class or adding a new class
+  addClass: (newClass: IClassData) => void;
+  // if the class data is not null, then it means the component
   // will be acting as the edit class form
   classData?: IClassData | null;
 }
@@ -36,6 +37,44 @@ interface IClassFormState {
   classData: IClassData | null;
 }
 
+// get new states when passing down new props
+// only applicable for edit classform
+const getStatesFromProps = (props: IClassFormProps) => {
+  // get image format from the base64 data of the avatar
+  if (props.classData) {
+    let imageFormat = props.classData.avatarData[5];
+    for (let i = 1; i < 12; i++) {
+      const currentLetter = props.classData.avatarData[5 + i];
+      if (currentLetter === ";") {
+        break;
+      }
+      imageFormat += currentLetter;
+    }
+    // make a fake image file for preview image
+    const imageFile = {
+      uid: -1,
+      name: "avatar",
+      status: "done",
+      url: props.classData.avatarData,
+      size: 10000,
+      type: imageFormat
+    };
+    // update the state
+    return {
+      id: props.classData.id,
+      className: props.classData.name,
+      classDescription: props.classData.description,
+      classLine: props.classData.line,
+      classFalcuty: props.classData.falcuty.toString(),
+      imageFile: [imageFile],
+      classData: props.classData,
+      onSendingData: false,
+      current: 0
+    };
+  }
+  return {};
+};
+
 /**
  * This is the class form. Can be used for: add class form, edit class form
  * If the user does pass down class information: edit class form
@@ -57,32 +96,8 @@ class ClassForm extends React.Component<
       if (JSON.stringify(props.classData) === JSON.stringify(state.classData)) {
         return null;
       } else {
-        // get image format from the base64 data of the avatar
-        let imageFormat = props.classData.avatarData[5];
-        for (let i = 1; i < 12; i++) {
-          const currentLetter = props.classData.avatarData[5 + i];
-          if (currentLetter === ";") {
-            break;
-          }
-          imageFormat += currentLetter;
-        }
-        // make a fake image file for preview image
-        const imageFile = {
-          uid: -1,
-          name: "avatar",
-          status: "done",
-          url: props.classData.avatarData,
-          size: 10000,
-          type: imageFormat
-        };
-        // update the state
-        return {
-          className: props.classData.name,
-          classDescription: props.classData.description,
-          classLine: props.classData.line,
-          classFalcuty: props.classData.falcuty,
-          imageFile: [imageFile]
-        };
+        console.log("Props are different");
+        return getStatesFromProps(props);
       }
     }
     return null;
@@ -171,37 +186,66 @@ class ClassForm extends React.Component<
   private onClickOk = () => {
     if (this.state.current === this.steps.length - 1) {
       // set onsending data to true to get the uploading animation
-      this.setState({ onSendingData: true });
-      // check if imageFile exists
       if (this.state.imageFile) {
+        this.setState({ onSendingData: true });
+        // get image data
         const imageFile = this.state.imageFile as any;
         const avatarData = imageFile[0].url;
 
-        // add class to the server
-        // get back the id of the class of the server
-        // append the class to the original class array
-        // close the form
-        teacherAddClass(
-          {
-            className: this.state.className,
-            classDescription: this.state.classDescription,
-            classLine: this.state.classLine,
-            classFalcuty: this.state.classFalcuty,
-            classImageData: avatarData
-          },
-          this.props.token
-        ).then(res => {
-          this.props.addNewClass({
-            id: res.id,
-            name: this.state.className,
-            description: this.state.classDescription,
-            line: this.state.classLine,
-            avatarData,
-            falcuty: this.state.classFalcuty
-          });
-          this.setState({ onSendingData: false });
-          this.props.toggleClassForm();
-        });
+        // get class data
+        const classData = this.state.classData as any;
+        // if class data exists then it means it's on the modifying state
+        if (classData) {
+          teacherAddClass(
+            {
+              id: classData.id,
+              className: this.state.className,
+              classDescription: this.state.classDescription,
+              classLine: this.state.classLine,
+              classFalcuty: this.state.classFalcuty,
+              classImageData: avatarData
+            },
+            this.props.token
+          ).then(() => {
+            this.props.addClass({
+              id: classData.id,
+              name: this.state.className,
+              description: this.state.classDescription,
+              line: this.state.classLine,
+              falcuty: this.state.classFalcuty,
+              avatarData
+            });
+            this.props.toggleClassForm();
+          }).catch(() => this.props.toggleClassForm());
+        } else {
+          // add class to the server
+          // get back the id of the class of the server
+          // append the class to the original class array
+          // close the form
+          teacherAddClass(
+            {
+              className: this.state.className,
+              classDescription: this.state.classDescription,
+              classLine: this.state.classLine,
+              classFalcuty: this.state.classFalcuty,
+              classImageData: avatarData
+            },
+            this.props.token
+          ).then(res => {
+            this.props.addClass({
+              id: res.id,
+              name: this.state.className,
+              description: this.state.classDescription,
+              line: this.state.classLine,
+              avatarData,
+              falcuty: this.state.classFalcuty
+            });
+            this.props.toggleClassForm();
+          }).catch(() => this.props.toggleClassForm);
+        }
+      }
+      else {
+        // do something when the form is not valid
       }
     } else {
       this.setState({ current: this.state.current + 1 });
@@ -221,8 +265,9 @@ class ClassForm extends React.Component<
   };
 
   // reset all the states once close the form
-  // only applicable when the component acts as add class form
   private resetFormData = () => {
+    // if not class data, it means it is in the adding class state
+    // reset the form normally
     if (!this.state.classData) {
       this.setState({
         className: "",
@@ -230,8 +275,17 @@ class ClassForm extends React.Component<
         classFalcuty: "0",
         classLine: "1",
         imageFile: undefined,
-        current: 0
+        current: 0,
+        onSendingData: false
       });
+    } 
+    // it is in the modifying class state
+    // it will get the oringal class data and set it as state
+    else {
+      if (this.props.classData) {
+        const originalStates = getStatesFromProps(this.props);
+        this.setState(originalStates as any);
+      }
     }
   };
 }

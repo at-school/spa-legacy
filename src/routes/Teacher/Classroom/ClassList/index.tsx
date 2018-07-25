@@ -1,7 +1,10 @@
 import { Card, Icon } from "antd";
 import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { teacherGetClasses, teacherRemoveClass } from "../../../../api/classroom";
+import {
+  teacherGetClasses,
+  teacherRemoveClass
+} from "../../../../api/classroom";
 import AppContext from "../../../../contexts/AppContext";
 import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
@@ -50,8 +53,20 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
   };
 
   // add new class but locally, append the class to the current list of class
-  public addNewClass = (newClass: IClassData) => {
-    this.setState(prevState => ({ classes: [...prevState.classes, newClass] }));
+  public addNewClass = (classData: IClassData) => {
+    this.setState(prevState => ({ classes: [...prevState.classes, classData] }));
+  };
+
+  // edit class but locally, modfiy the current class list
+  public editClass = (classData: IClassData) => {
+    this.setState(prevState => ({
+      classes: prevState.classes.map(c => {
+        if (c.id === classData.id) {
+          return classData;
+        }
+        return c;
+      })
+    }));
   };
 
   // remove class of a user both locally and on the server
@@ -103,13 +118,13 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
           ))}
         </TransitionGroup>
         <AddClassForm
-          addNewClass={this.addNewClass}
+          addClass={this.addNewClass}
           visible={this.state.newClassFormVisible}
           toggleClassForm={this.toggleAddClassForm}
         />
         {this.state.classes.length !== 0 && (
           <EditClassForm
-            addNewClass={this.addNewClass}
+          addClass={this.editClass}
             visible={this.state.editClassFormVisible}
             toggleClassForm={this.toggleEditClassForm}
             classData={this.state.classes[this.state.currentSelectClass]}
