@@ -1,0 +1,43 @@
+.layout-content {
+  margin: 0;
+}
+
+.messages {
+  margin: -48px -24px;
+  height: calc(100% + 48px);
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+
+  .message-list,
+  .message-info,
+  .message-content {
+    height: 100%;
+  }
+
+  .message-list {
+    flex: 0.2;
+    border-right: 1px solid #ebedf0;
+    background-color: white;
+
+    .message-list-search-container {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .message-list-search {
+        width: 80%;
+      }
+    }
+  }
+
+  .message-content {
+    flex: 0.5;
+  }
+
+  .message-info {
+    flex: 0.3;
+  }
+}

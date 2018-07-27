@@ -4,23 +4,25 @@ import AppContext from "../../contexts/AppContext";
 import createTeacherLayout from "../../layouts/AppLayout/TeacherLayout";
 import Classroom from "./Classroom";
 import Dashboard from "./Dashboard";
+import Messages from "./Messages";
 import RollCall from "./RollCall";
 
-
 class Content extends React.Component<any> {
-
   public componentDidUpdate() {
     if (!this.props.token) {
-      this.props.history.push("/authentication/signin")
+      this.props.history.push("/authentication/signin");
     }
   }
 
   public render() {
-    return(<React.Fragment>
-      <Route exact={true} path={"/teacher/dashboard"} component={Dashboard} />
-      <Route exact={true} path={"/teacher/classroom"} component={Classroom} />
-      <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
-    </React.Fragment>)
+    return (
+      <React.Fragment>
+        <Route exact={true} path={"/teacher/dashboard"} component={Dashboard} />
+        <Route exact={true} path={"/teacher/classroom"} component={Classroom} />
+        <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
+        <Route exact={true} path={"/teacher/messages"} component={Messages} />
+      </React.Fragment>
+    );
   }
 }
 

@@ -36,9 +36,9 @@ const MainContent: React.SFC<IMainContentProps> = ({
       <Layout.Content className="layout-content">
         <Content />
       </Layout.Content>
-      <Layout.Footer style={{ textAlign: "center" }}>
+      {/* <Layout.Footer style={{ textAlign: "center" }}>
         At School ©2018
-      </Layout.Footer>
+      </Layout.Footer> */}
     </Layout>
   );
 };

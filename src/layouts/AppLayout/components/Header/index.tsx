@@ -45,6 +45,9 @@ const Header: React.SFC<IHeaderProps> = ({
     case "/teacher/classroom":
       headerDisplayText = "Classroom";
       break;
+    case "/teacher/messages":
+      headerDisplayText = "Messages";
+      break;
   }
   return (
     <Layout.Header className="main-layout-layout-header">

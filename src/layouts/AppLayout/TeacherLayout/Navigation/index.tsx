@@ -14,6 +14,9 @@ const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
     case "/teacher/rollcall":
       menuKey = "3";
       break;
+    case "/teacher/messages":
+      menuKey = "4";
+      break;
   }
   return (
     <Menu theme="dark" mode="inline" selectedKeys={[menuKey]}>
@@ -33,6 +36,12 @@ const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
         <Link to="/teacher/rollcall">
           <Icon type="video-camera" />
           <span className="nav-text">Roll Call</span>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="4">
+        <Link to="/teacher/messages">
+          <Icon type="message" />
+          <span className="nav-text">Messages</span>
         </Link>
       </Menu.Item>
     </Menu>
