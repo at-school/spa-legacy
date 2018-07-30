@@ -8,6 +8,7 @@
     "@types/react-transition-group": "^2.0.11",
     "@types/react-webcam": "^0.3.0",
     "@types/recharts": "^1.0.24",
+    "@types/socket.io-client": "^1.4.32",
     "antd": "^3.6.6",
     "gh-pages": "^1.2.0",
     "react": "^16.4.1",
@@ -17,7 +18,9 @@
     "react-scripts-ts": "2.16.0",
     "react-transition-group": "^2.4.0",
     "react-webcam": "^1.0.1",
-    "recharts": "^1.0.1"
+    "recharts": "^1.0.1",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts-ts start",

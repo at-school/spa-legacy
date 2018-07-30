@@ -17,6 +17,7 @@ body {
   min-height: 100vh;
 
   .main-layout-sider {
+    z-index: 20 !important;
     position: fixed;
     left: 0;
     min-height: 100vh !important;

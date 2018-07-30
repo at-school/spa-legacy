@@ -1,4 +1,4 @@
-import { Button, Form, Icon, Input } from "antd";
+import { Button, Form, Icon, Input, message } from "antd";
 import * as React from "react";
 import { withRouter } from "react-router-dom";
 import { signin } from "../../../../api/auth";
@@ -25,11 +25,16 @@ class SignInForm extends React.Component<any> {
     this.props.form.validateFields((err: IFormError, values: IFormData) => {
       if (!err) {
         this.setState({ loading: true });
-        signin(values.username, values.password).then((res) => {
-          this.setState({ loading: false });
-          this.props.signinUser(res)
-          this.props.history.push("/teacher/dashboard");
-        });
+        signin(values.username, values.password)
+          .then(res => {
+            this.setState({ loading: false });
+            this.props.signinUser(res);
+            this.props.history.push("/teacher/dashboard");
+          })
+          .catch(() => {
+            this.setState({ loading: false });
+            message.error("Username or password is incorrect.");
+          });
       }
     });
   };
