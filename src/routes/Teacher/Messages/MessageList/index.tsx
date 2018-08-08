@@ -4,7 +4,8 @@ import React from "react";
 const MessageList = ({
   toggleAddChatRoom,
   roomList,
-  changeSelectedRoom
+  changeSelectedRoom,
+  selectedRoom
 }: any) => (
   <div className="message-list-container">
     <div className="message-list-search-container">
@@ -21,20 +22,35 @@ const MessageList = ({
           key={room.id}
           avatarData={room.avatarData}
           name={room.name}
+          lastMessage={
+            room.messages.slice(-1)[0]
+              ? room.messages.slice(-1)[0].content
+              : null
+          }
+          active={JSON.stringify(selectedRoom) === JSON.stringify(room)}
         />
       ))}
     </div>
   </div>
 );
 
-const MessageItem = ({ avatarData, name, changeSelectedRoom }: any) => (
-  <div onClick={changeSelectedRoom} className="message-item">
+const MessageItem = ({
+  avatarData,
+  name,
+  changeSelectedRoom,
+  lastMessage,
+  active
+}: any) => (
+  <div
+    onClick={changeSelectedRoom}
+    className={"message-item " + (active ? "active" : "")}
+  >
     <div className="message-item-avatar">
       <Avatar src={avatarData} size="large" icon="user" />
     </div>
     <div className="message-item-content">
       <div className="message-item-name">{name}</div>
-      <div className="message-item-details">THis is the chat ocntent</div>
+      <div className="message-item-details">{lastMessage}</div>
     </div>
   </div>
 );

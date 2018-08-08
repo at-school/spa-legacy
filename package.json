@@ -12,6 +12,7 @@
     "antd": "^3.6.6",
     "gh-pages": "^1.2.0",
     "react": "^16.4.1",
+    "react-chat-window": "^1.0.8",
     "react-dom": "^16.4.1",
     "react-particles-js": "^2.2.0",
     "react-router-dom": "^4.3.1",

@@ -1,0 +1,19 @@
+.picker {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+}
+.picker p {
+  margin-bottom: 0 !important;
+  margin-right: 16px;
+  width: 52px;
+}
+.picker .ant-select {
+  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  width: 60%;
+}
+
+/*# sourceMappingURL=styles.css.map */

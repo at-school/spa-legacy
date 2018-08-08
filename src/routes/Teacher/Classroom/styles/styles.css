@@ -1,0 +1,120 @@
+.classroom {
+  margin: -48px -28px 0 -28px;
+}
+.classroom .classroom-introduction {
+  width: 100%;
+  background-color: white;
+}
+.classroom .classroom-introduction .classroom-introduction-container {
+  padding: 18px 32px;
+  display: flex;
+  flex-direction: row;
+  font-family: "Roboto", sans-serif;
+}
+.classroom .classroom-introduction .classroom-introduction-container .classroom-title {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  margin-bottom: 16px;
+}
+.classroom .classroom-introduction .classroom-introduction-container .classroom-description {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.5em;
+  font-size: 14px;
+}
+.classroom .classroom-introduction img {
+  height: 180px;
+  margin-left: auto;
+}
+.classroom .class-list-container {
+  padding: 32px;
+}
+.classroom .class-list-container .class-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-gap: 20px;
+  align-items: stretch;
+}
+.classroom .class-list-container .class-list .add-class-card {
+  min-height: 178px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  background-color: #fff;
+  border-color: #d9d9d9;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.45);
+  outline: none;
+  border-style: dashed;
+}
+.classroom .class-list-container .class-list .add-class-card:hover {
+  color: #40a9ff;
+  border-color: #40a9ff;
+}
+.classroom .class-list-container .class-list .class-card {
+  min-height: 178px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+}
+.classroom .class-list-container .class-list .class-card .ant-card-body {
+  flex-grow: 1;
+}
+.classroom .class-list-container .class-list .class-card .ant-card-body .class-card-body {
+  display: flex;
+  flex-direction: row;
+}
+.classroom .class-list-container .class-list .class-card .ant-card-body .class-card-avatar {
+  margin-right: 18px;
+}
+.classroom .class-list-container .class-list .class-card .ant-card-body .class-card-content-title {
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin-bottom: 2px;
+}
+.classroom .class-list-container .class-list .class-card .ant-card-body .class-card-content-description {
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+
+.class-form .ant-modal-body {
+  padding: 20px;
+}
+.class-form .ant-modal-body .ant-steps {
+  margin-bottom: 20px;
+}
+.class-form .ant-modal-body .class-form-info p {
+  margin-bottom: 8px;
+}
+.class-form .ant-modal-body .class-form-info .ant-input {
+  margin-bottom: 20px;
+}
+.class-form .ant-modal-body .class-form-picture-upload {
+  margin-bottom: 110px;
+}
+.class-form .ant-modal-body .class-form-picture-upload .ant-upload-list-item {
+  margin-top: 10px;
+}
+
+.fade-enter {
+  opacity: 0.01;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-exit {
+  opacity: 0;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 0ms ease-in;
+}
+
+/*# sourceMappingURL=styles.css.map */
