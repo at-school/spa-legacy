@@ -293,3 +293,497 @@
     }
   }
 }
+
+@media only screen and (max-width: 380px) {
+  .landing-page {
+    #clouds {
+      .main-intro {
+        font-size: 24px;
+        margin-top: 25vh;
+
+        button {
+          margin-top: 27px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 4px;
+      z-index: 1000;
+
+      .intro-details {
+        z-index: 4;
+        font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 38px;
+        padding: 40px 20px 60px 20px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        flex-direction: column-reverse;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 12px;
+            font-size: 1.75rem;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 0;
+            padding-right: 10px;
+            padding-left: 10px;
+            max-width: 400px;
+          }
+        }
+
+        img {
+          margin-left: 0;
+          height: 180px;
+          margin-bottom: 30px;
+        }
+      }
+
+      .intro-email {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+
+        .intro-email-content {
+          font-size: 1.4rem;
+          font-weight: 600;
+
+          .intro-email-content-subtitle {
+            font-size: 0.8rem;
+            font-weight: 500;
+          }
+        }
+
+        .intro-email-form {
+          margin-top: 21px;
+          .ant-input-search {
+            width: 90vw;
+            height: 33px !important;
+            button,
+            input {
+              height: 33px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 380px) {
+  .landing-page {
+    #clouds {
+      .main-intro {
+        font-size: 30px;
+        margin-top: 30vh;
+
+        button {
+          margin-top: 29px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 10px;
+
+      .intro-details {
+        font-size: 1.4rem;
+        font-weight: 500;
+        line-height: 44px;
+        padding: 40px 25px 60px 25px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        flex-direction: column-reverse;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 12px;
+            font-size: 1.75rem;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 20px;
+            max-width: 400px;
+          }
+        }
+
+        img {
+          margin-left: 0;
+          height: 280px;
+          margin-bottom: 30px;
+        }
+      }
+
+      .intro-email {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+
+        .intro-email-content {
+          font-size: 1.65rem;
+          font-weight: 600;
+
+          .intro-email-content-subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+          }
+        }
+
+        .intro-email-form {
+          margin-top: 25px;
+          .ant-input-search {
+            width: 85vw;
+            height: 40px;
+            button {
+              height: 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .landing-page {
+
+    #clouds {
+      .main-intro {
+        font-size: 35px;
+        margin-top: 30vh;
+
+        button {
+          margin-top: 32px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 10px;
+
+      .intro-details {
+        font-size: 1.4rem;
+        font-weight: 500;
+        line-height: 44px;
+        padding: 40px 25px 60px 25px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        flex-direction: column-reverse;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 12px;
+            font-size: 1.85rem;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 20px;
+            max-width: 550px;
+          }
+        }
+
+        img {
+          margin-left: 0;
+          height: 370px;
+          margin-bottom: 40px;
+        }
+      }
+
+      .intro-email {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+
+        .intro-email-content {
+          font-size: 1.7rem;
+          font-weight: 600;
+
+          .intro-email-content-subtitle {
+            font-size: 1.15rem;
+            font-weight: 500;
+          }
+        }
+
+        .intro-email-form {
+          margin-top: 25px;
+          .ant-input-search {
+            width: 70vw;
+            height: 45px;
+            button {
+              height: 45px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .landing-page {
+
+    #clouds {
+      .main-intro {
+        font-size: 40px;
+        margin-top: 30vh;
+
+        button {
+          margin-top: 36px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 10px;
+
+      .intro-details {
+        font-size: 1.5rem;
+        font-weight: 500;
+        line-height: 44px;
+        padding: 40px 30px 60px 30px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        flex-direction: column-reverse;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 14px;
+            font-size: 1.9rem;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1.2rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 20px;
+            max-width: 600px;
+          }
+        }
+
+        img {
+          margin-left: 0;
+          height: 430px;
+          margin-bottom: 50px;
+        }
+      }
+    }
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .landing-page {
+    #clouds {
+      .main-intro {
+        font-size: 40px;
+        margin-top: 30vh;
+
+        button {
+          margin-top: 32px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 30px;
+
+      .intro-details {
+        font-size: 1.55rem;
+        font-weight: 500;
+        line-height: 46px;
+        padding: 40px 35px 60px 35px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        flex-direction: row;
+        align-items: center;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 12px;
+            font-size: 1.85rem;
+            font-weight: 500;
+            text-align: left;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 20px;
+            max-width: 400px;
+          }
+        }
+
+        img {
+          margin-left: auto;
+          margin-bottom: 0;
+          height: 330px;
+        }
+      }
+
+      .intro-email {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+
+        .intro-email-content {
+          font-size: 1.7rem;
+          font-weight: 600;
+
+          .intro-email-content-subtitle {
+            font-size: 1.15rem;
+            font-weight: 500;
+          }
+        }
+
+        .intro-email-form {
+          margin-top: 25px;
+          .ant-input-search {
+            width: 70vw;
+            height: 45px;
+            button {
+              height: 45px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .landing-page {
+    #clouds {
+      .main-intro {
+        font-size: 40px;
+        font-weight: 700;
+        margin-top: 30vh;
+
+        button {
+          margin-top: 30px;
+        }
+      }
+    }
+
+    .main-content {
+      padding: 20px 100px;
+
+      .intro-details {
+        font-size: 1.75rem;
+        font-weight: 500;
+        line-height: 48px;
+        padding: 40px 160px 60px 160px;
+      }
+
+      .intro-rollcall {
+        padding-top: 60px;
+        padding-bottom: 60px;
+
+        & > div {
+          .intro-rollcall-title {
+            margin-bottom: 12px;
+            font-size: 1.75rem;
+            font-weight: 500;
+          }
+
+          .intro-rollcall-content {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.83;
+            margin-right: 20px;
+            max-width: 400px;
+          }
+        }
+
+        img {
+          margin-left: auto;
+          height: 600px;
+          border-radius: 9px;
+        }
+      }
+
+      .intro-email {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        width: 100%;
+
+        .intro-email-content {
+          font-size: 1.75rem;
+          font-weight: 600;
+
+          .intro-email-content-subtitle {
+            font-size: 1.2rem;
+            font-weight: 500;
+          }
+        }
+
+        .intro-email-form {
+          width: 100%;
+          margin-top: 35px;
+          .ant-input-search {
+            width: 50%;
+            height: 60px;
+            button {
+              height: 60px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
