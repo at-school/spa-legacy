@@ -1,8 +1,8 @@
 import { Layout } from "antd";
 import React from "react";
+import Header from "../../../components/HeaderGuest";
 import Content from "./Content";
 import Footer from "./Footer";
-import Header from "./Header";
 import Intro from "./Intro";
 
 const MainLandingLayout: React.SFC<{
@@ -11,7 +11,12 @@ const MainLandingLayout: React.SFC<{
 }> = ({ setIntroRef, scrollIntoIntro }) => (
   <div className="landing-page">
     <Layout>
-      <Header />
+      <Header
+        menu={[
+          { name: "About", url: "/about/company" },
+          { name: "Sign in", url: "authentication/signin" }
+        ]}
+      />
       <Intro scrollIntoIntro={scrollIntoIntro} />
       <Content setIntroRef={setIntroRef} />
       <Footer />

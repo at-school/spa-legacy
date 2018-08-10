@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
+.about {
+  font-family: "Open Sans", sans-serif;
+}
+.about .group-photo {
+  width: 100%;
+  height: 100vh;
+  background-image: url("/group-photo.png");
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.about .group-photo .group-photo-description {
+  background-color: rgba(111, 215, 255, 0.6);
+  width: 40%;
+  font-size: 3rem;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+.about .about-company .about-company-intro {
+  background-image: linear-gradient(0deg, #48c6ef 0, #6f86d6);
+  min-height: 500px;
+  height: 50vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.about .about-company .about-company-intro .title {
+  font-size: 2.9rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.about .about-company .about-company-intro .subtitle {
+  font-size: 2.3rem;
+  font-weight: 300;
+}
+.about .about-company .company-mission {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.about .about-company .company-mission .company-mission-content {
+  width: 60%;
+}
+.about .about-company .company-mission .company-mission-content .title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+.about .about-company .company-mission .company-mission-content .subtitle {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.about .about-company .company-mission .company-mission-content .description {
+  font-size: 1.4rem;
+  font-weight: 300;
+  line-height: 2.6rem;
+}
+.about .about-company .company-mission .company-mission-figure {
+  font-size: 23rem;
+  flex-grow: 1;
+  text-align: center;
+  color: blue;
+}
+.about .about-content {
+  padding: 40px 60px;
+}
+.about .about-content .team-mission {
+  font-size: 2rem;
+  text-align: justify;
+  -moz-text-align-last: center;
+  text-align-last: center;
+  border-bottom: 1px solid #dfe4f3;
+  padding: 10px;
+  padding-bottom: 40px;
+}
+.about .about-content .members-introduction {
+  padding-top: 40px;
+}
+.about .about-content .members-introduction .member-introduction {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+.about .about-content .members-introduction .member-introduction .image-container {
+  flex: 0.4;
+}
+.about .about-content .members-introduction .member-introduction .blurb-container {
+  text-align: justify;
+  flex: 0.6;
+}
+.about .about-content .members-introduction .member-introduction .blurb-container .name {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+.about .about-content .members-introduction .member-introduction .blurb-container .role {
+  font-size: 1.6rem;
+  margin-bottom: 14px;
+}
+.about .about-content .members-introduction .member-introduction .blurb-container .contribution {
+  font-size: 1.4rem;
+  line-height: 2.1rem;
+}
+.about .about-content .members-introduction .anh-pham .image-container {
+  background-image: url("/anhpham.png");
+}
+.about .about-content .members-introduction .charl-kruger .image-container {
+  background-image: url("/charlkruger.png");
+}
+.about .about-content .members-introduction .stephan-kash .image-container {
+  background-image: url("/stephankash.png");
+}
+.about .about-content .members-introduction .image-container {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  margin-right: 20px;
+  height: 20%;
+  width: 500px;
+  height: 55vh;
+}
+.about .about-content .members-introduction .image-container .image-container-description {
+  position: absolute;
+  bottom: 0;
+  height: 0;
+  width: 100%;
+  background-color: rgba(10, 10, 10, 0.6);
+  transition: height 0.3s ease-in-out;
+}
+.about .about-content .members-introduction .image-container:hover .image-container-description {
+  height: 100%;
+}
+
+/*# sourceMappingURL=styles.css.map */

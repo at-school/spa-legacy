@@ -42,7 +42,6 @@ class Messages extends React.Component<
     this.socket = io.connect("http://127.0.0.1:5000/message");
 
     this.socket.on("newMessage", () => {
-      console.log("Hello");
       this.updateSelectedRoom();
     });
 

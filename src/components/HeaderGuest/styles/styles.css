@@ -1,0 +1,175 @@
+.navigation {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 48px;
+}
+.navigation .logo {
+  flex-grow: 1;
+}
+.navigation .logo a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: 3;
+}
+.navigation .logo a img {
+  height: 60px;
+  margin-right: 10px;
+}
+.navigation .logo a h1 {
+  color: white;
+  font-size: 35px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+.navigation .logo a h1 .at {
+  font-size: 45px;
+}
+.navigation ul {
+  background-color: transparent;
+  border-bottom: 0;
+  display: flex;
+}
+.navigation ul * {
+  line-height: 48px;
+}
+.navigation ul .ant-menu-item {
+  color: white;
+}
+.navigation ul .ant-menu-item * {
+  color: white !important;
+}
+.navigation ul .ant-menu-item:hover {
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+}
+.navigation ul .ant-menu-item-selected {
+  border-bottom-color: white;
+}
+
+@media only screen and (max-width: 380px) {
+  .ant-layout-header {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navigation {
+    top: 6px;
+  }
+  .navigation .logo a img {
+    height: 35px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    font-size: 25px;
+    margin: 0;
+  }
+  .navigation .logo a h1 .at {
+    font-size: 35px;
+  }
+}
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 380px) {
+  .ant-layout-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .navigation {
+    top: 10px;
+  }
+  .navigation .logo a img {
+    height: 48px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    font-size: 30px;
+    margin: 0;
+  }
+  .navigation .logo a h1 .at {
+    font-size: 40px;
+  }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .ant-layout-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .navigation {
+    top: 10px;
+  }
+  .navigation .logo a img {
+    height: 48px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    font-size: 30px;
+    margin: 0;
+  }
+  .navigation .logo a h1 .at {
+    font-size: 40px;
+  }
+}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .navigation {
+    top: 15px;
+  }
+  .navigation .logo a img {
+    height: 50px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    margin-bottom: 5px;
+  }
+}
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .ant-layout-header {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .navigation {
+    top: 18px;
+  }
+  .navigation .logo a img {
+    height: 51px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    margin-bottom: 6px;
+  }
+}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .ant-layout-header {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+
+  .navigation {
+    height: 48px;
+  }
+  .navigation .logo a img {
+    height: 60px;
+    margin-right: 10px;
+  }
+  .navigation .logo a h1 {
+    font-size: 35px;
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+  .navigation .logo a h1 .at {
+    font-size: 45px;
+  }
+}
+
+/*# sourceMappingURL=styles.css.map */
