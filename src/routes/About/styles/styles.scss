@@ -1,0 +1,173 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
+.about {
+  font-family: "Open Sans", sans-serif;
+
+  .group-photo {
+    width: 100%;
+    height: 100vh;
+    background-image: url("/group-photo.png");
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .group-photo-description {
+      background-color: rgba(111, 215, 255, 0.6);
+      // background-color: rgba(255, 255, 255, 0.6);
+      width: 40%;
+      font-size: 3rem;
+      // color: rgba(0,0,0,.65);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+  }
+
+  .about-company {
+    .about-company-intro {
+      background-image: linear-gradient(0deg,#48c6ef 0,#6f86d6);
+      min-height: 500px;
+      height: 50vh;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+
+      .title {
+        font-size: 2.9rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+      .subtitle {
+        font-size: 2.3rem;
+        font-weight: 300;
+      }
+    }
+
+    .company-mission {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .company-mission-content {
+        width: 60%;
+        .title {
+          font-size: 2.4rem;
+          font-weight: 700;
+          margin-bottom: 32px;
+        }
+
+        .subtitle {
+          font-size: 1.8rem;
+          font-weight: 500;
+          margin-bottom: 24px
+        }
+
+        .description {
+          font-size: 1.4rem;
+          font-weight: 300;
+          line-height: 2.6rem;
+        }
+      }
+
+      .company-mission-figure {
+        font-size: 23rem;
+        flex-grow: 1;
+        text-align: center;
+        color: blue;
+      }
+    }
+  }
+
+  .about-content {
+    padding: 40px 60px;
+    .team-mission {
+      font-size: 2rem;
+      text-align: justify;
+      -moz-text-align-last: center;
+      text-align-last: center;
+      border-bottom: 1px solid #dfe4f3;
+      padding: 10px;
+      padding-bottom: 40px;
+    }
+    .members-introduction {
+      padding-top: 40px;
+      .member-introduction {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 50px;
+        .image-container {
+          flex: 0.4;
+        }
+        .blurb-container {
+          text-align: justify;
+          flex: 0.6;
+          .name {
+            font-size: 2.4rem;
+            margin-bottom: 16px;
+          }
+          .role {
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+          }
+
+          .contribution {
+            font-size: 1.4rem;
+            line-height: 2.1rem;
+          }
+        }
+      }
+
+      .anh-pham {
+        .image-container {
+          background-image: url("/anhpham.png");
+        }
+      }
+
+      .charl-kruger {
+        .image-container {
+          background-image: url("/charlkruger.png");
+        }
+      }
+
+      .stephan-kash {
+        .image-container {
+          background-image: url("/stephankash.png")
+        }
+      }
+
+      .image-container {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        margin-right: 20px;
+        height: 20%;
+        width: 500px;
+        height: 55vh;
+
+        .image-container-description {
+          position: absolute;
+          bottom: 0;
+          height: 0;
+          width: 100%;
+          background-color: rgba(10, 10, 10, 0.6);
+          transition: height 0.3s ease-in-out;
+        }
+
+        &:hover {
+          .image-container-description {
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
