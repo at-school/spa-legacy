@@ -8,6 +8,7 @@ const Header = () => (
         <span className="at">@</span> School
       </h1>
     </a>
+    <div />
   </div>
 );
 
