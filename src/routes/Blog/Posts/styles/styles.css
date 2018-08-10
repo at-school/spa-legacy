@@ -17,5 +17,13 @@
 .blog-outer-container .blog-post-container p {
   font-size: 21px;
 }
+@media only screen and (max-width: 800px) {
+  .blog-outer-container .blog-post-container {
+    width: 90vw;
+  }
+  .blog-outer-container .blog-post-container p {
+    font-size: 18px;
+  }
+}
 
 /*# sourceMappingURL=styles.css.map */

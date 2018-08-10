@@ -74,16 +74,18 @@ $search-background-color: rgba(44, 44, 44, 0.945);
 		}
 		@media only screen and (max-width: 700px) {
 			grid-template-columns: auto;
+			width: 100vw;
 		}
 		.post {
 			padding: auto;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			// align-items: right;
 			padding-left: 40px;
-			height: 200px;
-			border-bottom: dotted 1px black;
+			padding-top: 40px;
+			padding-bottom: 40px;
+			// height: 200px;
+			border-bottom: dotted 1px rgb(170, 170, 170);
 			.post-content {
 				text-align: left;
 				a {
@@ -92,10 +94,19 @@ $search-background-color: rgba(44, 44, 44, 0.945);
 					font-size: 24px;
 				}
 				h4 {
-					font-size: 15
+					font-size: 15;
+					font-weight: 700;
+					color: rgb(109,109,109);
+					line-height: 42px;
+					margin: 0;
 				}
 				h5 {
-					font-size: 14;
+					line-height: 1em;
+					color: rgb(109,109,109);
+					font-weight: 400;
+					font-size: 18px;
+					line-height: 18px;
+					margin: 0;
 				}
 				a:hover {
 					border-color: rgb(0,0,0)

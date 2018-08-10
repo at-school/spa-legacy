@@ -81,6 +81,7 @@
 @media only screen and (max-width: 700px) {
   .main-container .post-container {
     grid-template-columns: auto;
+    width: 100vw;
   }
 }
 .main-container .post-container .post {
@@ -89,8 +90,9 @@
   flex-direction: column;
   justify-content: center;
   padding-left: 40px;
-  height: 200px;
-  border-bottom: dotted 1px black;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-bottom: dotted 1px #aaaaaa;
 }
 .main-container .post-container .post .post-content {
   text-align: left;
@@ -102,9 +104,18 @@
 }
 .main-container .post-container .post .post-content h4 {
   font-size: 15;
+  font-weight: 700;
+  color: #6d6d6d;
+  line-height: 42px;
+  margin: 0;
 }
 .main-container .post-container .post .post-content h5 {
-  font-size: 14;
+  line-height: 1em;
+  color: #6d6d6d;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 18px;
+  margin: 0;
 }
 .main-container .post-container .post .post-content a:hover {
   border-color: black;

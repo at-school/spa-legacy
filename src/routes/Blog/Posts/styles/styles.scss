@@ -12,9 +12,14 @@
 			font-weight: 800px;
 			font-size: 42px;
 		}
-
 		p {
 			font-size: 21px;
+		}
+		@media only screen and (max-width: 800px ) {
+			width: 90vw;
+			p {
+				font-size: 18px;
+			}
 		}
 	}
 }
