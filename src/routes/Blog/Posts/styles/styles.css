@@ -1,0 +1,21 @@
+.blog-outer-container {
+  align-items: center;
+  display: flex;
+  font-family: "Open Sans", sans-serif;
+  flex-direction: column;
+}
+.blog-outer-container .blog-post-container {
+  display: flex;
+  flex-direction: column;
+  width: 55vw;
+}
+.blog-outer-container .blog-post-container h1 {
+  font-family: "Open Sans", sans-serif !important;
+  font-weight: 800px;
+  font-size: 42px;
+}
+.blog-outer-container .blog-post-container p {
+  font-size: 21px;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -5,6 +5,7 @@ import AppContext from "../contexts/AppContext";
 import About from "./About";
 import Authentication from "./Authentication";
 import Blog from './Blog/index';
+import { Posts } from './Blog/Posts/index';
 import Landing from "./Landing";
 import "./styles.css";
 import Teacher from "./Teacher";
@@ -50,6 +51,9 @@ export default class AppNavigator extends React.Component {
 			<Route path="/authentication" component={Authentication} />
 			<Route path='/blog' component={Blog} />
 			<Route path="/about" component={About} />
+			{Posts.map((post, index) =>
+				<Route key={index} path={'/'+post.link} component={post.component} />
+			)}
 		  </React.Fragment>
 		</BrowserRouter>
 	  </AppContext.Provider>

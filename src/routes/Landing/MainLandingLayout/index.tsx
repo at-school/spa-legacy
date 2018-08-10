@@ -10,17 +10,18 @@ const MainLandingLayout: React.SFC<{
   scrollIntoIntro: () => void;
 }> = ({ setIntroRef, scrollIntoIntro }) => (
   <div className="landing-page">
-    <Layout>
-      <Header
-        menu={[
-          { name: "About", url: "/about/company" },
-          { name: "Sign in", url: "authentication/signin" }
-        ]}
-      />
-      <Intro scrollIntoIntro={scrollIntoIntro} />
-      <Content setIntroRef={setIntroRef} />
-      <Footer />
-    </Layout>
+	<Layout>
+	  <Header
+		menu={[
+			{ name: "Blog", url: "/blog" },
+			{ name: "About", url: "/about/company" },
+			{ name: "Sign in", url: "authentication/signin" }
+		]}
+	  />
+	  <Intro scrollIntoIntro={scrollIntoIntro} />
+	  <Content setIntroRef={setIntroRef} />
+	  <Footer />
+	</Layout>
   </div>
 );
 

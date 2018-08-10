@@ -7,7 +7,7 @@ interface IMenu {
   url: string;
 }
 
-interface IHeaderGuestProps {
+export interface IHeaderGuestProps {
   menu: IMenu[];
 }
 
