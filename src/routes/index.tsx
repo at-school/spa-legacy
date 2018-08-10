@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { signout } from "../api/auth";
 import AppContext from "../contexts/AppContext";
 import Authentication from "./Authentication";
+import Blog from './Blog/index';
 import Landing from "./Landing";
 import "./styles.css";
 import Teacher from "./Teacher";
@@ -46,6 +47,7 @@ export default class AppNavigator extends React.Component {
             <Route exact={true} path="/" component={Landing} />
             <Route path="/teacher" component={Teacher} />
             <Route path="/authentication" component={Authentication} />
+			<Route path='/blog' component={Blog} />
           </React.Fragment>
         </BrowserRouter>
       </AppContext.Provider>
