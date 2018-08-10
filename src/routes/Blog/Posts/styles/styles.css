@@ -7,7 +7,7 @@
 .blog-outer-container .blog-post-container {
   display: flex;
   flex-direction: column;
-  width: 55vw;
+  max-width: 750px;
 }
 .blog-outer-container .blog-post-container h1 {
   font-family: "Open Sans", sans-serif !important;
