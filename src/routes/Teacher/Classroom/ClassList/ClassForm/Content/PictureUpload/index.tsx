@@ -46,7 +46,7 @@ export default class PictureUpload extends React.Component<
       };
 
       // add it to the form state
-      this.props.handleImageDataChange(imageFile);
+      this.props.handleImageDataChange(imageFile as any);
     };
 
     return false;

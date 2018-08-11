@@ -30,7 +30,7 @@
 
   .about-company {
     .about-company-intro {
-      background-image: linear-gradient(0deg,#48c6ef 0,#6f86d6);
+      background-image: linear-gradient(0deg, #48c6ef 0, #6f86d6);
       min-height: 500px;
       height: 50vh;
       text-align: center;
@@ -67,7 +67,7 @@
         .subtitle {
           font-size: 1.8rem;
           font-weight: 500;
-          margin-bottom: 24px
+          margin-bottom: 24px;
         }
 
         .description {
@@ -82,6 +82,77 @@
         flex-grow: 1;
         text-align: center;
         color: blue;
+      }
+    }
+
+    .company-timeline {
+      margin-left: -40px;
+      margin-right: -40px;
+      background-color: rgb(135, 197, 237);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .company-timeline-title {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .company-timeline-legend {
+        flex-direction: row;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .color-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          margin: 20px;
+
+          .color-figure {
+            border-width: 1px;
+            border-style: solid;
+            height: 20px;
+            width: 20px;
+            margin-right: 2px;
+            border-radius: 50%;
+          }
+
+          .green-figure {
+            border-color: green;
+          }
+
+          .blue-figure {
+            border-color: blue;
+          }
+
+          .red-figure {
+            border-color:red;
+          }
+        }
+      }
+
+      .title {
+        text-align: center;
+        font-size: 1.7rem;
+        margin-bottom: 20px;
+      }
+      .company-timeline-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        .company-timeline-item {
+          max-width: 28%;
+          margin: 60px;
+          .ant-timeline-item-head {
+            background-color: rgb(135, 197, 237);
+          }
+          .ant-timeline-item-content {
+            color: white;
+          }
+        }
       }
     }
   }
@@ -139,7 +210,7 @@
 
       .stephan-kash {
         .image-container {
-          background-image: url("/stephankash.png")
+          background-image: url("/stephankash.png");
         }
       }
 
@@ -165,6 +236,74 @@
         &:hover {
           .image-container-description {
             height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .about {
+    .about-company {
+      .company-timeline {
+        .company-timeline-item {
+          max-width: 100%;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .about {
+    .about-company {
+      .company-timeline {
+        .company-timeline-item {
+          max-width: 100%;
+          margin: 0;
+        }
+      }
+    }
+
+    .about-content {
+      padding: 20px 30px;
+    }
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .about {
+    .about-company {
+      .company-timeline {
+        .company-timeline-container {
+          .company-timeline-item {
+            max-width: 40%;
+            margin: 48px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .about {
+    .about-company {
+      .company-timeline {
+        .company-timeline-container {
+          .company-timeline-item {
+            max-width: 25%;
+            margin: 48px;
           }
         }
       }

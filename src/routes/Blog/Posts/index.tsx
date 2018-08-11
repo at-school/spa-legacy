@@ -1,32 +1,11 @@
-import ONE from './12AUG18'
+import Post00001 from "./Post00001";
 
-export const Posts = [
-	{
-		'title':'this is our first post',
-		'author': 'Charl Kruger',
-		'date': '24 February 2001',
-		'link': '24-FEB-2001',
-		'component': ONE
-	},
-	{
-		'title': 'and this one is our second',
-		'author': 'Charl Kruger',
-		'date': '24 February 2001',
-		'link': '25-FEB-2001',
-		'component': ONE
-	},
-	{
-		'title': 'yes boys',
-		'author': 'Charl Kruger',
-		'date': '24 February 2001',
-		'link': '26-FEB-2001',
-		'component': ONE
-	},
-	{
-		'title': 'far out bill u suck',
-		'author': 'Charl Kruger',
-		'date': '24 February 2001',
-		'link': '27-FEB-2001',
-		'component': ONE
-	}
-]
+export const posts = [
+  {
+    title: "Project Planning",
+    author: ["Anh Pham", "Char Kruger"],
+    date: "12 August 2018",
+    postId: "00001",
+    component: Post00001
+  }
+];
