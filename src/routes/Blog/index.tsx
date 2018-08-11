@@ -13,22 +13,25 @@ interface IPostObject {
 
 interface IState {
 	search: string
+	testSearch: string
 	focus: boolean
 	posts: IPostObject[]
 }
 
 export default class Blog extends Component<{}, IState> {
 
-	// public const stuff = { 'author': 'Charl Kruger', 'date': '24 February 2001' }
-
 	public state = {
 		search: '',
+		testSearch: '',
 		focus: false,
 		posts: Posts
 	}
 
 	public handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.setState({search : e.target.value})
+	}
+	public handleTestSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		this.setState({testSearch : e.target.value})
 	}
 
 	public handleFocus = () => {
@@ -48,19 +51,31 @@ export default class Blog extends Component<{}, IState> {
 				/>
 					<div className='header'>
 							<span className='heading'>Atschool Blog Posts</span>
-							<div className={'search-container'+(this.state.focus ? ' fade': '')}>
+							{/* <div className={'search-container'+(this.state.focus ? ' fade': '')}>
 								<Icon type="search" />
 								<div className='search'>
 									<input
 										type="text"
-										name="" id=""
+										className="old"
 										onChange={this.handleSearch}
 										onFocus={this.handleFocus}
 										onBlur={this.handleFocus}
 										placeholder='Search posts'
 									/>
 								</div>
+							</div> */}
+						<div className='search-outer-container'>
+							<Icon type="search" />
+							<div className='search-inner-container'>
+								<input
+									type='text'
+									onChange={this.handleSearch}
+									onFocus={this.handleFocus}
+									onBlur={this.handleFocus}
+									placeholder='Search posts'
+								/>
 							</div>
+						</div>
 					</div>
 					<div className='main-container'>
 						<div className="post-container">

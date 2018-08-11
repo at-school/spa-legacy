@@ -30,3 +30,5 @@ export const Posts = [
 		'component': ONE
 	}
 ]
+
+

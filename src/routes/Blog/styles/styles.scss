@@ -1,6 +1,5 @@
 $search-height: 50px;
 $search-background-color: rgba(44, 44, 44, 0.945);
-// $search-background-color-hover: rgba(58, 58, 58, 0.945);
 
 .header {
 	font-family: 'Open Sans', sans-serif !important;
@@ -16,40 +15,39 @@ $search-background-color: rgba(44, 44, 44, 0.945);
 		font-size: 50px;
 		padding-right: 15px;
 	}
-	.search-container {
-		align-items: center;
+	.search-outer-container {
 		background-color: $search-background-color;
+		align-items: center;
 		border-radius: 5px;
 		display: flex;
 		flex-direction: row;
-		font-size: $search-height * 0.50;
 		justify-content: center;
+		height: 50px;
 		.anticon-search {
 			margin: 0 10px !important;
+			font-size: $search-height * 0.50
 		}
-		.search {
-			display: flex;
-			flex-direction: column;
-			height: $search-height;
-			justify-content: center;
-				input {
-					background-color: transparent;
-					border: none;
-					height: 65%;
-					width: 20vw;
-					&:focus{
-						outline: none
-					}
+		.search-inner-container {
+			height: 85%;
+			input {
+				height: 100%;
+				font-size: $search-height * 0.50;
+				background: transparent;
+				border: none;
+				color: white !important;
+				&:focus{
+					outline: none
 				}
 			}
 		}
+	};
 	@media only screen and (max-width: 800px) {
 		flex-direction: column;
 		.heading {
 			font-size: 10vw;
 			padding: 0 !important
 		}
-		.search-container .search input {
+		.search-outer-container .search-inner-container input,  {
 			width: 80vw !important;
 		}
 	}
@@ -104,7 +102,7 @@ $search-background-color: rgba(44, 44, 44, 0.945);
 					line-height: 1em;
 					color: rgb(109,109,109);
 					font-weight: 400;
-					font-size: 18px;
+					font-size: 15px;
 					line-height: 18px;
 					margin: 0;
 				}
