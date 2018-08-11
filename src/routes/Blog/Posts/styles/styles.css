@@ -1,29 +1,37 @@
 .blog-outer-container {
   align-items: center;
   display: flex;
-  font-family: "Open Sans", sans-serif;
   flex-direction: column;
+  padding-left: 200px;
+  padding-right: 200px;
 }
-.blog-outer-container .blog-post-container {
+.blog-outer-container .blog-post-header-container {
   display: flex;
   flex-direction: column;
-  max-width: 750px;
+  color: #282c34;
+  width: 100%;
 }
-.blog-outer-container .blog-post-container h1 {
-  font-family: "Open Sans", sans-serif !important;
-  font-weight: 800px;
+.blog-outer-container .blog-post-header-container h1 {
+  font-weight: 500;
   font-size: 42px;
+  font-size: 60px;
+  margin-bottom: 0;
+  margin-top: 40px;
+  line-height: 65px;
 }
-.blog-outer-container .blog-post-container p {
-  font-size: 21px;
+.blog-outer-container .blog-post-header-container p {
+  font-weight: 400;
+  margin-top: 10px;
+  margin-bottom: 40px;
 }
-@media only screen and (max-width: 800px) {
-  .blog-outer-container .blog-post-container {
-    width: 90vw;
-  }
-  .blog-outer-container .blog-post-container p {
-    font-size: 18px;
-  }
+.blog-outer-container .blog-post-header-container h4 {
+  font-size: 18px;
+  font-weight: 300;
+  color: #6d6d6d;
+}
+.blog-outer-container .blog-post-content-container {
+  display: flex;
+  flex-direction: column;
 }
 
 /*# sourceMappingURL=styles.css.map */

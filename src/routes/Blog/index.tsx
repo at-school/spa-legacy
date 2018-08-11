@@ -36,6 +36,7 @@ class Blog extends Component<any, IState> {
             { name: "All Posts", url: "/blog" },
             { name: "Sign In", url: "/authentication/signin" }
           ]}
+          background={this.props.location.pathname !== "/blog"}
         />
 
         {this.props.location.pathname === "/blog" && (
