@@ -53,7 +53,7 @@ $search-background-color: rgba(44, 44, 44, 0.945);
 	}
 }
 .fade {
-	background-color: lighten( $search-background-color, 5% ) !important;
+  background-color: lighten($search-background-color, 5%) !important;
 }
 .main-container {
 	margin-top: 5vh;

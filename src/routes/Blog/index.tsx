@@ -1,99 +1,63 @@
-import { Icon } from 'antd';
-import React, { Component, Fragment } from 'react';
-import HeaderGuest from '../../components/HeaderGuest/index';
-import { Posts } from './Posts/index'
-import './styles/styles.css';
-
-interface IPostObject {
-	title: string
-	author: string
-	date: string
-	link: string
-}
+import React, { Component, Fragment } from "react";
+import { Route, withRouter } from "react-router-dom";
+import HeaderGuest from "../../components/HeaderGuest";
+import AllPosts from "./AllPosts";
+import { posts } from "./Posts";
+import "./styles/styles.css";
 
 interface IState {
-	search: string
-	testSearch: string
-	focus: boolean
-	posts: IPostObject[]
+  searchPattern: string;
+  focus: boolean;
 }
 
-export default class Blog extends Component<{}, IState> {
+class Blog extends Component<any, IState> {
+  // public const stuff = { 'author': 'Charl Kruger', 'date': '24 February 2001' }
 
-	public state = {
-		search: '',
-		testSearch: '',
-		focus: false,
-		posts: Posts
-	}
+  public state = {
+    searchPattern: "",
+    focus: false
+  };
 
-	public handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({search : e.target.value})
-	}
-	public handleTestSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({testSearch : e.target.value})
-	}
+  public handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchPattern: e.target.value });
+  };
 
-	public handleFocus = () => {
-		this.setState((prevState) => ({
-			focus: !prevState.focus
-		}));
-	}
+  public handleToggleFocus = () => {
+    this.setState(prevState => ({
+      focus: !prevState.focus
+    }));
+  };
 
-	public render() {
-		return (
-			<Fragment>
-				<HeaderGuest
-					menu={[
-					{ name: "Company", url: "/about/company" },
-					{ name: "Team", url: "/about/team" }
-					]}
-				/>
-					<div className='header'>
-							<span className='heading'>Atschool Blog Posts</span>
-							{/* <div className={'search-container'+(this.state.focus ? ' fade': '')}>
-								<Icon type="search" />
-								<div className='search'>
-									<input
-										type="text"
-										className="old"
-										onChange={this.handleSearch}
-										onFocus={this.handleFocus}
-										onBlur={this.handleFocus}
-										placeholder='Search posts'
-									/>
-								</div>
-							</div> */}
-						<div className='search-outer-container'>
-							<Icon type="search" />
-							<div className='search-inner-container'>
-								<input
-									type='text'
-									onChange={this.handleSearch}
-									onFocus={this.handleFocus}
-									onBlur={this.handleFocus}
-									placeholder='Search posts'
-								/>
-							</div>
-						</div>
-					</div>
-					<div className='main-container'>
-						<div className="post-container">
-									{this.state.posts.map((post, index) => {
-										if( post.title.includes(this.state.search.toLowerCase()) ) {
-											return <div key={index} className='post'>
-																<div className='post-content'>
-																	<a href={'/'+post.link}>{post.title}</a>
-																	<h4>{post.date}</h4>
-																	<h5>{post.author}</h5>
-																</div>
-														</div>
-											} return false
-									}
-								)}
-							</div>
-						</div>
-			</Fragment>
-		)
-	}
+  public render() {
+    return (
+      <Fragment>
+        <HeaderGuest
+          menu={[
+            { name: "All Posts", url: "/blog" },
+            { name: "Sign In", url: "/authentication/signin" }
+          ]}
+        />
+
+        {this.props.location.pathname === "/blog" && (
+          <AllPosts
+            posts={posts}
+            handleSearch={this.handleSearch}
+            handleToggleFocus={this.handleToggleFocus}
+            focus={this.state.focus}
+            searchPattern={this.state.searchPattern}
+          />
+        )}
+        {posts.map((post, index) => (
+          <Route
+            exact={true}
+            key={index}
+            path={"/blog/post/" + post.postId}
+            component={post.component}
+          />
+        ))}
+      </Fragment>
+    );
+  }
 }
+
+export default withRouter(Blog);
