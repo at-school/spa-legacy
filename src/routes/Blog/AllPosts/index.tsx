@@ -10,12 +10,12 @@ const AllPosts: React.SFC<any> = ({
   searchPattern
 }) => (
   <React.Fragment>
-    <AllPostsHeader
-      handleSearch={handleSearch}
-      handleToggleFocus={handleToggleFocus}
-      focus={focus}
-    />
-    <PostList posts={posts} searchPattern={searchPattern} />
+	<AllPostsHeader
+	  handleSearch={handleSearch}
+	  handleToggleFocus={handleToggleFocus}
+	  focus={focus}
+	/>
+	<PostList posts={posts} searchPattern={searchPattern} />
   </React.Fragment>
 );
 

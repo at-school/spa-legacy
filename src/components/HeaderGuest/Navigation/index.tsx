@@ -7,11 +7,11 @@ interface IMenu {
   url: string;
 }
 
-export interface IHeaderGuestProps {
+export interface INavigationProps {
   menu: IMenu[];
 }
 
-const Navigation: React.SFC<IHeaderGuestProps> = ({ menu }) => (
+const Navigation: React.SFC<INavigationProps> = ({ menu }) => (
   <Menu
     theme="light"
     mode="horizontal"

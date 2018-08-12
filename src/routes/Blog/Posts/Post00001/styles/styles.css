@@ -1,0 +1,59 @@
+.post-00001 .title {
+  border-top: 1px solid #ececec;
+  padding-top: 40px;
+  margin-top: 44px;
+  line-height: 1.2;
+  font-size: 2.4em;
+  font-weight: bold;
+  border-top: 1px solid #ececec;
+}
+.post-00001 .description {
+  text-align: justify;
+  margin-top: 30px;
+  font-size: 1.4em;
+  line-height: 1.7;
+}
+.post-00001 .subtitle {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: -10px;
+  margin-top: 30px;
+}
+.post-00001 .description-abstract {
+  font-size: 21px;
+  font-weight: 400;
+  color: #6d6d6d;
+}
+.post-00001 .description-subitem {
+  font-size: 21px;
+  font-weight: 300;
+  margin-top: 30px;
+}
+.post-00001 .success-table {
+  margin: 30px 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+.post-00001 .success-table th:nth-child(2), .post-00001 .success-table th:nth-child(5) {
+  width: 10%;
+}
+.post-00001 .success-table td:nth-child(2), .post-00001 .success-table td:nth-child(5) {
+  width: 10%;
+}
+.post-00001 .success-table th, .post-00001 .success-table td {
+  padding: 10px 0px 10px 5px;
+  border: 1px solid #ddd;
+}
+@media only screen and (max-width: 700px) {
+  .post-00001 .success-table {
+    font-size: 10px;
+  }
+  .post-00001 .description-subitem {
+    font-size: 18px !important;
+  }
+  .post-00001 .subtitle {
+    font-size: 21px;
+  }
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -172,5 +172,18 @@
     font-size: 45px;
   }
 }
+.navigation-background {
+  background-color: #87c5ed;
+  position: relative;
+  top: 0px;
+  height: 69px;
+}
+.navigation-background .logo a img {
+  height: 50px;
+}
+.navigation-background li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 /*# sourceMappingURL=styles.css.map */
