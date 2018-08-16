@@ -23,12 +23,84 @@
   position: relative;
 }
 .chat-window .chat-window-main-content .chat-window-main-content-container {
-  background-color: red;
+  background-color: white;
   position: absolute;
   height: 500px;
   width: 300px;
   bottom: 60px;
   right: 25px;
+  border-radius: 10px;
+  box-shadow: 0 7px 40px 2px rgba(147, 148, 149, 0.3);
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container .chat-window-content-header {
+  height: 10%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #1890ff;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-message-container {
+  flex-grow: 1;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input {
+  background-color: #f4f7f9;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: background-color 0.2s ease-in, box-shadow 0.2s ease;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input input {
+  background-color: #f4f7f9;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-width: 0;
+  outline: none;
+  box-shadow: none;
+  transition: background-color 0.2s ease-in, box-shadow 0.2s ease;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input input:focus, .chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input input:hover {
+  outline: none;
+  border: none;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input .ulities-container {
+  display: flex;
+  flex-direction: row;
+  font-size: 20px;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .chat-window-input .ulities-container i {
+  margin-right: 3px;
+  margin-left: 3px;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .active {
+  box-shadow: 0 -5px 20px 0 rgba(150, 165, 190, 0.2);
+  background-color: #fff;
+}
+.chat-window .chat-window-main-content .chat-window-main-content-container > div .active input {
+  background-color: #fff;
+}
+.chat-window .chatwindow-visible-enter {
+  opacity: 0.01;
+  transform: scale(0.9) translateY(50%);
+}
+.chat-window .chatwindow-visible-enter-active {
+  opacity: 1;
+  transform: scale(1) translateY(0%);
+  transition: all 0.1s ease-out;
+}
+.chat-window .chatwindow-visible-exit {
+  opacity: 1;
+  transform: scale(1) translateY(0%);
+}
+.chat-window .chatwindow-visible-exit-active {
+  opacity: 0.01;
+  transform: scale(0.9) translateY(50%);
+  transition: all 0.1s ease-out;
 }
 
 /*# sourceMappingURL=styles.css.map */

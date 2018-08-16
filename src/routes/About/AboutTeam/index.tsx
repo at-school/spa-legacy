@@ -21,8 +21,9 @@ export default class AboutTeam extends React.Component {
               <div className="blurb-container">
                 <div className="name">Anh Pham</div>
                 <div className="role">
-                  <strong>Roles: </strong>Project Lead, Machine Learning
-                  Engineer, Full Stack Web Developer, UX Designer
+                  <strong>Roles: </strong>
+                  Project Lead, Machine Learning Engineer, Full Stack Web
+                  Developer, UX Designer
                 </div>
                 <div className="contribution">
                   <strong>Contributions: </strong>
@@ -44,13 +45,16 @@ export default class AboutTeam extends React.Component {
               <div className="blurb-container">
                 <div className="name">Charl Kruger</div>
                 <div className="role">
-                  <strong>Roles: </strong>Front End Developer, Data Analystic, UX Designer
+                  <strong>Roles: </strong>
+                  Front End Developer, Data Analystic, UX Designer
                 </div>
                 <div className="contribution">
                   <strong>Contributions: </strong>
-                  Charl is a Data Scientist and a Designer. He has used his Data Science skills
-                  to make an algorithm that helps teachers to find hidden trends related to marks, attendaces.
-                  He is also a
+                  Charl is a Data Scientist and a Designer. He has used his Data
+                  Science skills to make an algorithm that helps teachers to
+                  find hidden trends related to marks, attendaces. He is also a
+                  Front End Developer, where his main role is to design web
+                  applications as well as creating graphics for the application.
                 </div>
               </div>
             </div>
@@ -61,18 +65,12 @@ export default class AboutTeam extends React.Component {
               <div className="blurb-container">
                 <div className="name">Stephan Kashkarov</div>
                 <div className="role">
-                  <strong>Roles: </strong>Back End Developer
+                  <strong>Roles: </strong>
+                  Back End Developer
                 </div>
                 <div className="contribution">
                   <strong>Contributions: </strong>
-                  Anh is a React Developer as well as Machine Learning Engineer.
-                  With his full stack development skills, he has developed the
-                  Web Application and Mobile Application of the product. He also
-                  contributes his Machine Learning knowledge into developing a
-                  facial detection algorithm and a sentiment analysis algorithm.
-                  In addition, he is in charge of the quality of the product,
-                  and making sure that the development is on the current time
-                  track.
+                  
                 </div>
               </div>
             </div>

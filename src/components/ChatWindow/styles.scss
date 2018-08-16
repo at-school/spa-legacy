@@ -14,23 +14,102 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: box-shadow .3s ease;
+    transition: box-shadow 0.3s ease;
 
     &:hover {
-      box-shadow: 0 0 27px 1.5px rgba(0,0,0,.2);
+      box-shadow: 0 0 27px 1.5px rgba(0, 0, 0, 0.2);
     }
-
-    
-  }     
+  }
   .chat-window-main-content {
     position: relative;
     .chat-window-main-content-container {
-      background-color: red;
+      background-color: white;
       position: absolute;
       height: 500px;
       width: 300px;
       bottom: 60px;
       right: 25px;
+      border-radius: 10px;
+      box-shadow: 0 7px 40px 2px hsla(210, 1%, 58%, 0.3);
+
+      .chat-window-content-header {
+        height: 10%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: #1890ff;
+      }
+
+      & > div {
+        display: flex;
+        flex-direction: column;
+        height: 90%;
+        .chat-window-message-container {
+          flex-grow: 1;
+        }
+
+        .chat-window-input {
+          background-color: #f4f7f9;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+          transition: background-color 0.2s ease-in, box-shadow 0.2s ease;
+          input {
+            background-color: #f4f7f9;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            border-width: 0;
+            outline: none;
+            box-shadow: none;
+
+            &:focus,
+            &:hover {
+              outline: none;
+              border: none;
+            }
+            transition: background-color 0.2s ease-in, box-shadow 0.2s ease;
+          }
+
+          .ulities-container {
+            display: flex;
+            flex-direction: row;
+            font-size: 20px;
+            i {
+              margin-right: 3px;
+              margin-left: 3px;
+            }
+          }
+        }
+
+        .active {
+          box-shadow: 0 -5px 20px 0 rgba(150, 165, 190, 0.2);
+          background-color: #fff;
+
+          input {
+            background-color: #fff;
+          }
+        }
+      }
     }
-  }                                    
+  }
+
+  .chatwindow-visible-enter {
+    opacity: 0.01;
+    transform: scale(0.9) translateY(50%);
+  }
+  .chatwindow-visible-enter-active {
+    opacity: 1;
+    transform: scale(1) translateY(0%);
+    transition: all 0.1s ease-out;
+  }
+  .chatwindow-visible-exit {
+    opacity: 1;
+    transform: scale(1) translateY(0%);
+  }
+  .chatwindow-visible-exit-active {
+    opacity: 0.01;
+    transform: scale(0.9) translateY(50%);
+    transition: all 0.1s ease-out;
+  }
 }

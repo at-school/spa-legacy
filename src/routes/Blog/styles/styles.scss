@@ -2,114 +2,114 @@ $search-height: 50px;
 $search-background-color: rgba(44, 44, 44, 0.945);
 
 .header {
-	font-family: 'Open Sans', sans-serif !important;
-	align-items: center;
-	background-image: url('/blogimage.jpg');
-	color: white;
-	display: flex;
-	flex-direction: row;
-	min-height: 220px;
-	height: 40vh;
-	justify-content: center;
-	.heading {
-		font-size: 50px;
-		padding-right: 15px;
-	}
-	.search-outer-container {
-		background-color: $search-background-color;
-		align-items: center;
-		border-radius: 5px;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		height: 50px;
-		.anticon-search {
-			margin: 0 10px !important;
-			font-size: $search-height * 0.50
-		}
-		.search-inner-container {
-			height: 85%;
-			input {
-				height: 100%;
-				font-size: $search-height * 0.50;
-				background: transparent;
-				border: none;
-				color: white !important;
-				&:focus{
-					outline: none
-				}
-			}
-		}
-	};
-	@media only screen and (max-width: 800px) {
-		flex-direction: column;
-		.heading {
-			font-size: 10vw;
-			padding: 0 !important
-		}
-		.search-outer-container .search-inner-container input,  {
-			width: 80vw !important;
-		}
-	}
+  font-family: "Open Sans", sans-serif !important;
+  align-items: center;
+  background-image: url("/blogimage.jpg");
+  color: white;
+  display: flex;
+  flex-direction: row;
+  min-height: 220px;
+  height: 40vh;
+  justify-content: center;
+  .heading {
+    font-size: 50px;
+    padding-right: 15px;
+  }
+  .search-outer-container {
+    background-color: $search-background-color;
+    align-items: center;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 50px;
+    .anticon-search {
+      margin: 0 10px !important;
+      font-size: $search-height * 0.5;
+    }
+    .search-inner-container {
+      height: 85%;
+      input {
+        height: 100%;
+        font-size: $search-height * 0.5;
+        background: transparent;
+        border: none;
+        color: white !important;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 800px) {
+    flex-direction: column;
+    .heading {
+      font-size: 10vw;
+      padding: 0 !important;
+    }
+    .search-outer-container .search-inner-container input {
+      width: 80vw !important;
+    }
+  }
 }
 .fade {
   background-color: lighten($search-background-color, 5%) !important;
 }
 .main-container {
-	margin-top: 5vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	.post-container {
-		width: 65vw;
-		display: grid;
-		grid-template-columns: auto auto auto;
-		@media only screen and (max-width: 1150px) {
-			width: 85vw;
-		}
-		@media only screen and (max-width: 950px) {
-			grid-template-columns: auto auto;
-		}
-		@media only screen and (max-width: 700px) {
-			grid-template-columns: auto;
-			width: 100vw;
-		}
-		.post {
-			padding: auto;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			padding-left: 40px;
-			padding-top: 40px;
-			padding-bottom: 40px;
-			// height: 200px;
-			border-bottom: dotted 1px rgb(170, 170, 170);
-			.post-content {
-				text-align: left;
-				a {
-					color: rgb(0,0,0);
-					border-bottom: 1px solid rgb(236, 236, 236);
-					font-size: 24px;
-				}
-				h4 {
-					font-size: 15;
-					font-weight: 700;
-					color: rgb(109,109,109);
-					line-height: 42px;
-					margin: 0;
-				}
-				h5 {
-					line-height: 1em;
-					color: rgb(109,109,109);
-					font-weight: 400;
-					font-size: 15px;
-					line-height: 18px;
-					margin: 0;
-				}
-				a:hover {
-					border-color: rgb(0,0,0)
-				}
-			}
-		}
-	}
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .post-container {
+    width: 65vw;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    @media only screen and (max-width: 1150px) {
+      width: 85vw;
+    }
+    @media only screen and (max-width: 950px) {
+      grid-template-columns: auto auto;
+    }
+    @media only screen and (max-width: 700px) {
+      grid-template-columns: auto;
+      width: 100vw;
+    }
+    .post {
+      padding: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 40px;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      // height: 200px;
+      border-bottom: dotted 1px rgb(170, 170, 170);
+      .post-content {
+        text-align: left;
+        a {
+          color: rgb(0, 0, 0);
+          border-bottom: 1px solid rgb(236, 236, 236);
+          font-size: 24px;
+        }
+        h4 {
+          font-size: 15;
+          font-weight: 700;
+          color: rgb(109, 109, 109);
+          line-height: 42px;
+          margin: 0;
+        }
+        h5 {
+          line-height: 1em;
+          color: rgb(109, 109, 109);
+          font-weight: 400;
+          font-size: 15px;
+          line-height: 18px;
+          margin: 0;
+        }
+        a:hover {
+          border-color: rgb(0, 0, 0);
+        }
+      }
+    }
+  }
 }
