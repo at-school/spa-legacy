@@ -44,7 +44,7 @@ const createMainLayout = (Navigation: React.SFC) => (Content: React.SFC) => {
         <div>
           <Layout id="main-layout">
             <Sider
-              navigation={Navigation}
+              navigation={Navigation as any}
               collapsed={this.state.collapsed}
               onCollapse={this.onCollapse}
               pathname={this.props.pathname}

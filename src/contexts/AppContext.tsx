@@ -9,6 +9,7 @@ interface IAppProviderStore {
   /** Access level of the user: 1 is student, 2 is teacher */
   accessLevel: number | null;
   fullname: string | null;
+  username: string | null;
   signinUser: (userInfo: any) => void;
   signoutUser: () => void;
 }

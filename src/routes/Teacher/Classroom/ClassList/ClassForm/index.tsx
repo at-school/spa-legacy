@@ -4,6 +4,7 @@ import React from "react";
 import { teacherAddClass } from "../../../../../api/classroom";
 import AppContext from "../../../../../contexts/AppContext";
 import { IClassData } from "../../interfaces";
+import { getClassQuery } from "../../queries/queries";
 import FormContent from "../ClassForm/Content";
 import FormHeader from "../ClassForm/Header";
 
@@ -11,7 +12,7 @@ interface IClassFormProps {
   visible: boolean;
   toggleClassForm: () => void;
   // add class could be a function be either modifying the class or adding a new class
-  addClass: (newClass: IClassData) => void;
+  addClass: any;
   // if the class data is not null, then it means the component
   // will be acting as the edit class form
   classData?: IClassData | null;
@@ -41,10 +42,10 @@ interface IClassFormState {
 // only applicable for edit classform
 const getStatesFromProps = (props: IClassFormProps) => {
   // get image format from the base64 data of the avatar
-  if (props.classData) {
-    let imageFormat = props.classData.avatarData[5];
+  if (props.classData && props.classData.avatar) {
+    let imageFormat = props.classData.avatar[5];
     for (let i = 1; i < 12; i++) {
-      const currentLetter = props.classData.avatarData[5 + i];
+      const currentLetter = props.classData.avatar[5 + i];
       if (currentLetter === ";") {
         break;
       }
@@ -55,22 +56,24 @@ const getStatesFromProps = (props: IClassFormProps) => {
       uid: -1,
       name: "avatar",
       status: "done",
-      url: props.classData.avatarData,
+      url: props.classData.avatar,
       size: 10000,
       type: imageFormat
     };
     // update the state
-    return {
-      id: props.classData.id,
+    const data = {
+      id: props.classData.Id,
       className: props.classData.name,
       classDescription: props.classData.description,
-      classLine: props.classData.line,
-      classFalcuty: props.classData.falcuty.toString(),
+      classLine: props.classData.lineId,
+      classFalcuty: props.classData.falcutyId,
       imageFile: [imageFile],
       classData: props.classData,
       onSendingData: false,
       current: 0
     };
+    console.log(data);
+    return data;
   }
   return {};
 };
@@ -96,7 +99,6 @@ class ClassForm extends React.Component<
       if (JSON.stringify(props.classData) === JSON.stringify(state.classData)) {
         return null;
       } else {
-        console.log("Props are different");
         return getStatesFromProps(props);
       }
     }
@@ -122,6 +124,10 @@ class ClassForm extends React.Component<
     if (this.props.classData) {
       this.setState({ classData: this.props.classData });
     }
+  }
+
+  public shouldComponentUpdate(props: any) {
+    return true;
   }
 
   // handle all change of input: name, description, etc.
@@ -206,45 +212,40 @@ class ClassForm extends React.Component<
               classImageData: avatarData
             },
             this.props.token
-          ).then(() => {
-            this.props.addClass({
-              id: classData.id,
-              name: this.state.className,
-              description: this.state.classDescription,
-              line: this.state.classLine,
-              falcuty: this.state.classFalcuty,
-              avatarData
-            });
-            this.props.toggleClassForm();
-          }).catch(() => this.props.toggleClassForm());
+          )
+            .then(() => {
+              this.props.addClass({
+                id: classData.id,
+                name: this.state.className,
+                description: this.state.classDescription,
+                line: this.state.classLine,
+                falcuty: this.state.classFalcuty,
+                avatarData
+              });
+              this.props.toggleClassForm();
+            })
+            .catch(() => this.props.toggleClassForm());
         } else {
           // add class to the server
           // get back the id of the class of the server
           // append the class to the original class array
           // close the form
-          teacherAddClass(
-            {
-              className: this.state.className,
-              classDescription: this.state.classDescription,
-              classLine: this.state.classLine,
-              classFalcuty: this.state.classFalcuty,
-              classImageData: avatarData
-            },
-            this.props.token
-          ).then(res => {
-            this.props.addClass({
-              id: res.id,
-              name: this.state.className,
-              description: this.state.classDescription,
-              line: this.state.classLine,
-              avatarData,
-              falcuty: this.state.classFalcuty
-            });
-            this.props.toggleClassForm();
-          }).catch(() => this.props.toggleClassForm);
+          console.log(this.state)
+          this.props
+            .addClass({
+              variables: {
+                name: this.state.className,
+                description: this.state.classDescription,
+                avatar: avatarData,
+                falcutyId: this.state.classFalcuty,
+                lineId: this.state.classLine
+              },
+              refetchQueries: [{ query: getClassQuery }],
+              awaitRefetchQueries: true
+            })
+            .then((res: any) => this.props.toggleClassForm());
         }
-      }
-      else {
+      } else {
         // do something when the form is not valid
       }
     } else {
@@ -278,7 +279,7 @@ class ClassForm extends React.Component<
         current: 0,
         onSendingData: false
       });
-    } 
+    }
     // it is in the modifying class state
     // it will get the oringal class data and set it as state
     else {

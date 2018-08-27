@@ -6,7 +6,7 @@ interface IClassCardProps {
   toggleEditClassForm: () => void;
   // invoke when user clicks on remove class
   removeClass: () => void;
-  avatarData: string;
+  avatar: string;
   name: string;
   description: string;
 }
@@ -14,7 +14,7 @@ interface IClassCardProps {
 const ClassCard: React.SFC<IClassCardProps> = ({
   toggleEditClassForm,
   removeClass,
-  avatarData,
+  avatar,
   name,
   description
 }) => (
@@ -32,7 +32,7 @@ const ClassCard: React.SFC<IClassCardProps> = ({
   >
     <div className="class-card-body">
       <div className="class-card-avatar">
-        <Avatar src={avatarData} shape="circle" size="large" />
+        <Avatar src={avatar} shape="circle" size="large" />
       </div>
       <div className="class-card-content">
         <div className="class-card-content-title">{name}</div>

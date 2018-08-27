@@ -1,42 +1,35 @@
-import { Card, Icon } from "antd";
 import React from "react";
+import { ApolloConsumer, graphql } from "react-apollo";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import {
-  teacherGetClasses,
-  teacherRemoveClass
-} from "../../../../api/classroom";
+import { branch, compose, renderComponent } from "recompose";
 import AppContext from "../../../../contexts/AppContext";
 import { IClassData } from "../interfaces";
+import {
+  getClassQuery,
+  getClassQueryById,
+  removeClassMutation
+} from "../queries/queries";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
 import AddClassForm from "./NewClassForm";
 
 interface IClassListState {
   classes: IClassData[];
-  newClassFormVisible: boolean;
   editClassFormVisible: boolean;
   // current selection of the class for edit class form
   currentSelectClass: number;
+  classData: object;
 }
 
-class ClassList extends React.Component<{ token: string }, IClassListState> {
+class ClassList extends React.Component<
+  { token: string; data: any; mutate: any; client: any },
+  IClassListState
+> {
   public state = {
-    newClassFormVisible: false,
     editClassFormVisible: false,
     classes: [],
-    currentSelectClass: 0
-  };
-
-  public componentDidMount() {
-    // get all the classes of the user
-    teacherGetClasses(this.props.token).then(res =>
-      this.setState({ classes: res.results })
-    );
-  }
-
-  // toggle close and open the add class form
-  public toggleAddClassForm = () => {
-    this.setState({ newClassFormVisible: !this.state.newClassFormVisible });
+    currentSelectClass: 0,
+    classData: {}
   };
 
   // toggle close and open the edit class form
@@ -48,13 +41,22 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
 
   // toggle open the edit class form. need the update the state
   // so classData props pass down would change
-  public openEditClassForm = (classId: number) => () => {
-    this.setState({ currentSelectClass: classId }, this.toggleEditClassForm);
-  };
-
-  // add new class but locally, append the class to the current list of class
-  public addNewClass = (classData: IClassData) => {
-    this.setState(prevState => ({ classes: [...prevState.classes, classData] }));
+  public openEditClassForm = (classId: string) => () => {
+    this.props.client
+      .query({
+        query: getClassQueryById,
+        variables: { Id: classId }
+      })
+      .then((res: any) =>
+        this.setState(
+          { classData: res.data.classroom[0] },
+          this.toggleEditClassForm
+        )
+      );
+    // this.setState(
+    //   { currentSelectClass: classId as any },
+    //   this.toggleEditClassForm
+    // );
   };
 
   // edit class but locally, modfiy the current class list
@@ -72,14 +74,13 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
   // remove class of a user both locally and on the server
   // after removing class from the server
   // remove the class from the state by filtering the id
-  public removeClass = (id: string, token: string) => () => {
-    teacherRemoveClass(id, token).then(() =>
-      this.setState(prevState => {
-        return {
-          classes: prevState.classes.filter(c => c.id.toString() !== id)
-        };
-      })
-    );
+  public removeClass = (id: string) => () => {
+    this.props.mutate({
+      variables: {
+        Id: id
+      },
+      refetchQueries: [{ query: getClassQuery }]
+    });
   };
 
   public render() {
@@ -87,47 +88,28 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
       <div className="class-list-container">
         <TransitionGroup className="class-list">
           <CSSTransition key={"-1"} timeout={500} classNames="fade">
-            <div>
-              <Card
-                onClick={this.toggleAddClassForm}
-                className="add-class-card"
-              >
-                <Icon type="plus" /> Add new class
-              </Card>
-            </div>
+            <AddClassForm />
           </CSSTransition>
-          {this.state.classes.map((c: any, index: number) => (
-            <CSSTransition
-              key={c.id.toString()}
-              timeout={500}
-              classNames="fade"
-            >
+          {this.props.data.user[0].classrooms.map((c: any, index: number) => (
+            <CSSTransition key={c.Id} timeout={500} classNames="fade">
               <div>
                 <ClassCard
                   name={c.name}
                   description={c.description}
-                  avatarData={c.avatarData}
-                  removeClass={this.removeClass(
-                    c.id.toString(),
-                    this.props.token
-                  )}
-                  toggleEditClassForm={this.openEditClassForm(index)}
+                  avatar={c.avatar}
+                  removeClass={this.removeClass(c.Id)}
+                  toggleEditClassForm={this.openEditClassForm(c.Id)}
                 />
               </div>
             </CSSTransition>
           ))}
         </TransitionGroup>
-        <AddClassForm
-          addClass={this.addNewClass}
-          visible={this.state.newClassFormVisible}
-          toggleClassForm={this.toggleAddClassForm}
-        />
-        {this.state.classes.length !== 0 && (
+        {this.props.data.user[0].classrooms.length !== 0 && (
           <EditClassForm
-          addClass={this.editClass}
+            addClass={this.editClass}
             visible={this.state.editClassFormVisible}
             toggleClassForm={this.toggleEditClassForm}
-            classData={this.state.classes[this.state.currentSelectClass]}
+            classData={this.state.classData}
           />
         )}
       </div>
@@ -135,8 +117,31 @@ class ClassList extends React.Component<{ token: string }, IClassListState> {
   }
 }
 
+const LoadingComponent = () => <p>Loading...</p>;
+
+const ClassListGraphQl = compose(
+  // with compose, order matters -- we want our apollo HOC up top
+  // so that the HOCs below it will have access to the data prop
+  graphql(getClassQuery),
+  graphql(removeClassMutation),
+  branch(({ data }) => {
+    return !data.user && data.loading;
+  }, renderComponent(LoadingComponent))
+)(ClassList);
+
 export default (props: any) => (
-  <AppContext.Consumer>
-    {value => <ClassList {...props} token={value.token} />}
-  </AppContext.Consumer>
+  <ApolloConsumer>
+    {client => (
+      <AppContext.Consumer>
+        {value => (
+          <ClassListGraphQl
+            username={value.username}
+            {...props}
+            token={value.token}
+            client={client}
+          />
+        )}
+      </AppContext.Consumer>
+    )}
+  </ApolloConsumer>
 );
