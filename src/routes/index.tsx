@@ -24,7 +24,8 @@ export default class AppNavigator extends React.Component {
     avatarUrl: null,
     accessLevel: null,
     fullname: null,
-    username: null
+    username: null,
+    userId: null
   };
 
   public client: any;

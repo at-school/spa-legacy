@@ -23,6 +23,31 @@ const addClassroomMutation = gql`
   }
 `;
 
+const editClassroomMutation = gql`
+  mutation(
+    $Id: ID!
+    $name: String!
+    $description: String!
+    $avatar: String!
+    $lineId: String!
+    $falcutyId: String!
+  ) {
+    editClassroom(
+      arguments: {
+        Id: $Id
+        name: $name
+        description: $description
+        avatar: $avatar
+        lineId: $lineId
+        falcutyId: $falcutyId
+      }
+    ) {
+      name
+      description
+    }
+  }
+`;
+
 const removeClassMutation = gql`
   mutation($Id: ID) {
     removeClassroom(arguments: { Id: $Id }) {
@@ -63,5 +88,6 @@ export {
   getClassQuery,
   addClassroomMutation,
   removeClassMutation,
-  getClassQueryById
+  getClassQueryById,
+  editClassroomMutation
 };

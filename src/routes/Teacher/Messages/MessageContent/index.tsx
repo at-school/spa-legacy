@@ -14,14 +14,13 @@ class MessageContent extends React.Component<any, any> {
 
   public render() {
     const {
-      messageData,
       addChatRoomVisible,
-      selectAddChatRoomUser,
-      addNewRoom,
       sendMessage,
       updateMessage,
       currentMessage,
-      setScrollToBottomDiv
+      setScrollToBottomDiv,
+      toggleAddChatRoom,
+      selectedRoomId,
     } = this.props;
     return (
       <AppContent.Consumer>
@@ -29,17 +28,17 @@ class MessageContent extends React.Component<any, any> {
           <div className="message-content-container">
             {addChatRoomVisible ? (
               <AddChatRoom
-                addNewRoom={addNewRoom}
                 token={value.token!}
-                selectAddChatRoomUser={selectAddChatRoomUser}
+                toggleAddChatRoom={toggleAddChatRoom}
               />
             ) : (
               <div className="message-content">
                 <div className="message-content-details">
                   <MessageContentDetailsContainer
                     userAvatar={value.avatarUrl}
-                    messageData={messageData}
+                    messageData={this.props.messageData}
                     setScrollToBottomDiv={setScrollToBottomDiv}
+                    selectedRoomId={selectedRoomId}
                   />
                 </div>
                 <div className="message-content-input">
@@ -65,5 +64,6 @@ class MessageContent extends React.Component<any, any> {
     );
   }
 }
+
 
 export default MessageContent;

@@ -4,7 +4,7 @@ import React from "react";
 const MessageList = ({
   toggleAddChatRoom,
   roomList,
-  changeSelectedRoom,
+  changeSelectedRoomId,
   selectedRoom
 }: any) => (
   <div className="message-list-container">
@@ -18,14 +18,12 @@ const MessageList = ({
     <div className="message-list">
       {roomList.map((room: any) => (
         <MessageItem
-          changeSelectedRoom={changeSelectedRoom(room)}
-          key={room.id}
-          avatarData={room.avatarData}
+          changeSelectedRoom={changeSelectedRoomId(room.Id)}
+          key={room.Id}
+          avatarData={room.users[0].avatar}
           name={room.name}
           lastMessage={
-            room.messages.slice(-1)[0]
-              ? room.messages.slice(-1)[0].content
-              : null
+            room.latestMessage.length > 0 ? room.latestMessage[0].messageContent : ""
           }
           active={JSON.stringify(selectedRoom) === JSON.stringify(room)}
         />

@@ -2,11 +2,9 @@ import { Icon } from "antd";
 import React from "react";
 import { CSSTransition } from "react-transition-group";
 
-const Spinner: React.SFC<{ loading: boolean }> = ({ loading }) => (
+const Spinner: React.SFC<{}> = () => (
   <CSSTransition
-    in={loading}
-    transitionAppear={true}
-    transitionLeave={true}
+    in={true}
     timeout={300}
     unmountOnExit={true}
     classNames="fade"
@@ -16,7 +14,6 @@ const Spinner: React.SFC<{ loading: boolean }> = ({ loading }) => (
       style={{
         fontSize: 50,
         left: "50%",
-        margin: "-25px 0px 0px -25px",
         position: "absolute",
         top: "50%"
       }}

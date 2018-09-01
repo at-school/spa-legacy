@@ -1,7 +1,6 @@
 import { Modal } from "antd";
 import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
-import { teacherAddClass } from "../../../../../api/classroom";
 import AppContext from "../../../../../contexts/AppContext";
 import { IClassData } from "../../interfaces";
 import { getClassQuery } from "../../queries/queries";
@@ -126,10 +125,6 @@ class ClassForm extends React.Component<
     }
   }
 
-  public shouldComponentUpdate(props: any) {
-    return true;
-  }
-
   // handle all change of input: name, description, etc.
   public handleInputChange = (fieldChange: keyof IClassFormState) => (
     e: React.FormEvent<HTMLInputElement>
@@ -202,35 +197,22 @@ class ClassForm extends React.Component<
         const classData = this.state.classData as any;
         // if class data exists then it means it's on the modifying state
         if (classData) {
-          teacherAddClass(
+          this.props.addClass(
             {
-              id: classData.id,
-              className: this.state.className,
-              classDescription: this.state.classDescription,
-              classLine: this.state.classLine,
-              classFalcuty: this.state.classFalcuty,
-              classImageData: avatarData
+              id: classData.Id,
+              name: this.state.className,
+              description: this.state.classDescription,
+              line: this.state.classLine,
+              falcuty: this.state.classFalcuty,
+              avatarData
             },
-            this.props.token
-          )
-            .then(() => {
-              this.props.addClass({
-                id: classData.id,
-                name: this.state.className,
-                description: this.state.classDescription,
-                line: this.state.classLine,
-                falcuty: this.state.classFalcuty,
-                avatarData
-              });
-              this.props.toggleClassForm();
-            })
-            .catch(() => this.props.toggleClassForm());
+            this.props.toggleClassForm
+          );
         } else {
           // add class to the server
           // get back the id of the class of the server
           // append the class to the original class array
           // close the form
-          console.log(this.state)
           this.props
             .addClass({
               variables: {
@@ -243,7 +225,7 @@ class ClassForm extends React.Component<
               refetchQueries: [{ query: getClassQuery }],
               awaitRefetchQueries: true
             })
-            .then((res: any) => this.props.toggleClassForm());
+            .then(this.props.toggleClassForm);
         }
       } else {
         // do something when the form is not valid

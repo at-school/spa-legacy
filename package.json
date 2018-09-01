@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/lodash": "^4.14.116",
     "@types/prop-types": "^15.5.5",
     "@types/react-router-dom": "^4.3.0",
     "@types/react-transition-group": "^2.0.13",
@@ -17,6 +18,7 @@
     "apollo-link-context": "^1.0.8",
     "gh-pages": "^1.2.0",
     "graphql": "^0.13.2",
+    "lodash": "^4.17.10",
     "package.json": "^2.0.1",
     "react": "^16.4.2",
     "react-apollo": "^2.1.11",

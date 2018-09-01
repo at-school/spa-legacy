@@ -1,10 +1,8 @@
 import { Avatar } from "antd";
 import React from "react";
+import AppContext from "../../../../../contexts/AppContext";
 
-export default class MessageContentDetailsContainer extends React.Component<
-  any,
-  any
-> {
+class MessageContentDetailsContainer extends React.Component<any, any> {
   public shouldComponentUpdate(prevProps: any) {
     if (prevProps.messageData === this.props.messageData) {
       return false;
@@ -13,15 +11,16 @@ export default class MessageContentDetailsContainer extends React.Component<
   }
 
   public render() {
-    const { messageData, userAvatar, setScrollToBottomDiv } = this.props;
+    const { setScrollToBottomDiv, messageData, userId } = this.props;
+
     return (
       <div className="message-content-details-container">
         {messageData.map((message: any) => (
           <MessageContentItem
-            key={message.id}
-            className={message.self ? " self" : ""}
-            content={message.content}
-            avatar={message.self ? userAvatar : message.senderAvatar}
+            key={message.Id}
+            className={message.senderId === userId ? " self" : ""}
+            content={message.messageContent}
+            avatar={message.senderAvatar}
           />
         ))}
         <div ref={setScrollToBottomDiv} />
@@ -37,4 +36,12 @@ const MessageContentItem = ({ content, className, avatar }: any) => (
     </div>
     <div className="message-item-content">{content}</div>
   </div>
+);
+
+export default (props: any) => (
+  <AppContext.Consumer>
+    {value => (
+      <MessageContentDetailsContainer {...props} userId={value.userId} />
+    )}
+  </AppContext.Consumer>
 );

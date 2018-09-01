@@ -2,9 +2,11 @@ import React from "react";
 import { ApolloConsumer, graphql } from "react-apollo";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { branch, compose, renderComponent } from "recompose";
+import Spinner from "../../../../components/Spinner";
 import AppContext from "../../../../contexts/AppContext";
 import { IClassData } from "../interfaces";
 import {
+  editClassroomMutation,
   getClassQuery,
   getClassQueryById,
   removeClassMutation
@@ -22,7 +24,13 @@ interface IClassListState {
 }
 
 class ClassList extends React.Component<
-  { token: string; data: any; mutate: any; client: any },
+  {
+    token: string;
+    data: any;
+    removeClassMutation: any;
+    client: any;
+    editClassMutation: any;
+  },
   IClassListState
 > {
   public state = {
@@ -45,37 +53,40 @@ class ClassList extends React.Component<
     this.props.client
       .query({
         query: getClassQueryById,
-        variables: { Id: classId }
+        variables: { Id: classId },
+        fetchPolicy: "no-cache"
       })
-      .then((res: any) =>
+      .then((res: any) => {
         this.setState(
           { classData: res.data.classroom[0] },
           this.toggleEditClassForm
-        )
-      );
-    // this.setState(
-    //   { currentSelectClass: classId as any },
-    //   this.toggleEditClassForm
-    // );
+        );
+      });
   };
 
   // edit class but locally, modfiy the current class list
-  public editClass = (classData: IClassData) => {
-    this.setState(prevState => ({
-      classes: prevState.classes.map(c => {
-        if (c.id === classData.id) {
-          return classData;
-        }
-        return c;
+  public editClass = (classData: IClassData, callback: any) => {
+    const completeClassData = { ...classData, Id: classData.id };
+    const updatedData = {
+      Id: completeClassData.Id,
+      name: completeClassData.name,
+      description: completeClassData.description,
+      avatar: completeClassData.avatarData,
+      falcutyId: completeClassData.falcuty,
+      lineId: completeClassData.line
+    };
+    this.props
+      .editClassMutation({
+        variables: updatedData,
+        refetchQueries: [{ query: getClassQuery }],
+        awaitRefetchQueries: true
       })
-    }));
+      .then(callback)
+      .catch((err: any) => console.log(err));
   };
 
-  // remove class of a user both locally and on the server
-  // after removing class from the server
-  // remove the class from the state by filtering the id
   public removeClass = (id: string) => () => {
-    this.props.mutate({
+    this.props.removeClassMutation({
       variables: {
         Id: id
       },
@@ -117,16 +128,15 @@ class ClassList extends React.Component<
   }
 }
 
-const LoadingComponent = () => <p>Loading...</p>;
-
 const ClassListGraphQl = compose(
   // with compose, order matters -- we want our apollo HOC up top
   // so that the HOCs below it will have access to the data prop
   graphql(getClassQuery),
-  graphql(removeClassMutation),
+  graphql(removeClassMutation, { name: "removeClassMutation" }),
+  graphql(editClassroomMutation, { name: "editClassMutation" }),
   branch(({ data }) => {
     return !data.user && data.loading;
-  }, renderComponent(LoadingComponent))
+  }, renderComponent(Spinner))
 )(ClassList);
 
 export default (props: any) => (

@@ -12,6 +12,7 @@ interface IAppProviderStore {
   username: string | null;
   signinUser: (userInfo: any) => void;
   signoutUser: () => void;
+  userId: string | null;
 }
 
 export default AppContext;
