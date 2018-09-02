@@ -1,5 +1,7 @@
 import React from "react";
+import { withApollo } from "react-apollo";
 import { Route, withRouter } from "react-router-dom";
+import io from "socket.io-client";
 import ChatWindow from "../../components/ChatWindow";
 import AppContext from "../../contexts/AppContext";
 import TeacherMessageSocket from "../../contexts/Teacher/TeacherMessageSocket";
@@ -7,6 +9,7 @@ import createTeacherLayout from "../../layouts/AppLayout/TeacherLayout";
 import Classroom from "./Classroom";
 import Dashboard from "./Dashboard";
 import Messages from "./Messages";
+import { getChatRoomIdQuery } from "./Messages/queries/queries";
 import RollCall from "./RollCall";
 
 class Content extends React.Component<any, { selectedRoom: any }> {
@@ -29,17 +32,29 @@ class Content extends React.Component<any, { selectedRoom: any }> {
         }
       }
     );
+    this.messageSocket.on("connect", () => {
+      // subscribe listener to all chatrooms
+      this.props.client
+        .query({
+          query: getChatRoomIdQuery,
+          variables: { username: this.props.username }
+        })
+        .then((res: any) => res.data.user[0].chatrooms)
+        .then((chatrooms: any) => {
+          console.log(chatrooms)
+          for (const chatroom of chatrooms) {
+            this.messageSocket.emit("sendMessage", {
+              chatroomId: chatroom.Id
+            });
+          }
+        });
+    });
   }
 
   public componentDidUpdate() {
     if (!this.props.token) {
       this.props.history.push("/authentication/signin");
     }
-  }
-
-  public shouldComponentUpdate() {
-    console.log(this.props);
-    return true;
   }
 
   public render() {
@@ -57,9 +72,17 @@ class Content extends React.Component<any, { selectedRoom: any }> {
   }
 }
 
+const ContentWithApollo = withApollo(Content);
+
 const ContentWithContext = ({ history }: any) => (
   <AppContext.Consumer>
-    {value => <Content token={value.token} history={history} />}
+    {value => (
+      <ContentWithApollo
+        username={value.username}
+        token={value.token}
+        history={history}
+      />
+    )}
   </AppContext.Consumer>
 );
 const ContentWithRouter = withRouter(ContentWithContext);

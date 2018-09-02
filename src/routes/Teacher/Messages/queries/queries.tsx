@@ -14,6 +14,9 @@ const addMessageMutation = gql`
       arguments: { chatroomId: $chatroomId, messageContent: $messageContent }
     ) {
       Id
+      messageContent
+      senderAvatar
+      senderId
     }
   }
 `;
@@ -36,6 +39,16 @@ const getChatRoomQuery = gql`
   }
 `;
 
+const getChatRoomIdQuery = gql`
+  query GetChatroom($username: String) {
+    user(arguments: { username: $username }) {
+      chatrooms {
+        Id
+      }
+    }
+  }
+`;
+
 const getChatRoomMessageQuery = gql`
   query GetChatRoomMessage($chatroomId: ID) {
     message(arguments: { chatroomId: $chatroomId }) {
@@ -47,9 +60,21 @@ const getChatRoomMessageQuery = gql`
   }
 `;
 
+const getLatestChatroom = gql`
+  query GetLatestChatroom($username: String) {
+    user(arguments: { username: $username }) {
+      latestChatroom {
+        Id
+      }
+    }
+  }
+`;
+
 export {
   addChatRoomMutation,
   getChatRoomQuery,
   addMessageMutation,
-  getChatRoomMessageQuery
+  getChatRoomMessageQuery,
+  getChatRoomIdQuery,
+  getLatestChatroom
 };

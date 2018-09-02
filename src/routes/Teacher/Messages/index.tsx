@@ -1,12 +1,19 @@
+import Lodash from "lodash";
 import React from "react";
-import { compose, graphql } from "react-apollo";
+import { compose, graphql, Query, withApollo } from "react-apollo";
 import { branch, renderComponent } from "recompose";
 import Spinner from "../../../components/Spinner";
 import AppContext from "../../../contexts/AppContext";
+import MessageSocket from "../../../contexts/Teacher/TeacherMessageSocket";
 import MessageContent from "./MessageContent";
 import MessageInfo from "./MessageInfo";
 import MessageList from "./MessageList";
-import { addMessageMutation, getChatRoomMessageQuery, getChatRoomQuery } from "./queries/queries";
+import {
+  addMessageMutation,
+  getChatRoomMessageQuery,
+  getChatRoomQuery,
+  getLatestChatroom
+} from "./queries/queries";
 import "./styles/styles.css";
 
 interface IMessageItem {
@@ -23,6 +30,9 @@ class Messages extends React.Component<
     chatRoomList: any;
     addMessageMutation: any;
     messageList: any;
+    socket: any;
+    selectedRoomId: string;
+    client: any;
   },
   {
     messageData: IMessageItem[];
@@ -31,10 +41,8 @@ class Messages extends React.Component<
     selectedRoomId: any;
     message: string;
     chatrooms: any;
-    onSendingMessage: boolean;
   }
 > {
-  public socket: any;
   public scrollToBottomDiv: any;
   public state = {
     messageData: [],
@@ -45,8 +53,7 @@ class Messages extends React.Component<
     },
     selectedRoomId: "",
     message: "",
-    chatrooms: [],
-    onSendingMessage: false
+    chatrooms: []
   };
 
   public toggleAddChatRoom = () => {
@@ -59,62 +66,65 @@ class Messages extends React.Component<
   };
 
   public componentDidMount() {
-    this.socket.on("connect", () => {
-      // set selected room the the first index
-      if (this.props.chatRoomList.user[0]) {
-        const { chatrooms } = this.props.chatRoomList.user[0];
-        for (const chatroom of chatrooms) {
-          this.socket.emit("sendMessage", {
-            room: chatroom.Id
-          });
-        }
-      }
-    });
+    this.setState({ selectedRoomId: this.props.selectedRoomId });
+    this.scrollToBottom(false);
 
-    // set selected room the the first index
-    if (this.props.chatRoomList.user[0]) {
-      const { chatrooms } = this.props.chatRoomList.user[0];
-      if (chatrooms.length > 0) {
-        this.setState({ selectedRoomId: chatrooms[0].Id }, () =>
-          this.scrollToBottomDiv.scrollIntoView()
-        );
-      }
-    }
-
-    this.socket.on("newMessage", (res: any) => {
-      console.log("Receive Message");
-      if (res.roomId === this.state.selectedRoomId) {
-        this.props.messageList.refetch().then(() => {
-          this.props.chatRoomList
-            .refetch({ username: this.props.username })
-            .then(() => {
-              this.setState({ onSendingMessage: false }, () =>
-                this.setState({ message: "" }, () => this.scrollToBottom())
-              );
-            });
-        });
-      } else {
-        this.props.chatRoomList.refetch({ username: this.props.username });
-      }
-    });
-
-    // this.props.data.refetch({ username: this.props.username }).then((res:any) => console.log(res));
+    this.props.socket.on("newMessage", this.onNewMessage);
   }
 
-  public shouldComponentUpdate() {
-    if (this.state.onSendingMessage) {
-      return false;
+  public onNewMessage = (res: any) => {
+    console.log(this.props.messageList);
+    if (res.senderUsername !== this.props.username) {
+      if (res.chatroomId === this.state.selectedRoomId) {
+        // Read the data from our cache for this query.
+        const data = this.props.client.readQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId: res.chatroomId }
+        });
+        // Add the new message from the mutation to the end.
+        console.log(data);
+        data.message.push(res);
+        // Write our data back to the cache.
+        this.props.client.writeQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId: res.chatroomId },
+          data
+        });
+      }
+
+      const roomData = this.props.client.readQuery({
+        query: getChatRoomQuery,
+        variables: { username: this.props.username }
+      });
+      roomData.user[0].chatrooms = Lodash.sortBy(
+        roomData.user[0].chatrooms,
+        item => {
+          return item.Id === res.chatroomId ? 0 : 1;
+        }
+      );
+      roomData.user[0].chatrooms[0].latestMessage[0].messageContent =
+        res.messageContent;
+      this.props.client.writeQuery({
+        query: getChatRoomQuery,
+        variables: { username: this.props.username },
+        data: roomData
+      });
     }
-    return true;
+  };
+
+  public componentWillUnmount() {
+    this.props.socket.removeListener("newMessage", this.onNewMessage);
   }
 
   public setScrollToBottomDiv = (ref: any) => {
     this.scrollToBottomDiv = ref;
   };
 
-  public scrollToBottom = () => {
+  public scrollToBottom = (smooth = true) => {
     if (this.scrollToBottomDiv) {
-      this.scrollToBottomDiv.scrollIntoView({ behavior: "smooth" });
+      this.scrollToBottomDiv.scrollIntoView({
+        behavior: smooth ? "smooth" : "instant"
+      });
     }
   };
 
@@ -122,44 +132,73 @@ class Messages extends React.Component<
     this.setState({ message: e.target.value });
   };
 
-  public componentWillUnmount() {
-    this.socket.disconnect();
-  }
-
   public sendMessage = () => {
     const messageContent = this.state.message;
     if (messageContent.length > 0) {
-      // this.props
-      //   .addMessageMutation({
-      //     variables: {
-      //       chatroomId,
-      //       messageContent
-      //     },
-      //     refetchQueries: [
-      //       {
-      //         query: getChatRoomQuery,
-      //         variables: { username: this.props.username }
-      //       }
-      //     ],
-      //     awaitRefetchQueries: true
-      //   })
-      //   .then(() => console.log(this.props))
-      //   .catch((err: any) => console.log(err));
-
-      this.setState({ onSendingMessage: true }, () => {
-        this.socket.emit("sendMessage", {
-          room: this.state.selectedRoomId,
-          message: messageContent
-        });
-      });
+      this.props
+        .addMessageMutation({
+          variables: {
+            chatroomId: this.state.selectedRoomId,
+            messageContent
+          },
+          update: (store: any, { data: { createMessage } }: any) => {
+            this.props.socket.emit("sendMessage", {
+              ...createMessage,
+              chatroomId: this.state.selectedRoomId
+            });
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: getChatRoomMessageQuery,
+              variables: { chatroomId: this.state.selectedRoomId }
+            });
+            const roomData = store.readQuery({
+              query: getChatRoomQuery,
+              variables: { username: this.props.username }
+            });
+            roomData.user[0].chatrooms = Lodash.sortBy(
+              roomData.user[0].chatrooms,
+              item => {
+                return item.Id === this.state.selectedRoomId ? 0 : 1;
+              }
+            );
+            roomData.user[0].chatrooms[0].latestMessage[0].messageContent = this.state.message;
+            // Add the new message from the mutation to the end.
+            data.message.push(createMessage);
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: getChatRoomMessageQuery,
+              variables: { chatroomId: this.state.selectedRoomId },
+              data
+            });
+            store.writeQuery({
+              query: getChatRoomQuery,
+              variables: { username: this.props.username },
+              data: roomData
+            });
+            this.setState({ message: "" });
+          }
+        })
+        .then((res: any) => console.log(this.props))
+        .catch((err: any) => console.log(err));
     }
   };
+
+  public componentDidUpdate(prevProps: any, prevState: any) {
+    if (prevState.selectedRoomId !== this.state.selectedRoomId) {
+      this.scrollToBottom(false);
+    } else if (
+      JSON.stringify(prevProps.messageList.message) !==
+      JSON.stringify(this.props.messageList.message)
+    ) {
+      this.scrollToBottom();
+    }
+  }
 
   public changeSelectedRoomId = (selectedRoomId: any) => () => {
     this.setState({ selectedRoomId });
     this.props.messageList
       .refetch({ chatroomId: selectedRoomId })
-      .then(() => this.scrollToBottom());
+      .then(() => this.scrollToBottom(false));
   };
 
   public render() {
@@ -173,6 +212,7 @@ class Messages extends React.Component<
           changeSelectedRoomId={this.changeSelectedRoomId}
           // selectedRoom={this.state.selectedRoom}
         />
+
         <MessageContent
           addChatRoomVisible={this.state.addChatRoom.formVisible}
           messageData={
@@ -187,6 +227,7 @@ class Messages extends React.Component<
           currentMessage={this.state.message}
           setScrollToBottomDiv={this.setScrollToBottomDiv}
         />
+
         <MessageInfo
           userName={this.props.username}
           addChatRoom={this.state.addChatRoom.formVisible}
@@ -197,31 +238,18 @@ class Messages extends React.Component<
   }
 }
 
-const MessagesWithContent = compose(
+const MessagesWithChatRoom = compose(
+  graphql(addMessageMutation, { name: "addMessageMutation" }),
   graphql(getChatRoomMessageQuery, {
     options: (props: any) => {
-      let selectedRoomId = "";
-      if (props.chatRoomList.user && props.chatRoomList.user.length > 0) {
-        const { chatrooms } = props.chatRoomList.user[0];
-        if (chatrooms.length > 0) {
-          selectedRoomId = chatrooms[0].Id;
-        }
-      }
       return {
         variables: {
-          chatroomId: selectedRoomId
+          chatroomId: props.selectedRoomId
         }
       };
     },
     name: "messageList"
   }),
-  branch(({ messageList }) => {
-    return !messageList.message && messageList.loading;
-  }, renderComponent(Spinner))
-)(Messages);
-
-const MessagesWithChatRoom = compose(
-  graphql(addMessageMutation, { name: "addMessageMutation" }),
   graphql(getChatRoomQuery, {
     options: (props: any) => {
       return {
@@ -231,21 +259,44 @@ const MessagesWithChatRoom = compose(
       };
     },
     name: "chatRoomList"
-  }),
+  }), 
   branch(({ chatRoomList }) => {
     return !chatRoomList.user && chatRoomList.loading;
   }, renderComponent(Spinner))
-)(MessagesWithContent);
+)(withApollo(Messages as any));
 
 export default (props: any) => (
   <AppContext.Consumer>
     {value => (
-      <MessagesWithChatRoom
-        {...props}
-        token={value.token!}
-        username={value.username!}
-        avatar={value.avatarUrl!}
-      />
+      <MessageSocket.Consumer>
+        {socket => (
+          <Query
+            query={getLatestChatroom}
+            variables={{ username: value.username }}
+          >
+            {({ loading, data }) => {
+              if (loading) {
+                return <Spinner />;
+              }
+              const { user } = data;
+
+              const { latestChatroom } = user[0];
+              const { Id } = latestChatroom[0];
+
+              return (
+                <MessagesWithChatRoom
+                  socket={socket.socket}
+                  {...props}
+                  token={value.token!}
+                  username={value.username!}
+                  avatar={value.avatarUrl!}
+                  selectedRoomId={Id}
+                />
+              );
+            }}
+          </Query>
+        )}
+      </MessageSocket.Consumer>
     )}
   </AppContext.Consumer>
 );
