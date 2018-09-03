@@ -1,9 +1,9 @@
 import React from "react";
-import createPost from "../createPost";
+import createPost from "../HOC/createPost";
 import Issues from "./Issues";
 import PartiesInvolved from "./PartiesInvolved";
 import ProjectOutcome from "./ProjectOutcome";
-import Risks from './Risks/index';
+import Risks from "./Risks/index";
 import "./styles/styles.css";
 import SuccessProbability from "./SuccessProbability";
 
@@ -13,13 +13,19 @@ const Content = () => (
     <PartiesInvolved />
     <Issues />
     <SuccessProbability />
-	<Risks />
+    <Risks />
   </div>
 );
 
+const postOverview = `What is @ School? How does it help teachers empower their students? When is it available? This post will answer all of your questions related to the project.`;
+
 export default createPost(
   Content,
-  "Atschool what it is, and why we built it.",
+  "Project Planning",
   "12 August 2018",
-  ["Charl Kruger", "Anh Pham"]
+  postOverview,
+  [
+    { name: "Charl Kruger", twitter: "https://twitter.com/Charl84583706" },
+    { name: "Anh Pham", twitter: "https://twitter.com/anhphamduy" }
+  ]
 );

@@ -16,7 +16,6 @@
 }
 .messages .message-list-container {
   flex: 0.25;
-  border-right: 1px solid #ebedf0;
   background-color: white;
   overflow: scroll;
 }
@@ -83,6 +82,7 @@
 .messages .message-content-container {
   flex: 0.5;
   border-right: 1px solid #ebedf0;
+  border-left: 1px solid #ebedf0;
 }
 .messages .message-content-container .message-content {
   display: flex;

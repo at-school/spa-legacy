@@ -17,7 +17,6 @@
 
   .message-list-container {
     flex: 0.25;
-    border-right: 1px solid #ebedf0;
     background-color: white;
     overflow: scroll;
 
@@ -99,6 +98,7 @@
   .message-content-container {
     flex: 0.5;
     border-right: 1px solid #ebedf0;
+    border-left: 1px solid #ebedf0;
     .message-content {
       display: flex;
       flex-direction: column;

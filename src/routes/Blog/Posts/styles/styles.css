@@ -1,21 +1,49 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:700");
 .blog-outer-container {
+  color: #282c34;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   font-family: "Open Sans", sans-serif !important;
+  -webkit-font-smoothing: antialiased;
 }
 .blog-outer-container .blog-post-title {
   font-family: "Open Sans", sans-serif !important;
-  font-weight: 600;
-  font-size: 42px;
-  font-size: 50px;
-  line-height: 50px;
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 45px;
   margin-top: 5vh;
-  margin-bottom: 2vh;
+}
+.blog-outer-container .blog-post-author-date {
+  margin-top: 30px;
+  line-height: 1.2rem;
+  color: black;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.blog-outer-container .blog-post-overview {
+  font-size: 18px;
+  font-weight: 300;
+  color: #6d6d6d;
+  line-height: 1.7;
 }
 .blog-outer-container .blog-post-content-container {
   max-width: 700px;
+  font-family: "Open Sans", sans-serif !important;
+}
+.blog-outer-container .blog-post-content-container .blog-section .blog-section-title {
+  border-top: 1px solid #ececec;
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-top: 44px;
+  padding-top: 40px;
+  line-height: 1.2;
+  color: black;
+}
+.blog-outer-container .blog-post-content-container .blog-section .blog-section-content {
+  font-size: 17px;
+  line-height: 1.7;
 }
 @media only screen and (max-width: 750px) {
   .blog-outer-container {
