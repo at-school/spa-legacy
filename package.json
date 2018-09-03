@@ -11,7 +11,7 @@
     "@types/recharts": "^1.0.27",
     "@types/recompose": "^0.26.4",
     "@types/socket.io-client": "^1.4.32",
-    "antd": "^3.8.2",
+    "antd": "^3.9.0",
     "aphrodite": "^2.2.3",
     "apollo-boost": "^0.1.14",
     "apollo-cache-inmemory": "^1.2.9",
@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
-    "@types/node": "^10.7.1",
-    "@types/react": "^16.4.11",
+    "@types/node": "^10.9.4",
+    "@types/react": "^16.4.13",
     "@types/react-dom": "^16.0.7",
     "typescript": "^2.9.2"
   },
