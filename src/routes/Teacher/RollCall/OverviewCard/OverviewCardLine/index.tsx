@@ -30,6 +30,10 @@ class OverviewCardLine extends React.Component<any, any> {
     this.interval = setInterval(this.updateTime, 60000);
   }
 
+  public componentWillMount() {
+    this.updateLine();
+  }
+
   public componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -42,8 +46,12 @@ class OverviewCardLine extends React.Component<any, any> {
   public scheduleInfoModal = () => {
     if (this.props.data) {
       const schedule = this.props.data.schedule.map((item: any) => {
+        const className = css(
+          item.line === this.state.currentLine && styles.bold,
+          styles.flexRow
+        );
         return (
-          <div className={css(styles.flexRow)} key={item.line}>
+          <div className={className} key={item.line}>
             <div>Line {item.line}</div>
             <div className={css(styles.alignRight)}>
               {item.startTime} - {item.endTime}
@@ -95,42 +103,50 @@ class OverviewCardLine extends React.Component<any, any> {
     );
   }
 
+  private updateLine = () => {
+    const { data } = this.props;
+    if (data.schedule.length > 0) {
+      const { schedule }: any = data;
+      const currentTime = moment();
+
+      let isInSchedule = false;
+      for (const scheduleItem of schedule) {
+        if (
+          scheduleItem.hasOwnProperty("startTime") &&
+          scheduleItem.hasOwnProperty("endTime")
+        ) {
+          const startTime = moment(scheduleItem.startTime, "HH:mm:ss");
+          const endTime = moment(scheduleItem.endTime, "HH:mm:ss");
+          const isBetween = currentTime.isBetween(startTime, endTime);
+
+          if (isBetween && this.state.currentLine !== scheduleItem.line) {
+            this.setState({ currentLine: scheduleItem.line });
+            return;
+          } else if (isBetween) {
+            isInSchedule = true;
+            break;
+          }
+        }
+      }
+
+      if (!isInSchedule) {
+        this.setState({ currentLine: "N/A" });
+      }
+    } else {
+      this.setState({ currentLine: "N/A" });
+    }
+  };
+
   private updateTime = () => {
     const { data } = this.props;
     if (!data.loading) {
-      const updateLine = () => {
-        if (data.schedule.length > 0) {
-          const { schedule }: any = data;
-          const currentTime = moment();
-          for (const scheduleItem of schedule) {
-            if (
-              scheduleItem.hasOwnProperty("startTime") &&
-              scheduleItem.hasOwnProperty("endTime")
-            ) {
-              const startTime = moment(scheduleItem.startTime, "HH:mm:ss");
-              const endTime = moment(scheduleItem.endTime, "HH:mm:ss");
-              if (
-                currentTime.isBetween(startTime, endTime) &&
-                this.state.currentLine !== scheduleItem.line
-              ) {
-                this.setState({ currentLine: schedule.line });
-                break;
-              }
-            }
-          }
-          this.setState({ currentLine: "N/A" });
-        } else {
-          this.setState({ currentLine: "N/A" });
-        }
-      };
-
       const currentDay = moment().format("dddd");
       if (currentDay !== this.state.day) {
         this.props.data.refetch({ day: moment().format("dddd") }).then(() => {
-          this.setState({ day: currentDay }, updateLine);
+          this.setState({ day: currentDay }, this.updateLine);
         });
       } else {
-        updateLine();
+        this.updateLine();
       }
     }
   };
@@ -143,6 +159,9 @@ const styles = StyleSheet.create({
   },
   alignRight: {
     marginLeft: "auto"
+  },
+  bold: {
+    fontWeight: "bold"
   }
 });
 
