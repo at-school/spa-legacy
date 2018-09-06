@@ -15,7 +15,7 @@ import "./styles.css";
 import Teacher from "./Teacher";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/graphql"
+  uri: "http://127.0.0.1:5000/graphql"
 });
 
 export default class AppNavigator extends React.Component {

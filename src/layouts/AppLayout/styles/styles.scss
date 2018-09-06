@@ -1,11 +1,10 @@
 $blue-hover-color: rgba(230, 247, 255, 0.745);
-@import url('https://fonts.googleapis.com/css?family=Roboto:300');
-
+@import url("https://fonts.googleapis.com/css?family=Roboto:300");
 
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .ant-layout,
@@ -95,6 +94,12 @@ body {
 
       .main-layout-layout-header-right {
         // icon in general in the header
+        ul {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+        }
         ul,
         li {
           height: 64px;
@@ -102,32 +107,24 @@ body {
         }
 
         li {
-          padding-top: 9px;
+          display: flex;
         }
 
         li:hover {
           color: inherit;
           background-color: $blue-hover-color;
         }
-
-        .anticon {
-          font-size: 16px;
-          margin-right: 0px;
-        }
+        font-size: 16px;
 
         // the search icon in the header
         .no-style:hover {
-          background-color: #fff;
+          background-color: transparent;
         }
 
         .search {
           display: flex;
           flex-direction: row;
           align-items: center;
-        }
-
-        .anticon-search {
-          margin-top: 17px;
         }
 
         // the search box in the header
@@ -169,8 +166,12 @@ body {
           justify-content: center;
         }
 
+        .ant-badge {
+          width: 16px;
+        }
+
         // the user options in the header
-        .user-avatar {
+        .user-avatar > div {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -197,7 +198,6 @@ body {
 
 // pop-up when clicking on the bell icon in header
 .notification-box {
-
   .ant-popover-inner-content {
     padding: 0;
     width: 336px;

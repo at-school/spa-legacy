@@ -79,6 +79,17 @@ body {
   font-size: 20px;
   line-height: 60.9999980927px;
 }
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right {
+  font-size: 16px;
+}
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right ul,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right ul,
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right li,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right ul,
@@ -88,31 +99,22 @@ body {
 }
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right li,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right li {
-  padding-top: 9px;
+  display: flex;
 }
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right li:hover,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right li:hover {
   color: inherit;
   background-color: rgba(230, 247, 255, 0.745);
 }
-#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .anticon,
-#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .anticon {
-  font-size: 16px;
-  margin-right: 0px;
-}
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .no-style:hover,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .no-style:hover {
-  background-color: #fff;
+  background-color: transparent;
 }
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .search,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .search {
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .anticon-search,
-#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .anticon-search {
-  margin-top: 17px;
 }
 #main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right input,
 #main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right input {
@@ -152,18 +154,22 @@ body {
   align-items: center;
   justify-content: center;
 }
-#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar,
-#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar {
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .ant-badge,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .ant-badge {
+  width: 16px;
+}
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar img,
-#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar img {
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div img,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div img {
   border-radius: 50%;
 }
-#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar p,
-#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar p {
+#main-layout .main-layout-layout .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div p,
+#main-layout .main-layout-layout-collapsed .main-layout-layout-header .main-layout-layout-header-right .user-avatar > div p {
   margin-bottom: 0;
   margin-left: 8px;
   color: rgba(0, 0, 0, 0.65);

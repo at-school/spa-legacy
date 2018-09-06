@@ -60,9 +60,7 @@ const Header: React.SFC<IHeaderProps> = ({
         <Menu mode="horizontal" selectedKeys={["-1"]}>
           <Menu.Item className="no-style">
             <div className="search">
-              <div onClick={toggleSearch}>
-                <Icon type="search" />
-              </div>
+              <Icon type="search" onClick={toggleSearch} />
               <Input
                 ref={searchInputHeaderRef}
                 className={searchVisible ? "input-show" : ""}
@@ -106,25 +104,26 @@ const Header: React.SFC<IHeaderProps> = ({
           </Menu.Item>
 
           <Menu.SubMenu
+            className="user-avatar"
             title={
-              <div className="user-avatar">
-                <Avatar
-                  src={avatarUrl}
-                  size="small"
-                />
+              <React.Fragment>
+                <Avatar src={avatarUrl} size="small" />
                 <p>{fullname}</p>
-              </div>
+              </React.Fragment>
             }
           >
             <Menu.Item key="setting:1">
-              <Icon type="user" />Profile
+              <Icon type="user" />
+              Profile
             </Menu.Item>
             <Menu.Item key="setting:2">
-              <Icon type="setting" />Settings
+              <Icon type="setting" />
+              Settings
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="setting:3" onClick={signoutUser}>
-              <Icon type="logout" />Sign Out
+              <Icon type="logout" />
+              Sign Out
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>
