@@ -1,16 +1,18 @@
+import Lodash from "lodash";
 import React from "react";
 import { ApolloConsumer, graphql } from "react-apollo";
+import { Link, withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { branch, compose, renderComponent } from "recompose";
-import Spinner from "../../../../components/Spinner";
-import AppContext from "../../../../contexts/AppContext";
-import { IClassData } from "../interfaces";
+import Spinner from "../../../../../components/Spinner";
+import AppContext from "../../../../../contexts/AppContext";
 import {
   editClassroomMutation,
   getClassQuery,
   getClassQueryById,
   removeClassMutation
-} from "../queries/queries";
+} from "../../queries";
+import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
 import AddClassForm from "./NewClassForm";
@@ -30,6 +32,7 @@ class ClassList extends React.Component<
     removeClassMutation: any;
     client: any;
     editClassMutation: any;
+    history: any;
   },
   IClassListState
 > {
@@ -85,6 +88,17 @@ class ClassList extends React.Component<
       .catch((err: any) => console.log(err));
   };
 
+  public goToClassDetails = (Id: string) => () => {
+    try {
+      const classDetails = Lodash.find(this.props.data.user[0].classrooms, {
+        Id
+      });
+      this.props.history.push("/teacher/classroom/" + String(Id) + "/students", classDetails);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   public removeClass = (id: string) => () => {
     this.props.removeClassMutation({
       variables: {
@@ -95,13 +109,19 @@ class ClassList extends React.Component<
   };
 
   public render() {
+    let classList = []
+    try {
+      classList = this.props.data.user[0].classrooms;
+    } catch(err) {
+      classList = []
+    }
     return (
       <div className="class-list-container">
         <TransitionGroup className="class-list">
           <CSSTransition key={"-1"} timeout={500} classNames="fade">
             <AddClassForm />
           </CSSTransition>
-          {this.props.data.user[0].classrooms.map((c: any, index: number) => (
+          {classList.map((c: any, index: number) => (
             <CSSTransition key={c.Id} timeout={500} classNames="fade">
               <div>
                 <ClassCard
@@ -110,12 +130,13 @@ class ClassList extends React.Component<
                   avatar={c.avatar}
                   removeClass={this.removeClass(c.Id)}
                   toggleEditClassForm={this.openEditClassForm(c.Id)}
+                  goToClassDetails={this.goToClassDetails(c.Id)}
                 />
               </div>
             </CSSTransition>
           ))}
         </TransitionGroup>
-        {this.props.data.user[0].classrooms.length !== 0 && (
+        {classList.length !== 0 && (
           <EditClassForm
             addClass={this.editClass}
             visible={this.state.editClassFormVisible}
@@ -123,6 +144,9 @@ class ClassList extends React.Component<
             classData={this.state.classData}
           />
         )}
+        <Link to="/teacher/classroom/123123/students">
+          <h1>Go to the next URL</h1>
+        </Link>
       </div>
     );
   }
@@ -131,13 +155,15 @@ class ClassList extends React.Component<
 const ClassListGraphQl = compose(
   // with compose, order matters -- we want our apollo HOC up top
   // so that the HOCs below it will have access to the data prop
-  graphql(getClassQuery),
+  graphql(getClassQuery, {
+    options: (props: any) => ({ variables: { Id: props.Id } })
+  }),
   graphql(removeClassMutation, { name: "removeClassMutation" }),
   graphql(editClassroomMutation, { name: "editClassMutation" }),
   branch(({ data }) => {
     return !data.user && data.loading;
   }, renderComponent(Spinner))
-)(ClassList);
+)(withRouter(ClassList as any));
 
 export default (props: any) => (
   <ApolloConsumer>
@@ -149,6 +175,7 @@ export default (props: any) => (
             {...props}
             token={value.token}
             client={client}
+            Id={value.userId}
           />
         )}
       </AppContext.Consumer>

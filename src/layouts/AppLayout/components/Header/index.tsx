@@ -35,19 +35,14 @@ const Header: React.SFC<IHeaderProps> = ({
   avatarUrl
 }) => {
   let headerDisplayText = "";
-  switch (pathname) {
-    case "/teacher/dashboard":
-      headerDisplayText = "Dashboard";
-      break;
-    case "/teacher/rollcall":
-      headerDisplayText = "Roll Call";
-      break;
-    case "/teacher/classroom":
-      headerDisplayText = "Classroom";
-      break;
-    case "/teacher/messages":
-      headerDisplayText = "Messages";
-      break;
+  if (pathname.includes("/teacher/dashboard")) {
+    headerDisplayText = "Dashboard";
+  } else if (pathname.includes("/teacher/classroom")) {
+    headerDisplayText = "Classroom";
+  } else if (pathname.includes("/teacher/rollcall")) {
+    headerDisplayText = "Roll Call";
+  } else if (pathname.includes("/teacher/messages")) {
+    headerDisplayText = "Messages";
   }
   return (
     <Layout.Header className="main-layout-layout-header">

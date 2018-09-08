@@ -1,9 +1,9 @@
 import { Modal } from "antd";
 import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
-import AppContext from "../../../../../contexts/AppContext";
+import AppContext from "../../../../../../contexts/AppContext";
+import { getClassQuery } from "../../../queries";
 import { IClassData } from "../../interfaces";
-import { getClassQuery } from "../../queries/queries";
 import FormContent from "../ClassForm/Content";
 import FormHeader from "../ClassForm/Header";
 

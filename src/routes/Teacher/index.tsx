@@ -6,7 +6,8 @@ import ChatWindow from "../../components/ChatWindow";
 import AppContext from "../../contexts/AppContext";
 import TeacherMessageSocket from "../../contexts/Teacher/TeacherMessageSocket";
 import createTeacherLayout from "../../layouts/AppLayout/TeacherLayout";
-import Classroom from "./Classroom";
+import ClassDetails from "./Classroom/ClassDetails";
+import ClassroomScreenRoot from "./Classroom/RootScreen";
 import Dashboard from "./Dashboard";
 import Messages from "./Messages";
 import { getChatRoomIdQuery } from "./Messages/queries/queries";
@@ -41,7 +42,7 @@ class Content extends React.Component<any, { selectedRoom: any }> {
         })
         .then((res: any) => res.data.user[0].chatrooms)
         .then((chatrooms: any) => {
-          console.log(chatrooms)
+          console.log(chatrooms);
           for (const chatroom of chatrooms) {
             this.messageSocket.emit("sendMessage", {
               chatroomId: chatroom.Id
@@ -61,7 +62,8 @@ class Content extends React.Component<any, { selectedRoom: any }> {
     return (
       <TeacherMessageSocket.Provider value={{ socket: this.messageSocket }}>
         <Route exact={true} path={"/teacher/dashboard"} component={Dashboard} />
-        <Route exact={true} path={"/teacher/classroom"} component={Classroom} />
+        <Route exact={true} path={"/teacher/classroom"} component={ClassroomScreenRoot} />
+        <Route exact={true} path="/teacher/classroom/:id/:item" component={ClassDetails} />
         <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
         <Route exact={true} path={"/teacher/messages"} component={Messages} />
         {!this.props.history.location.pathname.includes("messages") && (
@@ -85,6 +87,7 @@ const ContentWithContext = ({ history }: any) => (
     )}
   </AppContext.Consumer>
 );
+
 const ContentWithRouter = withRouter(ContentWithContext);
 
 const Teacher = createTeacherLayout(ContentWithRouter as any);

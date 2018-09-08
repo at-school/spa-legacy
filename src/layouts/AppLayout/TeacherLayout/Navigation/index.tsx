@@ -4,19 +4,15 @@ import { Link } from "react-router-dom";
 
 const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
   let menuKey = "";
-  switch (pathname) {
-    case "/teacher/dashboard":
-      menuKey = "1";
-      break;
-    case "/teacher/classroom":
-      menuKey = "2";
-      break;
-    case "/teacher/rollcall":
-      menuKey = "3";
-      break;
-    case "/teacher/messages":
-      menuKey = "4";
-      break;
+
+  if (pathname.includes("/teacher/dashboard")) {
+    menuKey = "1";
+  } else if (pathname.includes("/teacher/classroom")) {
+    menuKey = "2";
+  } else if (pathname.includes("/teacher/rollcall")) {
+    menuKey = "3";
+  } else if (pathname.includes("/teacher/messages")) {
+    menuKey = "4";
   }
   return (
     <Menu theme="dark" mode="inline" selectedKeys={[menuKey]}>

@@ -57,8 +57,8 @@ const removeClassMutation = gql`
 `;
 
 const getClassQuery = gql`
-  query GetClassroom {
-    user(arguments: {}) {
+  query GetClassroom($Id: ID) {
+    user(arguments: { Id: $Id }) {
       classrooms {
         Id
         name

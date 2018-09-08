@@ -2,7 +2,7 @@ import { Card, Icon } from "antd";
 import React from "react";
 import { graphql } from "react-apollo";
 import { compose, withHandlers, withState } from "recompose";
-import { addClassroomMutation } from "../../queries/queries";
+import { addClassroomMutation } from "../../../queries";
 import ClassForm from "../ClassForm";
 
 const NewClassForm = (props: any) => {

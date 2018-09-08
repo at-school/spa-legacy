@@ -9,6 +9,7 @@ interface IClassCardProps {
   avatar: string;
   name: string;
   description: string;
+  goToClassDetails: () => void;
 }
 
 const ClassCard: React.SFC<IClassCardProps> = ({
@@ -16,7 +17,8 @@ const ClassCard: React.SFC<IClassCardProps> = ({
   removeClass,
   avatar,
   name,
-  description
+  description,
+  goToClassDetails
 }) => (
   <Card
     hoverable={true}
@@ -30,7 +32,7 @@ const ClassCard: React.SFC<IClassCardProps> = ({
       </div>
     ]}
   >
-    <div className="class-card-body">
+    <div className="class-card-body" onClick={goToClassDetails}>
       <div className="class-card-avatar">
         <Avatar src={avatar} shape="circle" size="large" />
       </div>

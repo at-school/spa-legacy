@@ -1,27 +1,24 @@
 import React from "react";
-import ClassList from "./ClassList";
-import "./styles/styles.css";
+import { Route } from "react-router-dom";
 
-export default class Classroom extends React.Component {
-  public render() {
-    return (
-      <div className="classroom">
-        <ClassroomIntroduction />
-        <ClassList />
-      </div>
-    );
-  }
-}
-
-const ClassroomIntroduction = () => (
-  <div className="classroom-introduction">
-    <div className="classroom-introduction-container">
-      <div>
-        <div className="classroom-title">Classroom</div>
-        <p>Seems like you do not have any classroom.</p>
-        <p>Click the button below to add class.</p>
-      </div>
-      <img src="/computer-cartoon.png" alt="Computer cartoon" />
-    </div>
-  </div>
+const ClassDetails = () => (
+  <React.Fragment>
+    <h1>Fuck me</h1>
+    <Route
+      path="/teacher/classroom/:id/students"
+      exact={true}
+      component={Test}
+    />
+    <Route
+      path="/teacher/classroom/:id/statistics"
+      exact={true}
+      component={Test1}
+    />
+  </React.Fragment>
 );
+
+const Test = () => <h1>Test</h1>;
+
+const Test1 = () => <h1>Test1</h1>;
+
+export default ClassDetails;

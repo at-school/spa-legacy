@@ -176,7 +176,7 @@ body {
 }
 #main-layout .main-layout-layout .layout-content,
 #main-layout .main-layout-layout-collapsed .layout-content {
-  margin: 48px 24px 0;
+  margin: 48px 24px;
   overflow: initial;
 }
 
