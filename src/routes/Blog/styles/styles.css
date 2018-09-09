@@ -120,4 +120,21 @@
   border-color: black;
 }
 
+<<<<<<< HEAD
+.gif-image {
+	padding-top: 30px;
+	padding-bottom: 30px;
+	height: 360px;
+}
+
+.gif-image img {
+	position: relative;
+	height: 100%;
+	float: left
+	/* right: 100px; */
+
+}
+
+=======
+>>>>>>> b31ca47b251815a33f68fe74ba5a9b7d8799608f
 /*# sourceMappingURL=styles.css.map */
