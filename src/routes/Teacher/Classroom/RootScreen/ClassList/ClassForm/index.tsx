@@ -15,10 +15,12 @@ interface IClassFormProps {
   // if the class data is not null, then it means the component
   // will be acting as the edit class form
   classData?: IClassData | null;
+  userId?: string;
 }
 
 interface IClassFormPropsWithContext extends IClassFormProps {
   token: string;
+  userId?: string;
 }
 
 interface IClassFormState {
@@ -213,19 +215,37 @@ class ClassForm extends React.Component<
           // get back the id of the class of the server
           // append the class to the original class array
           // close the form
-          this.props
-            .addClass({
-              variables: {
-                name: this.state.className,
-                description: this.state.classDescription,
-                avatar: avatarData,
-                falcutyId: this.state.classFalcuty,
-                lineId: this.state.classLine
-              },
-              refetchQueries: [{ query: getClassQuery }],
-              awaitRefetchQueries: true
-            })
-            .then(this.props.toggleClassForm);
+          this.props.addClass({
+            variables: {
+              name: this.state.className,
+              description: this.state.classDescription,
+              avatar: avatarData,
+              falcutyId: this.state.classFalcuty,
+              lineId: this.state.classLine
+            },
+            update: (store: any, { data: { createClassroom } }: any) => {
+              // Read the data from our cache for this query.
+              const data = store.readQuery({
+                query: getClassQuery,
+                variables: { Id: this.props.userId }
+              });
+              console.log(createClassroom);
+              console.log(data);
+              try {
+                data.user[0].classrooms.push(createClassroom);
+                console.log(data);
+
+                store.writeQuery({
+                  query: getClassQuery,
+                  variables: { Id: this.props.userId },
+                  data
+                });
+              } catch (err) {
+                console.log(err);
+              }
+              this.props.toggleClassForm();
+            }
+          });
         }
       } else {
         // do something when the form is not valid
@@ -275,6 +295,14 @@ class ClassForm extends React.Component<
 
 export default (props: IClassFormProps) => (
   <AppContext.Consumer>
-    {value => value.token && <ClassForm {...props} token={value.token} />}
+    {value =>
+      value.token && (
+        <ClassForm
+          userId={value.userId as any}
+          {...props}
+          token={value.token}
+        />
+      )
+    }
   </AppContext.Consumer>
 );

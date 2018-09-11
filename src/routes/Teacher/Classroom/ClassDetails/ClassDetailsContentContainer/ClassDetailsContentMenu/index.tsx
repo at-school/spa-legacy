@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
     fontSize: "1rem",
     paddingLeft: "0",
     marginRight: "32px",
-    paddingRight: "12px",
+    paddingRight: "32px",
     borderRight: "2px solid #f1f1f1"
   },
   itemStyle: {
-    marginBottom: "5px",
+    marginBottom: "12px",
     cursor: "pointer",
     color: "#999"
   },

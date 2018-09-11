@@ -110,6 +110,7 @@ class ClassList extends React.Component<
 
   public render() {
     let classList = []
+    console.log(this.props.data)
     try {
       classList = this.props.data.user[0].classrooms;
     } catch(err) {

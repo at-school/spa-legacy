@@ -33,13 +33,17 @@
   margin-bottom: 0;
   margin-top: 20px;
 }
-#RegisterForm i {
+#RegisterForm .anticon-facebook,
+#RegisterForm .anticon-twitter,
+#RegisterForm .anticon-google {
   font-size: 35px;
   margin-right: 10px;
   margin-bottom: 10px;
   transition: linear 0.3s;
 }
-#RegisterForm i:hover {
+#RegisterForm .anticon-facebook:hover,
+#RegisterForm .anticon-twitter:hover,
+#RegisterForm .anticon-google:hover {
   opacity: 0.8;
 }
 #RegisterForm .anticon-facebook {

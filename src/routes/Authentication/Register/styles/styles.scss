@@ -7,7 +7,7 @@ $google-icon-color: rgb(219, 68, 55);
 
 #RegisterForm {
   margin-bottom: 30px;
-  
+
   .main-container {
     display: flex;
     flex-direction: column;
@@ -30,7 +30,6 @@ $google-icon-color: rgb(219, 68, 55);
       min-width: 100%;
       max-width: 100%;
     }
-
   }
 
   .form {
@@ -45,16 +44,19 @@ $google-icon-color: rgb(219, 68, 55);
   }
 
   // styling 3 icons: Facebook, Twitter, and Google
-  i {
-    font-size: 35px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    transition: linear 0.3s;
-  }
 
-  i:hover {
-    opacity: 0.8;
-  }
+  .anticon-facebook,
+    .anticon-twitter,
+    .anticon-google {
+      font-size: 35px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: linear 0.3s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
 
   .anticon-facebook {
     color: $facebook-icon-color;

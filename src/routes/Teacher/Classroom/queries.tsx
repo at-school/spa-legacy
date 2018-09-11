@@ -17,8 +17,12 @@ const addClassroomMutation = gql`
         falcutyId: $falcutyId
       }
     ) {
+      Id
       name
       description
+      avatar
+      falcutyId
+      lineId
     }
   }
 `;

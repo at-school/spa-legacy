@@ -40,6 +40,8 @@ class AddChatRoom extends React.Component<
     console.log(this.props);
   }
 
+  
+
   public render() {
     return (
       <div className="add-chatroom">

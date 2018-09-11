@@ -1,7 +1,10 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
+import StudentContent from "./StudentContent";
 
 const ClassDetailsContentContent = (props: any) => {
-  return <h1>Actual content goes here</h1>;
+  const classId = props.match.params.id
+  return <StudentContent classId={classId}/>;
 };
 
-export default ClassDetailsContentContent;
+export default withRouter(ClassDetailsContentContent);

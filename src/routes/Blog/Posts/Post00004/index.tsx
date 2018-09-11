@@ -14,17 +14,10 @@ const Content = () => {
   );
 };
 
-<<<<<<< HEAD
-const postOverview = `This week, we've discovered a huge issue related to Github Pages.
-Also, we haved finished the migration, now we're adding the new
-functionalities: email intergration as well as integration between the face recognition of
-the client and the server.`;
-=======
 const postOverview = `This week, we've discovered a huge issue related to Github Pages. 
   Also, we haved finished the migration, now we're adding the new 
   functionalities: email, intergration between the face recognition of 
   the client and the server.`;
->>>>>>> b31ca47b251815a33f68fe74ba5a9b7d8799608f
 
 export default createPost(
   Content,

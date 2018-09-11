@@ -40,13 +40,22 @@ class Content extends React.Component<any, { selectedRoom: any }> {
           query: getChatRoomIdQuery,
           variables: { username: this.props.username }
         })
-        .then((res: any) => res.data.user[0].chatrooms)
+        .then((res: any) => {
+          try {
+            return res.data.user[0].chatrooms;
+          } catch (err) {
+            console.log(err);
+            return [];
+          }
+        })
         .then((chatrooms: any) => {
           console.log(chatrooms);
-          for (const chatroom of chatrooms) {
-            this.messageSocket.emit("sendMessage", {
-              chatroomId: chatroom.Id
-            });
+          if (chatrooms) {
+            for (const chatroom of chatrooms) {
+              this.messageSocket.emit("sendMessage", {
+                chatroomId: chatroom.Id
+              });
+            }
           }
         });
     });
@@ -62,8 +71,16 @@ class Content extends React.Component<any, { selectedRoom: any }> {
     return (
       <TeacherMessageSocket.Provider value={{ socket: this.messageSocket }}>
         <Route exact={true} path={"/teacher/dashboard"} component={Dashboard} />
-        <Route exact={true} path={"/teacher/classroom"} component={ClassroomScreenRoot} />
-        <Route exact={true} path="/teacher/classroom/:id/:item" component={ClassDetails} />
+        <Route
+          exact={true}
+          path={"/teacher/classroom"}
+          component={ClassroomScreenRoot}
+        />
+        <Route
+          exact={true}
+          path="/teacher/classroom/:id/:item"
+          component={ClassDetails}
+        />
         <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
         <Route exact={true} path={"/teacher/messages"} component={Messages} />
         {!this.props.history.location.pathname.includes("messages") && (
