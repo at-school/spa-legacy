@@ -5,8 +5,9 @@ import { graphql } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../../../components/Spinner";
+import { getStudentsQuery } from "../../../../../queries";
 import AddStudentModal from "./AddStudentModal";
-import { getStudentsQuery, removeStudentMutation } from "./queries";
+import { removeStudentMutation } from "./queries";
 
 class StudentContent extends React.Component<any, any> {
   public state = {

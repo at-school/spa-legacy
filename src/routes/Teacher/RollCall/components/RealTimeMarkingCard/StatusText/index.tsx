@@ -5,7 +5,7 @@ import React from "react";
  * After a certain amount of time, it will add or remove dot at the end of the text.
  */
 export default class StatusText extends React.Component<
-  {},
+  { changing: boolean },
   { numberOfDots: number; currentDots: string }
 > {
   public state = {
@@ -29,15 +29,17 @@ export default class StatusText extends React.Component<
 
   /** Function that handles add or remove dot from the text/state */
   private manageDot = () => {
-    let dots = "";
-    for (let i = 0; i < this.state.numberOfDots; i++) {
-      dots += ".";
+    if (this.props.changing) {
+      let dots = "";
+      for (let i = 0; i < this.state.numberOfDots; i++) {
+        dots += ".";
+      }
+      if (this.state.numberOfDots === 3) {
+        this.setState({ numberOfDots: 0 });
+      } else {
+        this.setState({ numberOfDots: this.state.numberOfDots + 1 });
+      }
+      this.setState({ currentDots: dots });
     }
-    if (this.state.numberOfDots === 3) {
-      this.setState({ numberOfDots: 0 });
-    } else {
-      this.setState({ numberOfDots: this.state.numberOfDots + 1 });
-    }
-    this.setState({ currentDots: dots });
   };
 }

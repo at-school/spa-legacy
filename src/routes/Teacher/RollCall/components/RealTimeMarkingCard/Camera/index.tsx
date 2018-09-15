@@ -1,10 +1,31 @@
 import React from "react";
 import Webcam from "react-webcam";
+import AppContext from "../../../../../../contexts/AppContext";
 
-export default class Camera extends React.Component {
+const uploadImage = async (imageData: any, token: string) => {
+  const response = await fetch("http://127.0.0.1:5000/camera/upload", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: "Bearer " + token
+    },
+    body: JSON.stringify({ imageData })
+  });
+  const data = await response.json();
+  if (data.success) {
+    return data;
+  }
+
+  const errMessage = await data.message;
+  throw new Error(errMessage);
+};
+
+class Camera extends React.Component<any, any> {
   public state = {
     sendImage: null
   };
+
+  public sendImageInterval: any;
 
   private webcam: any;
 
@@ -15,17 +36,20 @@ export default class Camera extends React.Component {
     const imageSrc = this.webcam.getScreenshot();
     return imageSrc;
   };
-  //   upload() {
-  //     const imageSrc = this.webcam.getScreenshot();
-  //     if (imageSrc !== null) uploadImage(imageSrc);
-  //   }
-  //   componentDidMount() {
-  //     let sendImage = setInterval(() => this.upload(), 500);
-  //     this.setState({ sendImage });
-  //   }
-  //   componentWillUnmount() {
-  //     clearInterval(this.state.sendImage);
-  //   }
+  public upload() {
+    const imageSrc = this.webcam.getScreenshot();
+    if (imageSrc) {
+      uploadImage(imageSrc, this.props.token)
+        .then(data => this.props.markStudents(data.peopleFound))
+        .catch(err => console.log(err));
+    }
+  }
+  public componentDidMount() {
+    this.sendImageInterval = setInterval(() => this.upload(), 500);
+  }
+  public componentWillUnmount() {
+    clearInterval(this.sendImageInterval);
+  }
   public render() {
     return (
       <div>
@@ -40,3 +64,9 @@ export default class Camera extends React.Component {
     );
   }
 }
+
+export default (props: any) => (
+  <AppContext.Consumer>
+    {value => <Camera {...props} token={value.token} />}
+  </AppContext.Consumer>
+);

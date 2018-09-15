@@ -103,6 +103,7 @@ body {
   display: flex;
   align-content: center;
   justify-content: center;
+  animation-play-state: paused;
 }
 .real-time-marking-card .real-time-marking-container .camera-loading {
   width: 100px;
@@ -204,6 +205,9 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+.real-time-marking-card .real-time-marking-container .camera-loading .paused {
+  animation-play-state: paused;
 }
 .real-time-marking-card .status-text {
   margin-top: 20px;

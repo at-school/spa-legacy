@@ -5,7 +5,8 @@ import { graphql, withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { searchStudents } from "../../../../../../../../api/classroom";
 import AppContext from "../../../../../../../../contexts/AppContext";
-import { addStudentMutation, getStudentsQuery } from "../queries";
+import { getStudentsQuery } from "../../../../../../queries";
+import { addStudentMutation } from "../queries";
 import AddStudentInput from "./AddStudentInput";
 import StudentRow from "./StudentRow";
 

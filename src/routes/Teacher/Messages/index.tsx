@@ -203,12 +203,12 @@ class Messages extends React.Component<
 
   public render() {
     const chatrooms = this.props.chatRoomList.user[0].chatrooms;
-
+    console.log(chatrooms)
     return (
       <div className="messages">
         <MessageList
           toggleAddChatRoom={this.toggleAddChatRoom}
-          roomList={chatrooms}
+          roomList={chatrooms ? chatrooms : []}
           changeSelectedRoomId={this.changeSelectedRoomId}
           // selectedRoom={this.state.selectedRoom}
         />
@@ -259,7 +259,7 @@ const MessagesWithChatRoom = compose(
       };
     },
     name: "chatRoomList"
-  }), 
+  }),
   branch(({ chatRoomList }) => {
     return !chatRoomList.user && chatRoomList.loading;
   }, renderComponent(Spinner))
@@ -281,7 +281,11 @@ export default (props: any) => (
               const { user } = data;
 
               const { latestChatroom } = user[0];
-              const { Id } = latestChatroom[0];
+              const { Id } =
+                latestChatroom && latestChatroom.length > 0
+                  ? latestChatroom[0]
+                  : "";
+              console.log(data)
 
               return (
                 <MessagesWithChatRoom

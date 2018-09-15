@@ -1,53 +1,20 @@
 import { Card, Modal } from "antd";
 import { css, StyleSheet } from "aphrodite";
-import { gql } from "apollo-boost";
 import moment from "moment";
 import React from "react";
-import { graphql } from "react-apollo";
-import { branch, compose, renderComponent } from "recompose";
-import ScheduleModal from "./ScheduleModal";
-
-const getScheduleQuery = gql`
-  query GetSchedule($day: String) {
-    schedule(arguments: { day: $day }) {
-      line
-      startTime
-      endTime
-    }
-  }
-`;
+import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
 
 class OverviewCardLine extends React.Component<any, any> {
   public state = {
     day: moment().format("dddd"),
-    modalVisible: false,
     currentLine: "N/A"
   };
 
-  private interval: any;
-
-  public componentDidMount() {
-    this.interval = setInterval(this.updateTime, 60000);
-  }
-
-  public componentWillMount() {
-    this.updateLine();
-  }
-
-  public componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  public toggleModal = () =>
-    this.setState((prevState: any) => ({
-      modalVisible: !prevState.modalVisible
-    }));
-
   public scheduleInfoModal = () => {
-    if (this.props.data) {
-      const schedule = this.props.data.schedule.map((item: any) => {
+    if (this.props.classroomContext.schedule) {
+      const schedule = this.props.classroomContext.schedule.map((item: any) => {
         const className = css(
-          item.line === this.state.currentLine && styles.bold,
+          item.line === this.props.classroomContext.line && styles.bold,
           styles.flexRow
         );
         return (
@@ -67,13 +34,11 @@ class OverviewCardLine extends React.Component<any, any> {
   };
 
   public render() {
+    console.log(this.props);
+
+
     return (
       <React.Fragment>
-        <ScheduleModal
-          toggleModal={this.toggleModal}
-          visible={this.state.modalVisible}
-          title="Schedule"
-        />
         <Card
           title={
             <div className="head-container">
@@ -85,7 +50,7 @@ class OverviewCardLine extends React.Component<any, any> {
               <div className="overview-info-card-text-container">
                 <p className="overview-info-card-text-title">Line</p>
                 <h3 className="overview-info-card-text-description">
-                  {this.state.currentLine}
+                  {this.props.classroomContext.line ? this.props.classroomContext.line : "N/A"}
                 </h3>
               </div>
             </div>
@@ -102,54 +67,6 @@ class OverviewCardLine extends React.Component<any, any> {
       </React.Fragment>
     );
   }
-
-  private updateLine = () => {
-    const { data } = this.props;
-    if (data.schedule.length > 0) {
-      const { schedule }: any = data;
-      const currentTime = moment();
-
-      let isInSchedule = false;
-      for (const scheduleItem of schedule) {
-        if (
-          scheduleItem.hasOwnProperty("startTime") &&
-          scheduleItem.hasOwnProperty("endTime")
-        ) {
-          const startTime = moment(scheduleItem.startTime, "HH:mm:ss");
-          const endTime = moment(scheduleItem.endTime, "HH:mm:ss");
-          const isBetween = currentTime.isBetween(startTime, endTime);
-
-          if (isBetween && this.state.currentLine !== scheduleItem.line) {
-            this.setState({ currentLine: scheduleItem.line });
-            return;
-          } else if (isBetween) {
-            isInSchedule = true;
-            break;
-          }
-        }
-      }
-
-      if (!isInSchedule) {
-        this.setState({ currentLine: "N/A" });
-      }
-    } else {
-      this.setState({ currentLine: "N/A" });
-    }
-  };
-
-  private updateTime = () => {
-    const { data } = this.props;
-    if (!data.loading) {
-      const currentDay = moment().format("dddd");
-      if (currentDay !== this.state.day) {
-        this.props.data.refetch({ day: moment().format("dddd") }).then(() => {
-          this.setState({ day: currentDay }, this.updateLine);
-        });
-      } else {
-        this.updateLine();
-      }
-    }
-  };
 }
 
 const styles = StyleSheet.create({
@@ -165,17 +82,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const LoadingComponent = () => <Card loading={true} />;
-
-export default compose(
-  graphql(getScheduleQuery, {
-    options: () => {
-      return {
-        variables: { day: moment().format("dddd") }
-      };
-    }
-  }),
-  branch(({ data }) => {
-    return !data.user && data.loading;
-  }, renderComponent(LoadingComponent))
-)(OverviewCardLine);
+export default withClassroomContext(OverviewCardLine);

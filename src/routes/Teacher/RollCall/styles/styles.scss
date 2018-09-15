@@ -118,6 +118,7 @@ body {
     display: flex;
     align-content: center;
     justify-content: center;
+    animation-play-state: paused;
 
     .camera-loading {
       $loading-color: rgb(24, 144, 255);
@@ -126,6 +127,7 @@ body {
       height: 100px;
       border-radius: 100%;
       position: relative;
+      
 
       .circle {
         background: none;
@@ -237,6 +239,10 @@ body {
         100% {
           transform: rotate(360deg);
         }
+      }
+
+      .paused {
+        animation-play-state: paused;
       }
     }
   }
