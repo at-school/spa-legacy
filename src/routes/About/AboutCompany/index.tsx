@@ -87,8 +87,8 @@ const WebAppTimeline = () => (
         2018-08-19 (0.4 weeks)
       </Timeline.Item>
       <Timeline.Item color="blue">
-        Make the report of each individual student downloadable in PDF
-        2018-09-01 (1 week)
+        Make the report of each individual student downloadable in PDF as well
+        as creating the schedule, marks. 2018-10-01 (4 weeks)
       </Timeline.Item>
       <Timeline.Item
         dot={<Icon type="clock-circle-o" style={{ fontSize: "16px" }} />}
@@ -112,19 +112,19 @@ const MobileAppTimeline = () => (
         base64 data 2018-07-12
       </Timeline.Item>
       <Timeline.Item color="red">
-        Integrate chat app using Socket.IO 2018-08-31
+        Integrate chat app using Socket.IO 2018-09-31
       </Timeline.Item>
       <Timeline.Item color="blue">
-        Enable the ability to create and edit classroom 2018-08-31 (1 week)
+        Enable the ability to create and edit classroom 2018-10-15 (1 week)
       </Timeline.Item>
       <Timeline.Item color="blue">
         Make the report of each individual student downloadable in PDF
-        2018-09-08 (1 week)
+        2018-10-20 (1 week)
       </Timeline.Item>
       <Timeline.Item
         dot={<Icon type="clock-circle-o" style={{ fontSize: "16px" }} />}
       >
-        Beta Release 2018-09-07
+        Beta Release 2018-10-30
       </Timeline.Item>
     </Timeline>
   </div>
@@ -147,18 +147,14 @@ const ServerTimeline = () => (
         Create Chat socket using Socket.IO and integrate Emojfier into chat
         2018-07-30
       </Timeline.Item>
-      <Timeline.Item color="red">
-        Build APIs to download and print reports for students as well as
-        teachers 2018-08-20 (2 weeks)
-      </Timeline.Item>
       <Timeline.Item color="blue">
         Build new database model for all students marks and attendances
-        2018-08-31 (2 weeks)
+        2018-09-30 (10 weeks)
       </Timeline.Item>
       <Timeline.Item
         dot={<Icon type="clock-circle-o" style={{ fontSize: "16px" }} />}
       >
-        Deployment 2018-09-07 * Dependent on finalisation of all prior
+        Deployment 2018-10-10 * Dependent on finalisation of all prior
         deliverables and server *
       </Timeline.Item>
     </Timeline>
