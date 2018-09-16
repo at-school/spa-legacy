@@ -55,19 +55,25 @@ class RollCall extends React.Component<any, any> {
     }) as any;
 
     const markStudentsList = studentList.map((student: any) => student.Id);
+    console.log(markStudentsList)
 
     const markStudents = currentStudentId.filter(
       (value: any) => -1 !== markStudentsList.indexOf(value)
     );
+    console.log(this.state.students)
 
     if (markStudents.length > 0) {
       this.setState((prevState: any) => ({
-        students: prevState.students.map(
-          (student: any) =>
-            markStudents.includes(student.Id)
-              ? { ...student, in: true }
-              : { ...student }
-        )
+        students: prevState.students.map((student: any) => {
+          if (markStudents.includes(student.Id)) {
+            console.log("Here")
+            console.log(student.Id)
+            console.log(markStudents)
+            console.log("Here")
+            return { ...student, in: true };
+          }
+          return { ...student };
+        })
       }));
     }
   };

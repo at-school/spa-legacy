@@ -18,20 +18,20 @@ const SuccessProbability = () => (
 				<tr>
 					<td>Database configuration and management</td>
 					<td>10%</td>
-					<td>Microsoft Azure SQL</td>
-					<td>Stephan</td>
-					<td>90%</td>
+					<td>MLab</td>
+					<td>Anh</td>
+					<td>70%</td>
 				</tr>
 				<tr>
 					<td>Web App UX design</td>
-					<td>15% </td>
+					<td>5% </td>
 					<td>Scss, Adobe XD</td>
 					<td>Anh/Charl</td>
 					<td>80%</td>
 				</tr>
 				<tr>
 					<td>Web App functionality</td>
-					<td>5%</td>
+					<td>10%</td>
 					<td>Typescript, React</td>
 					<td>Anh/Charl</td>
 					<td>80%</td>
@@ -80,14 +80,14 @@ const SuccessProbability = () => (
 				</tr>
 				<tr>
 					<td>Server</td>
-					<td>15%</td>
+					<td>3%</td>
 					<td>Python, Flask</td>
 					<td>Anh/Charl/Stephan</td>
 					<td>95%</td>
 				</tr>
 				<tr>
 					<td>Deployment</td>
-					<td>13%</td>
+					<td>10%</td>
 					<td>something</td>
 					<td>Anh</td>
 					<td>30%</td>
@@ -95,7 +95,7 @@ const SuccessProbability = () => (
 			</tbody>
 		</table>
 		<h2>Estimated Probability of success: ∑(importance of outcome * probability of success)</h2>
-		<h2 style={{ fontWeight: 'bold' }}>EPS: 50%</h2>
+		<h2 style={{ fontWeight: 'bold' }}>EPS: 60.85%</h2>
 		</div>
 		</div>
 );

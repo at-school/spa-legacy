@@ -12,6 +12,8 @@ const uploadImage = async (imageData: any, token: string) => {
     body: JSON.stringify({ imageData })
   });
   const data = await response.json();
+  console.log("Data received ");
+  console.log(data);
   if (data.success) {
     return data;
   }
@@ -54,7 +56,6 @@ class Camera extends React.Component<any, any> {
     return (
       <div>
         <Webcam
-          style={{ display: "none" }}
           audio={false}
           ref={this.setRef}
           width="100%"

@@ -16,7 +16,7 @@ const Content = () => {
 
 const postOverview = `We have decided to deplay the deployment of the Single Page Web Application.
 					  We have also created a module in python 'PyMail' for managing email data.
-					  Along with creating Chaches in graphQL to mimimise email loading time.  `;
+					  Along with creating caches in graphQL to mimimise email loading time.  `;
 
 export default createPost(
   Content,
