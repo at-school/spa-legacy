@@ -239,67 +239,69 @@ class Content extends React.Component<any, any> {
       return false;
     };
 
-    if (this.state.schedule.length === 0) {
-      if (
-        !this.props.getScheduleQuery.schedule &&
-        this.props.getScheduleQuery.schedule.length <= 0
-      ) {
-        this.setState({ schedule: this.props.getScheduleQuery.schedule });
-      } else {
-        getNextSchedule();
-      }
-      return;
-    } else if (isTheEnd()) {
-      getNextSchedule();
-      return;
-    } else if (isTheStart()) {
-      if (
-        this.state.schedule.length > 0 &&
-        (this.state.schedule[0] as any).line !==
-          String(this.state.currentMoment.line)
-      ) {
-        this.setState(
-          (prevState: any) => ({
-            currentMoment: {
-              ...prevState.currentMoment,
-              line: (this.state.schedule[0] as any).line
-            }
-          }),
-          () => getClassInfo(String((this.state.schedule[0] as any).line))
-        );
-        return;
-      }
-    } else {
-      for (const scheduleItem of this.props.getScheduleQuery.schedule) {
+    if (!this.props.getScheduleQuery.loading) {
+      if (this.state.schedule.length === 0) {
         if (
-          scheduleItem.hasOwnProperty("startTime") &&
-          scheduleItem.hasOwnProperty("endTime")
+          this.props.getScheduleQuery.schedule &&
+          this.props.getScheduleQuery.schedule.length >= 0
         ) {
-          const startTime = moment(scheduleItem.startTime, "HH:mm:ss");
-          const endTime = moment(scheduleItem.endTime, "HH:mm:ss");
-          const isBetween = moment().isBetween(startTime, endTime);
-
-          if (
-            isBetween &&
-            this.state.currentMoment.line !== scheduleItem.line
-          ) {
-            this.setState((prevState: any) => ({
+          this.setState({ schedule: this.props.getScheduleQuery.schedule });
+        } else {
+          getNextSchedule();
+        }
+        return;
+      } else if (isTheEnd()) {
+        getNextSchedule();
+        return;
+      } else if (isTheStart()) {
+        if (
+          this.state.schedule.length > 0 &&
+          (this.state.schedule[0] as any).line !==
+            String(this.state.currentMoment.line)
+        ) {
+          this.setState(
+            (prevState: any) => ({
               currentMoment: {
                 ...prevState.currentMoment,
-                line: scheduleItem.line
+                line: (this.state.schedule[0] as any).line
               }
-            }));
-            getClassInfo(String(scheduleItem.line));
-            return;
-          } else if (isBetween) {
-            return;
+            }),
+            () => getClassInfo(String((this.state.schedule[0] as any).line))
+          );
+          return;
+        }
+      } else {
+        for (const scheduleItem of this.props.getScheduleQuery.schedule) {
+          if (
+            scheduleItem.hasOwnProperty("startTime") &&
+            scheduleItem.hasOwnProperty("endTime")
+          ) {
+            const startTime = moment(scheduleItem.startTime, "HH:mm:ss");
+            const endTime = moment(scheduleItem.endTime, "HH:mm:ss");
+            const isBetween = moment().isBetween(startTime, endTime);
+
+            if (
+              isBetween &&
+              this.state.currentMoment.line !== scheduleItem.line
+            ) {
+              this.setState((prevState: any) => ({
+                currentMoment: {
+                  ...prevState.currentMoment,
+                  line: scheduleItem.line
+                }
+              }));
+              getClassInfo(String(scheduleItem.line));
+              return;
+            } else if (isBetween) {
+              return;
+            }
           }
         }
-      }
-      if (this.state.currentMoment.line) {
-        this.setState((prevState: any) => ({
-          currentMoment: { ...prevState.currentMoment, line: undefined }
-        }));
+        if (this.state.currentMoment.line) {
+          this.setState((prevState: any) => ({
+            currentMoment: { ...prevState.currentMoment, line: undefined }
+          }));
+        }
       }
     }
   };
