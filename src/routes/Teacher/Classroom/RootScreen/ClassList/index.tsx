@@ -6,16 +6,13 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../components/Spinner";
 import AppContext from "../../../../../contexts/AppContext";
-import {
-  editClassroomMutation,
-  getClassQuery,
-  getClassQueryById,
-  removeClassMutation
-} from "../../queries";
+import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
+import { editClassroomMutation, getClassQuery, getClassQueryById, removeClassMutation } from "../../queries";
 import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
 import AddClassForm from "./NewClassForm";
+
 
 interface IClassListState {
   classes: IClassData[];
@@ -33,6 +30,8 @@ class ClassList extends React.Component<
     client: any;
     editClassMutation: any;
     history: any;
+    userId: string;
+    classroomContext: any;
   },
   IClassListState
 > {
@@ -93,7 +92,10 @@ class ClassList extends React.Component<
       const classDetails = Lodash.find(this.props.data.user[0].classrooms, {
         Id
       });
-      this.props.history.push("/teacher/classroom/" + String(Id) + "/students", classDetails);
+      this.props.history.push(
+        "/teacher/classroom/" + String(Id) + "/students",
+        classDetails
+      );
     } catch (err) {
       console.log(err);
     }
@@ -104,23 +106,43 @@ class ClassList extends React.Component<
       variables: {
         Id: id
       },
-      refetchQueries: [{ query: getClassQuery }]
+      update: (store: any, { data: { removeClassroom } }: any) => {
+        this.props.classroomContext.getClassInfo("")
+        const data = store.readQuery({
+          query: getClassQuery,
+          variables: { Id: this.props.userId }
+        });
+
+        try {
+          data.user[0].classrooms = data.user[0].classrooms.filter(
+            (classroom: any) => classroom.Id !== removeClassroom.Id
+          );
+
+          store.writeQuery({
+            query: getClassQuery,
+            variables: { Id: this.props.userId },
+            data
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
     });
   };
 
   public render() {
-    let classList = []
-    console.log(this.props.data)
+    let classList = [];
+    console.log(this.props.data);
     try {
       classList = this.props.data.user[0].classrooms;
-    } catch(err) {
-      classList = []
+    } catch (err) {
+      classList = [];
     }
     return (
       <div className="class-list-container">
         <TransitionGroup className="class-list">
           <CSSTransition key={"-1"} timeout={500} classNames="fade">
-            <AddClassForm />
+            <AddClassForm getClassInfo={this.props.classroomContext.getClassInfo}/>
           </CSSTransition>
           {classList.map((c: any, index: number) => (
             <CSSTransition key={c.Id} timeout={500} classNames="fade">
@@ -157,14 +179,14 @@ const ClassListGraphQl = compose(
   // with compose, order matters -- we want our apollo HOC up top
   // so that the HOCs below it will have access to the data prop
   graphql(getClassQuery, {
-    options: (props: any) => ({ variables: { Id: props.Id } })
+    options: (props: any) => ({ variables: { Id: props.userId } })
   }),
   graphql(removeClassMutation, { name: "removeClassMutation" }),
   graphql(editClassroomMutation, { name: "editClassMutation" }),
   branch(({ data }) => {
     return !data.user && data.loading;
   }, renderComponent(Spinner))
-)(withRouter(ClassList as any));
+)(withClassroomContext(withRouter(ClassList as any)));
 
 export default (props: any) => (
   <ApolloConsumer>
@@ -176,7 +198,7 @@ export default (props: any) => (
             {...props}
             token={value.token}
             client={client}
-            Id={value.userId}
+            userId={value.userId}
           />
         )}
       </AppContext.Consumer>

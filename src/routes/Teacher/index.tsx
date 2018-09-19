@@ -13,7 +13,7 @@ import ClassroomScreenRoot from "./Classroom/RootScreen";
 import Dashboard from "./Dashboard";
 import Messages from "./Messages";
 import { getChatRoomIdQuery } from "./Messages/queries/queries";
-import { getClassQuery, getScheduleQuery, getStudentsQuery } from "./queries";
+import { getClassQuery, getScheduleQuery } from "./queries";
 import RollCall from "./RollCall";
 
 class Content extends React.Component<any, any> {
@@ -109,7 +109,7 @@ class Content extends React.Component<any, any> {
             students: this.state.classroomStudents,
             schedule: this.state.schedule,
             classId: this.state.currentClassId,
-            getClassInfo: this.getClassInfo
+            getClassInfo: this.saveClassId
           }}
         >
           <Route
@@ -137,33 +137,26 @@ class Content extends React.Component<any, any> {
     );
   }
 
-  public getClassInfo = (lineId: string) => {
-    this.props.client
-      .query({
+  public saveClassId = (currentClassId: string) => {
+    this.setState({ currentClassId });
+  };
+
+  public updateSchedule = () => {
+    const getClassInfo = async (lineId: string) => {
+      const res = await this.props.client.query({
         query: getClassQuery,
         variables: {
           teacherUsername: this.props.username,
           lineId
-        },
-        refetchQueries: [
-          {
-            query: getStudentsQuery,
-            variables: {
-              Id: lineId
-            }
-          }
-        ]
-      })
-      .then((res: any) => {
-        if (res.data && res.data.classroom && res.data.classroom.length > 0) {
-          this.setState({
-            currentClassId: res.data.classroom[0].Id
-          });
         }
       });
-  };
+      if (res.data && res.data.classroom && res.data.classroom.length > 0) {
+        return res.data.classroom[0].Id;
+      } else {
+        return "";
+      }
+    };
 
-  public updateSchedule = () => {
     // get next day schedule
     const getNextSchedule = () => {
       if (!this.state.loading) {
@@ -268,7 +261,10 @@ class Content extends React.Component<any, any> {
                 line: (this.state.schedule[0] as any).line
               }
             }),
-            () => this.getClassInfo(String((this.state.schedule[0] as any).line))
+            () =>
+              getClassInfo(String((this.state.schedule[0] as any).line)).then(
+                (classId: string) => this.saveClassId(classId)
+              )
           );
           return;
         }
@@ -292,7 +288,7 @@ class Content extends React.Component<any, any> {
                   line: scheduleItem.line
                 }
               }));
-              this.getClassInfo(String(scheduleItem.line));
+              getClassInfo(String(scheduleItem.line)).then(classId => this.saveClassId(classId));
               return;
             } else if (isBetween) {
               return;

@@ -1,15 +1,21 @@
 import React from "react";
 import Webcam from "react-webcam";
 import AppContext from "../../../../../../contexts/AppContext";
+import { withClassroomContext } from "../../../../../../contexts/Teacher/ClassroomContext";
 
-const uploadImage = async (imageData: any, token: string) => {
+const uploadImage = async (
+  imageData: string,
+  line: string,
+  classId: string,
+  token: string
+) => {
   const response = await fetch("http://127.0.0.1:5000/camera/upload", {
     method: "POST",
     headers: {
       "content-type": "application/json",
       Authorization: "Bearer " + token
     },
-    body: JSON.stringify({ imageData })
+    body: JSON.stringify({ imageData, line, classId })
   });
   const data = await response.json();
   console.log("Data received ");
@@ -41,7 +47,12 @@ class Camera extends React.Component<any, any> {
   public upload() {
     const imageSrc = this.webcam.getScreenshot();
     if (imageSrc) {
-      uploadImage(imageSrc, this.props.token)
+      uploadImage(
+        imageSrc,
+        this.props.classroomContext.line,
+        this.props.classroomContext.classId,
+        this.props.token
+      )
         .then(data => this.props.markStudents(data.peopleFound))
         .catch(err => console.log(err));
     }
@@ -53,6 +64,7 @@ class Camera extends React.Component<any, any> {
     clearInterval(this.sendImageInterval);
   }
   public render() {
+    console.log(this.props.classroomContext);
     return (
       <div style={{ position: "fixed", zIndex: -1, visibility: "hidden" }}>
         <Webcam
@@ -66,8 +78,8 @@ class Camera extends React.Component<any, any> {
   }
 }
 
-export default (props: any) => (
+export default withClassroomContext((props: any) => (
   <AppContext.Consumer>
     {value => <Camera {...props} token={value.token} />}
   </AppContext.Consumer>
-);
+));

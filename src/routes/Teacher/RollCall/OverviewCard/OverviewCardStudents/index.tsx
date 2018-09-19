@@ -4,7 +4,6 @@ import React from "react";
 
 export default class OverviewCardStudents extends React.Component<any> {
   public studentsInfoModal = () => {
-    console.log(this.props.students);
     const schedule = this.props.students.map((student: any) => {
       const className = css(styles.flexRow);
       return (
@@ -34,12 +33,14 @@ export default class OverviewCardStudents extends React.Component<any> {
             <div className="overview-info-card-text-container">
               <p className="overview-info-card-text-title">Students</p>
               <h3 className="overview-info-card-text-description">
-                {
+                {this.props.students.length === 0 && "N/A"}
+
+                {this.props.students.length !== 0 &&
                   this.props.students.filter((student: any) => student.in)
-                    .length
-                }
-                /
-                {this.props.students.length} <small>in class</small>
+                    .length + "/"}
+
+                {this.props.students.length !== 0 && this.props.students.length}
+                {this.props.students.length !== 0 && <small>in class</small>}
               </h3>
             </div>
           </div>

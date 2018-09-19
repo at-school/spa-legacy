@@ -55,7 +55,7 @@ const editClassroomMutation = gql`
 const removeClassMutation = gql`
   mutation($Id: ID) {
     removeClassroom(arguments: { Id: $Id }) {
-      name
+      Id
     }
   }
 `;

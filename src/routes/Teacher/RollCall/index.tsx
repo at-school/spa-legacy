@@ -66,10 +66,6 @@ class RollCall extends React.Component<any, any> {
       this.setState((prevState: any) => ({
         students: prevState.students.map((student: any) => {
           if (markStudents.includes(student.Id)) {
-            console.log("Here")
-            console.log(student.Id)
-            console.log(markStudents)
-            console.log("Here")
             return { ...student, in: true };
           }
           return { ...student };
@@ -85,7 +81,7 @@ class RollCall extends React.Component<any, any> {
         <ActivityCard />
         <Row gutter={16}>
           <Col xs={24} md={12} lg={24} xl={12}>
-            <RealTimeMarkingCard markStudents={this.markStudents} />
+            <RealTimeMarkingCard students={this.state.students} markStudents={this.markStudents} />
           </Col>
           <Col xs={24} md={12} lg={24} xl={12}>
             <StudentOnTimeCard />
@@ -147,6 +143,8 @@ const ActivityListItem = (item: any) => (
 
 const RollCallWithGraphql = graphql(getStudentsQuery, {
   options: (props: any) => {
+    console.log("props changing")
+    console.log(props.classroomContext.classId)
     return {
       variables: {
         Id: props.classroomContext.classId
