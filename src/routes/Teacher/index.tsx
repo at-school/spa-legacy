@@ -108,7 +108,8 @@ class Content extends React.Component<any, any> {
             line: this.state.currentMoment.line as any,
             students: this.state.classroomStudents,
             schedule: this.state.schedule,
-            classId: this.state.currentClassId
+            classId: this.state.currentClassId,
+            getClassInfo: this.getClassInfo
           }}
         >
           <Route
@@ -136,32 +137,33 @@ class Content extends React.Component<any, any> {
     );
   }
 
-  public updateSchedule = () => {
-    const getClassInfo = (lineId: string) => {
-      this.props.client
-        .query({
-          query: getClassQuery,
-          variables: {
-            teacherUsername: this.props.username,
-            lineId
-          },
-          refetchQueries: [
-            {
-              query: getStudentsQuery,
-              variables: {
-                Id: lineId
-              }
+  public getClassInfo = (lineId: string) => {
+    this.props.client
+      .query({
+        query: getClassQuery,
+        variables: {
+          teacherUsername: this.props.username,
+          lineId
+        },
+        refetchQueries: [
+          {
+            query: getStudentsQuery,
+            variables: {
+              Id: lineId
             }
-          ]
-        })
-        .then((res: any) => {
-          if (res.data && res.data.classroom && res.data.classroom.length > 0) {
-            this.setState({
-              currentClassId: res.data.classroom[0].Id
-            });
           }
-        });
-    };
+        ]
+      })
+      .then((res: any) => {
+        if (res.data && res.data.classroom && res.data.classroom.length > 0) {
+          this.setState({
+            currentClassId: res.data.classroom[0].Id
+          });
+        }
+      });
+  };
+
+  public updateSchedule = () => {
     // get next day schedule
     const getNextSchedule = () => {
       if (!this.state.loading) {
@@ -266,7 +268,7 @@ class Content extends React.Component<any, any> {
                 line: (this.state.schedule[0] as any).line
               }
             }),
-            () => getClassInfo(String((this.state.schedule[0] as any).line))
+            () => this.getClassInfo(String((this.state.schedule[0] as any).line))
           );
           return;
         }
@@ -290,7 +292,7 @@ class Content extends React.Component<any, any> {
                   line: scheduleItem.line
                 }
               }));
-              getClassInfo(String(scheduleItem.line));
+              this.getClassInfo(String(scheduleItem.line));
               return;
             } else if (isBetween) {
               return;

@@ -2,11 +2,13 @@ import { Card, Icon } from "antd";
 import React from "react";
 import { graphql } from "react-apollo";
 import { compose, withHandlers, withState } from "recompose";
+import { withClassroomContext } from "../../../../../../contexts/Teacher/ClassroomContext";
 import { addClassroomMutation } from "../../../queries";
 import ClassForm from "../ClassForm";
 
 const NewClassForm = (props: any) => {
-  const { formVisible, toggleForm, mutate } = props;
+  console.log(props);
+  const { formVisible, toggleForm, mutate, classroomContext } = props;
   return (
     <React.Fragment>
       <div>
@@ -18,6 +20,7 @@ const NewClassForm = (props: any) => {
         addClass={mutate}
         visible={formVisible}
         toggleClassForm={toggleForm}
+        getClassInfo={classroomContext.getClassInfo}
       />
     </React.Fragment>
   );
@@ -30,4 +33,4 @@ export default compose(
       toggleForm((formVisible: boolean) => !formVisible)
   }),
   graphql(addClassroomMutation)
-)(NewClassForm);
+)(withClassroomContext(NewClassForm));

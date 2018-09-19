@@ -16,6 +16,7 @@ interface IClassFormProps {
   // will be acting as the edit class form
   classData?: IClassData | null;
   userId?: string;
+  getClassInfo?: any;
 }
 
 interface IClassFormPropsWithContext extends IClassFormProps {
@@ -225,25 +226,24 @@ class ClassForm extends React.Component<
             },
             update: (store: any, { data: { createClassroom } }: any) => {
               // Read the data from our cache for this query.
-              const data = store.readQuery({
-                query: getClassQuery,
-                variables: { Id: this.props.userId }
-              });
-              console.log(createClassroom);
-              console.log(data);
-              try {
-                data.user[0].classrooms.push(createClassroom);
-                console.log(data);
-
-                store.writeQuery({
+              this.props.getClassInfo(this.state.classLine).then(() => {
+                const data = store.readQuery({
                   query: getClassQuery,
-                  variables: { Id: this.props.userId },
-                  data
+                  variables: { Id: this.props.userId }
                 });
-              } catch (err) {
-                console.log(err);
-              }
-              this.props.toggleClassForm();
+                try {
+                  data.user[0].classrooms.push(createClassroom);
+
+                  store.writeQuery({
+                    query: getClassQuery,
+                    variables: { Id: this.props.userId },
+                    data
+                  });
+                } catch (err) {
+                  console.log(err);
+                }
+                this.props.toggleClassForm();
+              });
             }
           });
         }

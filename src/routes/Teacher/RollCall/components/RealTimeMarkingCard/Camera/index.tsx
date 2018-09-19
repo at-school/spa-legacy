@@ -54,7 +54,7 @@ class Camera extends React.Component<any, any> {
   }
   public render() {
     return (
-      <div>
+      <div style={{ position: "fixed", zIndex: -1, visibility: "hidden" }}>
         <Webcam
           audio={false}
           ref={this.setRef}

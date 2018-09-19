@@ -12,6 +12,7 @@ interface IClassroomProviderStore {
   students: IStudent[];
   schedule: ISchedule[];
   classId: string;
+  getClassInfo: (lineId: string) => void;
 }
 
 interface IStudent {
@@ -29,7 +30,7 @@ interface ISchedule {
 
 export const withClassroomContext = (Component: any) => (props: any) => (
   <ClassroomContext.Consumer>
-    {value => <Component classroomContext={{...value}} {...props} />}
+    {value => <Component classroomContext={{ ...value }} {...props} />}
   </ClassroomContext.Consumer>
 );
 
