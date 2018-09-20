@@ -21,6 +21,7 @@ export default class OverviewCardStudents extends React.Component<any> {
   };
 
   public render() {
+    console.log(this.props.classroomContext)
     return (
       <Card
         title={

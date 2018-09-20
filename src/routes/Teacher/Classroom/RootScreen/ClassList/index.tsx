@@ -7,12 +7,17 @@ import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../components/Spinner";
 import AppContext from "../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
-import { editClassroomMutation, getClassQuery, getClassQueryById, removeClassMutation } from "../../queries";
+import { getClassQueryByLine } from "../../../queries";
+import {
+  editClassroomMutation,
+  getClassQuery,
+  getClassQueryById,
+  removeClassMutation
+} from "../../queries";
 import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
 import AddClassForm from "./NewClassForm";
-
 
 interface IClassListState {
   classes: IClassData[];
@@ -32,6 +37,7 @@ class ClassList extends React.Component<
     history: any;
     userId: string;
     classroomContext: any;
+    username: string;
   },
   IClassListState
 > {
@@ -107,21 +113,39 @@ class ClassList extends React.Component<
         Id: id
       },
       update: (store: any, { data: { removeClassroom } }: any) => {
-        this.props.classroomContext.getClassInfo("")
+        this.props.classroomContext.getClassInfo("");
         const data = store.readQuery({
           query: getClassQuery,
           variables: { Id: this.props.userId }
         });
 
+        const data1 = store.readQuery({
+          query: getClassQueryByLine,
+          variables: {
+            lineId: this.props.classroomContext.line,
+            teacherUsername: this.props.username
+          }
+        });
+        
+
         try {
           data.user[0].classrooms = data.user[0].classrooms.filter(
             (classroom: any) => classroom.Id !== removeClassroom.Id
           );
-
+          data1.classroom = []
           store.writeQuery({
             query: getClassQuery,
             variables: { Id: this.props.userId },
             data
+          });
+
+          store.writeQuery({
+            query: getClassQueryByLine,
+            variables: {
+              lineId: this.props.classroomContext.line,
+              teacherUsername: this.props.username
+            },
+            data: data1
           });
         } catch (err) {
           console.log(err);
@@ -142,7 +166,9 @@ class ClassList extends React.Component<
       <div className="class-list-container">
         <TransitionGroup className="class-list">
           <CSSTransition key={"-1"} timeout={500} classNames="fade">
-            <AddClassForm getClassInfo={this.props.classroomContext.getClassInfo}/>
+            <AddClassForm
+              getClassInfo={this.props.classroomContext.getClassInfo}
+            />
           </CSSTransition>
           {classList.map((c: any, index: number) => (
             <CSSTransition key={c.Id} timeout={500} classNames="fade">

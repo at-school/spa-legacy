@@ -2,6 +2,8 @@ import { Modal } from "antd";
 import { UploadFile } from "antd/lib/upload/interface";
 import React from "react";
 import AppContext from "../../../../../../contexts/AppContext";
+import { withClassroomContext } from "../../../../../../contexts/Teacher/ClassroomContext";
+import { getClassQueryByLine } from "../../../../queries";
 import { getClassQuery } from "../../../queries";
 import { IClassData } from "../../interfaces";
 import FormContent from "../ClassForm/Content";
@@ -17,6 +19,8 @@ interface IClassFormProps {
   classData?: IClassData | null;
   userId?: string;
   getClassInfo?: any;
+  username: string;
+  classroomContext: any;
 }
 
 interface IClassFormPropsWithContext extends IClassFormProps {
@@ -231,13 +235,34 @@ class ClassForm extends React.Component<
                 query: getClassQuery,
                 variables: { Id: this.props.userId }
               });
+              const data1 = store.readQuery({
+                query: getClassQueryByLine,
+                variables: {
+                  teacherUsername: this.props.username,
+                  lineId: this.props.classroomContext.line
+                }
+              });
+              console.log(data1)
+
               try {
                 data.user[0].classrooms.push(createClassroom);
+                data1.classroom = [
+                  { Id: createClassroom.Id, __typename: "ClassroomSchema" }
+                ];
+                console.log(data1)
 
                 store.writeQuery({
                   query: getClassQuery,
                   variables: { Id: this.props.userId },
                   data
+                });
+                store.writeQuery({
+                  query: getClassQueryByLine,
+                  variables: {
+                    teacherUsername: this.props.username,
+                    lineId: this.props.classroomContext.line
+                  },
+                  data: data1
                 });
               } catch (err) {
                 console.log(err);
@@ -292,16 +317,17 @@ class ClassForm extends React.Component<
   };
 }
 
-export default (props: IClassFormProps) => (
+export default withClassroomContext((props: IClassFormProps) => (
   <AppContext.Consumer>
     {value =>
       value.token && (
         <ClassForm
           userId={value.userId as any}
+          username={value.username as string}
           {...props}
           token={value.token}
         />
       )
     }
   </AppContext.Consumer>
-);
+));
