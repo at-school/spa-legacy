@@ -55,7 +55,6 @@ class RealTimeMarkingCard extends React.Component<any, any> {
           style={{ width: "100%" }}
           bordered={false}
         >
-          {/* <Camera /> */}
           <Spinner spin={this.state.cameraEnable} />
           <StatusText changing={this.state.cameraEnable} />
         </Card>

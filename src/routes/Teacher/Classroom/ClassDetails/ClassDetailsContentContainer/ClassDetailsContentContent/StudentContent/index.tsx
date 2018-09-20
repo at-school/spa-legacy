@@ -5,6 +5,8 @@ import { graphql } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../../../components/Spinner";
+import AppContext from "../../../../../../../contexts/AppContext";
+import { withClassroomContext } from "../../../../../../../contexts/Teacher/ClassroomContext";
 import { getStudentsQuery } from "../../../../../queries";
 import AddStudentModal from "./AddStudentModal";
 import { removeStudentMutation } from "./queries";
@@ -86,6 +88,9 @@ class StudentContent extends React.Component<any, any> {
         )}
         <AddStudentModal
           toggleAddStudentForm={this.toggleAddStudentForm}
+          username={this.props.username}
+          token={this.props.token}
+          classroomContext={this.props.classroomContext}
           visible={this.state.visible}
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}
@@ -173,4 +178,18 @@ export default compose(
   branch(({ data }) => {
     return !data.classroom && data.loading;
   }, renderComponent(Spinner))
-)(withRouter(StudentContent)) as any;
+)(
+  withRouter(
+    withClassroomContext((props: any) => (
+      <AppContext.Consumer>
+        {value => (
+          <StudentContent
+            token={value.token}
+            username={value.username}
+            {...props}
+          />
+        )}
+      </AppContext.Consumer>
+    ))
+  )
+) as any;

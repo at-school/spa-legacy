@@ -235,27 +235,17 @@ class ClassForm extends React.Component<
                 query: getClassQuery,
                 variables: { Id: this.props.userId }
               });
-              const data1 = store.readQuery({
-                query: getClassQueryByLine,
-                variables: {
-                  teacherUsername: this.props.username,
-                  lineId: this.props.classroomContext.line
-                }
-              });
-              console.log(data1)
-
-              try {
-                data.user[0].classrooms.push(createClassroom);
+              if (this.state.classLine === this.props.classroomContext.line) {
+                const data1 = store.readQuery({
+                  query: getClassQueryByLine,
+                  variables: {
+                    teacherUsername: this.props.username,
+                    lineId: this.props.classroomContext.line
+                  }
+                });
                 data1.classroom = [
                   { Id: createClassroom.Id, __typename: "ClassroomSchema" }
                 ];
-                console.log(data1)
-
-                store.writeQuery({
-                  query: getClassQuery,
-                  variables: { Id: this.props.userId },
-                  data
-                });
                 store.writeQuery({
                   query: getClassQueryByLine,
                   variables: {
@@ -264,6 +254,17 @@ class ClassForm extends React.Component<
                   },
                   data: data1
                 });
+              }
+
+              try {
+                data.user[0].classrooms.push(createClassroom);
+
+                store.writeQuery({
+                  query: getClassQuery,
+                  variables: { Id: this.props.userId },
+                  data
+                });
+                
               } catch (err) {
                 console.log(err);
               }

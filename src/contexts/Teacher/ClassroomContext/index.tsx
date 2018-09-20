@@ -12,6 +12,7 @@ interface IClassroomProviderStore {
   students: IStudent[];
   schedule: ISchedule[];
   classId: string;
+  scheduleId: string;
   getClassInfo: (lineId: string) => void;
 }
 

@@ -4,8 +4,10 @@ import React from "react";
 import { graphql, withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { searchStudents } from "../../../../../../../../api/classroom";
-import AppContext from "../../../../../../../../contexts/AppContext";
-import { getStudentsQuery } from "../../../../../../queries";
+import {
+  getScheduleDetailsQuery,
+  getStudentsQuery
+} from "../../../../../../queries";
 import { addStudentMutation } from "../queries";
 import AddStudentInput from "./AddStudentInput";
 import StudentRow from "./StudentRow";
@@ -18,6 +20,28 @@ interface IAddStudentModalState {
   selectedStudentList: Array<{ Id: string; name: string; avatar: string }>;
   searchValue: string;
 }
+
+export const addStudentsToSchedule = async (
+  studentList: string[],
+  scheduleId: string,
+  token: string
+) => {
+  const response = await fetch("http://127.0.0.1:5000/classroom/schedule/students", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ studentList, scheduleId })
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+
+  const errMessage = await response.text();
+  throw new Error(errMessage);
+};
 
 class AddStudentModal extends React.Component<any, IAddStudentModalState> {
   public state = {
@@ -44,8 +68,56 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
         query: getStudentsQuery,
         variables: { Id: classId }
       });
+      if (classId === this.props.classroomContext.classId) {
+        if (
+          this.props.classroomContext.scheduleId &&
+          this.props.classroomContext.classId === classId
+        ) {
+          console.log("Yes");
+          
+          addStudentsToSchedule(
+            values.map((value: any) => value.addStudentToClassroom.Id),
+            this.props.classroomContext.scheduleId,
+            this.props.token
+          ).then((res: any) => {
+            const data1 = this.props.client.readQuery({
+              query: getScheduleDetailsQuery,
+              variables: {
+                teacherUsername: this.props.username,
+                line: this.props.classroomContext.line,
+                classId: this.props.classroomContext.classId
+              }
+            });
+            const {studentList} = res
+            data1.scheduleDetails.students.push(...studentList.map((studentId: string) => {
+              const studentDetails = values.find((value: any) => value.addStudentToClassroom.Id === studentId) as any
+              return {
+                inClass: false,
+                __typename: "StudentsScheduleDetailsSchema",
+                studentDetails: {
+                  Id: studentId,
+                  firstname: studentDetails.addStudentToClassroom.firstname,
+                  lastname: studentDetails.addStudentToClassroom.lastname,
+                  __typename: "UserSchema"
+                }
+              }
+            }))
+            this.props.client.writeQuery({
+              query: getScheduleDetailsQuery,
+              variables: {
+                teacherUsername: this.props.username,
+                line: this.props.classroomContext.line,
+                classId: this.props.classroomContext.classId
+              },
+              data: data1
+            });
+            console.log(values);
+          console.log(data1);
+          });
+          
+        }
+      }
       for (const value of values) {
-        console.log(value);
         const { addStudentToClassroom } = value as any;
         data.classroom[0].students.push(addStudentToClassroom);
       }
@@ -54,7 +126,7 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
         variables: { Id: classId },
         data
       });
-      this.handleCancel()
+      this.handleCancel();
     });
   };
 
@@ -166,12 +238,6 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
   }
 }
 
-const AddStudentModalWithContext = (props: any) => (
-  <AppContext.Consumer>
-    {value => <AddStudentModal token={value.token} {...props} />}
-  </AppContext.Consumer>
-);
-
 export default graphql(addStudentMutation)(
-  withRouter(withApollo(AddStudentModalWithContext))
+  withRouter(withApollo(AddStudentModal))
 ) as any;

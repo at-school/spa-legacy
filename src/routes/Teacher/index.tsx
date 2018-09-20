@@ -90,18 +90,27 @@ class Content extends React.Component<any, any> {
 
   public render() {
     console.log(this.props);
+    let studentList = []
+    let scheduleId = ""    
+    
+    const {getScheduleDetailsQuery: {scheduleDetails}} = this.props
+    if (scheduleDetails && scheduleDetails.students) {
+      studentList = scheduleDetails.students
+      scheduleId = scheduleDetails.Id
+    }
     return (
       <TeacherMessageSocket.Provider value={{ socket: this.messageSocket }}>
         <ClassroomContext.Provider
           value={{
             Id: this.state.classroomId,
+            scheduleId,
             avatar: this.state.classroomAvatar,
             name: this.state.classroomName,
             description: this.state.classroomDescription,
             line: this.props.getScheduleQuery.loading
               ? ""
               : this.props.getScheduleQuery.latestLine.line,
-            students: this.state.classroomStudents,
+            students: studentList,
             schedule: this.props.getAllScheduleQuery.loading
               ? []
               : this.props.getAllScheduleQuery.schedule,
@@ -157,8 +166,9 @@ const ContentWithApollo = compose(
         const startTime = moment(scheduleData.startTime);
         const endTime = moment(scheduleData.endTime);
         if (current.isBefore(startTime)) {
+          console.log(current.diff(startTime, "milliseconds"))
           props.getScheduleQuery.startPolling(
-            current.diff(startTime, "milliseconds")
+            Math.abs(current.diff(startTime, "milliseconds"))
           );
         } else {
           props.getScheduleQuery.startPolling(
@@ -191,23 +201,13 @@ const ContentWithApollo = compose(
   graphql(getScheduleDetailsQuery, {
     name: "getScheduleDetailsQuery",
     options: (props: any) => {
-      console.log(props.getClassQuery);
-      let skip = false;
-      if (props.getClassQuery.loading || props.getScheduleQuery.loading) {
-        skip = true;
-      } else if (
-        props.getClassQuery.classroom &&
-        props.getClassQuery.classroom.length === 0
-      ) {
-        skip = true;
-      }
       let classId = "";
       if (
-        !props.getClassQuery &&
+        props.getClassQuery &&
         props.getClassQuery.classroom &&
-        props.getClassQuery.classroom.length > 0
+        props.getClassQuery.classroom.length === 1
       ) {
-        classId = props.getClassQuery.classroom[1].Id;
+        classId = props.getClassQuery.classroom[0].Id;
       }
       return {
         variables: {
@@ -217,7 +217,7 @@ const ContentWithApollo = compose(
             props.getScheduleQuery.latestLine.line,
           classId
         },
-        skip
+        skip: classId === ""
       };
     }
   })

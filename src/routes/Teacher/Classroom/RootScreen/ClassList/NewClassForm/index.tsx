@@ -6,7 +6,6 @@ import { addClassroomMutation } from "../../../queries";
 import ClassForm from "../ClassForm";
 
 const NewClassForm = (props: any) => {
-  console.log(props);
   const { formVisible, toggleForm, mutate, getClassInfo } = props;
   return (
     <React.Fragment>
