@@ -37,7 +37,7 @@ export default class OverviewCardStudents extends React.Component<any> {
                 {this.props.students.length === 0 && "N/A"}
 
                 {this.props.students.length !== 0 &&
-                  this.props.students.filter((student: any) => student.in)
+                  this.props.students.filter((student: any) => student.inClass)
                     .length + "/"}
 
                 {this.props.students.length !== 0 && this.props.students.length}

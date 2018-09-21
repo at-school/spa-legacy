@@ -13,7 +13,12 @@ import ClassroomScreenRoot from "./Classroom/RootScreen";
 import Dashboard from "./Dashboard";
 import Messages from "./Messages";
 import { getChatRoomIdQuery } from "./Messages/queries/queries";
-import { getAllScheduleQuery, getClassQueryByLine, getScheduleDetailsQuery, getScheduleQuery } from "./queries";
+import {
+  getAllScheduleQuery,
+  getClassQueryByLine,
+  getScheduleDetailsQuery,
+  getScheduleQuery
+} from "./queries";
 import RollCall from "./RollCall";
 
 class Content extends React.Component<any, any> {
@@ -90,13 +95,24 @@ class Content extends React.Component<any, any> {
 
   public render() {
     console.log(this.props);
-    let studentList = []
-    let scheduleId = ""    
-    
-    const {getScheduleDetailsQuery: {scheduleDetails}} = this.props
-    if (scheduleDetails && scheduleDetails.students) {
-      studentList = scheduleDetails.students
-      scheduleId = scheduleDetails.Id
+    let studentList = [];
+    let scheduleId = "";
+    let classId = "";
+    if (this.props.getScheduleDetailsQuery) {
+      const {
+        getScheduleDetailsQuery: { scheduleDetails }
+      } = this.props;
+      if (scheduleDetails && scheduleDetails.students) {
+        studentList = scheduleDetails.students;
+        scheduleId = scheduleDetails.Id;
+      }
+    }
+    if (
+      this.props.getClassQuery &&
+      this.props.getClassQuery.classroom &&
+      this.props.getClassQuery.classroom.length === 1
+    ) {
+      classId = this.props.getClassQuery.classroom[0].Id;
     }
     return (
       <TeacherMessageSocket.Provider value={{ socket: this.messageSocket }}>
@@ -114,11 +130,7 @@ class Content extends React.Component<any, any> {
             schedule: this.props.getAllScheduleQuery.loading
               ? []
               : this.props.getAllScheduleQuery.schedule,
-            classId: this.props.getClassQuery.loading
-              ? ""
-              : this.props.getClassQuery.classroom.length > 0
-                ? this.props.getClassQuery.classroom[0].Id
-                : "",
+            classId,
             getClassInfo: this.saveClassId
           }}
         >
@@ -166,13 +178,13 @@ const ContentWithApollo = compose(
         const startTime = moment(scheduleData.startTime);
         const endTime = moment(scheduleData.endTime);
         if (current.isBefore(startTime)) {
-          console.log(current.diff(startTime, "milliseconds"))
+          console.log(current.diff(startTime, "milliseconds"));
           props.getScheduleQuery.startPolling(
             Math.abs(current.diff(startTime, "milliseconds"))
           );
         } else {
           props.getScheduleQuery.startPolling(
-            current.diff(endTime, "milliseconds")
+            Math.abs(current.diff(endTime, "milliseconds"))
           );
         }
       }
@@ -216,10 +228,13 @@ const ContentWithApollo = compose(
             props.getScheduleQuery.latestLine &&
             props.getScheduleQuery.latestLine.line,
           classId
-        },
-        skip: classId === ""
+        }
       };
-    }
+    },
+    skip: props =>
+      !props.getClassQuery ||
+      !props.getClassQuery.classroom ||
+      props.getClassQuery.classroom.length === 0
   })
 )(withApollo(Content)) as any;
 

@@ -21,15 +21,14 @@ class RealTimeMarkingCard extends React.Component<any, any> {
 
   public toggleCamera = () => {
     if (
-      (this.props.classroomContext.classId &&
-        this.props.students.length > 0) ||
+      (this.props.classroomContext.classId && this.props.classroomContext.students.length > 0) ||
       this.state.cameraEnable
     ) {
       this.setState((prevState: any) => ({
         cameraEnable: !prevState.cameraEnable
       }));
     } else {
-      message.warning('This is no students in class or class does not exist!')
+      message.warning("This is no students in class or class does not exist!");
     }
   };
 
@@ -37,7 +36,10 @@ class RealTimeMarkingCard extends React.Component<any, any> {
     return (
       <React.Fragment>
         {this.state.cameraEnable && (
-          <Camera markStudents={this.props.markStudents} />
+          <Camera
+            students={this.props.classroomContext.students}
+            markStudents={this.props.markStudents}
+          />
         )}
         <Card
           title={

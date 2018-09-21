@@ -1,12 +1,14 @@
 import React from "react";
+import { withApollo } from "react-apollo";
 import Webcam from "react-webcam";
 import AppContext from "../../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../../contexts/Teacher/ClassroomContext";
+import { getScheduleDetailsQuery } from "../../../../queries";
 
 const uploadImage = async (
   imageData: string,
-  line: string,
-  classId: string,
+  studentList: any,
+  scheduleId: string,
   token: string
 ) => {
   const response = await fetch("http://127.0.0.1:5000/camera/upload", {
@@ -15,16 +17,13 @@ const uploadImage = async (
       "content-type": "application/json",
       Authorization: "Bearer " + token
     },
-    body: JSON.stringify({ imageData, line, classId })
+    body: JSON.stringify({ imageData, studentList, scheduleId })
   });
-  const data = await response.json();
-  console.log("Data received ");
-  console.log(data);
-  if (data.success) {
-    return data;
+  if (response.ok) {
+    return response.json();
   }
 
-  const errMessage = await data.message;
+  const errMessage = await response.text();
   throw new Error(errMessage);
 };
 
@@ -44,21 +43,60 @@ class Camera extends React.Component<any, any> {
     const imageSrc = this.webcam.getScreenshot();
     return imageSrc;
   };
-  public upload() {
-    const imageSrc = this.webcam.getScreenshot();
-    if (imageSrc) {
-      uploadImage(
-        imageSrc,
-        this.props.classroomContext.line,
-        this.props.classroomContext.classId,
-        this.props.token
-      )
-        .then(data => this.props.markStudents(data.peopleFound))
-        .catch(err => console.log(err));
+  public upload = () => {
+    if (this.webcam) {
+      const imageSrc = this.webcam.getScreenshot();
+      const studentsNotInClass = this.props.classroomContext.students
+        .filter((student: any) => !student.inClass)
+        .map((student: any) => student.studentDetails.Id);
+      if (imageSrc) {
+        uploadImage(
+          imageSrc,
+          studentsNotInClass,
+          this.props.classroomContext.scheduleId,
+          this.props.token
+        )
+          .then(data => {
+            console.log(data);
+            const storeData = this.props.client.readQuery({
+              query: getScheduleDetailsQuery,
+              variables: {
+                teacherUsername: this.props.username,
+                line: this.props.classroomContext.line,
+                classId: this.props.classroomContext.classId
+              }
+            });
+            const { scheduleDetails } = storeData;
+            if (
+              scheduleDetails &&
+              scheduleDetails.students &&
+              scheduleDetails.students.length > 0
+            ) {
+              storeData.scheduleDetails.students = storeData.scheduleDetails.students.map(
+                (student: any) => {
+                  if (data.studentList.includes(student.studentDetails.Id)) {
+                    return { ...student, inClass: true };
+                  }
+                  return { ...student };
+                }
+              );
+            }
+            this.props.client.writeQuery({
+              query: getScheduleDetailsQuery,
+              variables: {
+                teacherUsername: this.props.username,
+                line: this.props.classroomContext.line,
+                classId: this.props.classroomContext.classId
+              },
+              data: storeData
+            });
+          })
+          .catch(err => console.log(err));
+      }
     }
-  }
+  };
   public componentDidMount() {
-    this.sendImageInterval = setInterval(() => this.upload(), 500);
+    this.sendImageInterval = setInterval(this.upload, 500);
   }
   public componentWillUnmount() {
     clearInterval(this.sendImageInterval);
@@ -78,8 +116,12 @@ class Camera extends React.Component<any, any> {
   }
 }
 
-export default withClassroomContext((props: any) => (
-  <AppContext.Consumer>
-    {value => <Camera {...props} token={value.token} />}
-  </AppContext.Consumer>
-));
+export default withApollo(
+  withClassroomContext((props: any) => (
+    <AppContext.Consumer>
+      {value => (
+        <Camera username={value.username} {...props} token={value.token} />
+      )}
+    </AppContext.Consumer>
+  ))
+);
