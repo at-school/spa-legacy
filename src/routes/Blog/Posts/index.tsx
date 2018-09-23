@@ -4,8 +4,16 @@ import Post00003 from "./Post00003";
 import Post00004 from "./Post00004";
 import Post00005 from "./Post00005"
 import Post00006 from "./Post00006"
+import Post00007 from "./Post00007"
 
 export const posts = [
+	{
+		title: "Week 6 Update",
+		author: ["Anh Pham, ", "Charl Kruger"],
+		date: "22 September 2018",
+		postId: "00007",
+		component: Post00007
+	},
 	{
 		title: "Week 5 Update",
 		author: ["Anh Pham, ", "Charl Kruger"],
