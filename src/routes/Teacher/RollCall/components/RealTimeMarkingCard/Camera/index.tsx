@@ -4,11 +4,13 @@ import Webcam from "react-webcam";
 import AppContext from "../../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../../contexts/Teacher/ClassroomContext";
 import { getScheduleDetailsQuery } from "../../../../queries";
+import { getRollMarkingActivitiesQuery } from "../../../queries";
 
 const uploadImage = async (
   imageData: string,
   studentList: any,
   scheduleId: string,
+  userId: string,
   token: string
 ) => {
   const response = await fetch("http://127.0.0.1:5000/camera/upload", {
@@ -17,7 +19,7 @@ const uploadImage = async (
       "content-type": "application/json",
       Authorization: "Bearer " + token
     },
-    body: JSON.stringify({ imageData, studentList, scheduleId })
+    body: JSON.stringify({ imageData, studentList, scheduleId, userId })
   });
   if (response.ok) {
     return response.json();
@@ -44,6 +46,7 @@ class Camera extends React.Component<any, any> {
     return imageSrc;
   };
   public upload = () => {
+    console.log(this.props.classroomContext.students);
     if (this.webcam) {
       const imageSrc = this.webcam.getScreenshot();
       const studentsNotInClass = this.props.classroomContext.students
@@ -54,6 +57,7 @@ class Camera extends React.Component<any, any> {
           imageSrc,
           studentsNotInClass,
           this.props.classroomContext.scheduleId,
+          this.props.userId,
           this.props.token
         )
           .then(data => {
@@ -90,6 +94,41 @@ class Camera extends React.Component<any, any> {
               },
               data: storeData
             });
+            // add new activity
+            if (data.activity) {
+              const activityStoreData = this.props.client.readQuery({
+                query: getRollMarkingActivitiesQuery,
+                variables: {
+                  userId: this.props.userId
+                }
+              });
+              const { rollMarkingActivites } = activityStoreData;
+              console.log(rollMarkingActivites);
+              if (rollMarkingActivites) {
+                rollMarkingActivites.unshift({
+                  ...data.activity,
+                  __typename: "RollMarkingActivitiesSchema",
+                  students: data.studentList.map((studentId: any) => {
+                    const studentData = this.props.classroomContext.students.find(
+                      (student: any) => student.studentDetails.Id === studentId
+                    );
+                    return {
+                      Id: studentData.studentDetails.Id,
+                      firstname: studentData.studentDetails.firstname,
+                      lastname: studentData.studentDetails.lastname,
+                      __typename: "UserSchema"
+                    };
+                  })
+                });
+                this.props.client.writeQuery({
+                  query: getRollMarkingActivitiesQuery,
+                  variables: {
+                    userId: this.props.userId
+                  },
+                  data: activityStoreData
+                });
+              }
+            }
           })
           .catch(err => console.log(err));
       }
@@ -120,7 +159,12 @@ export default withApollo(
   withClassroomContext((props: any) => (
     <AppContext.Consumer>
       {value => (
-        <Camera username={value.username} {...props} token={value.token} />
+        <Camera
+          userId={value.userId}
+          username={value.username}
+          {...props}
+          token={value.token}
+        />
       )}
     </AppContext.Consumer>
   ))

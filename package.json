@@ -34,7 +34,9 @@
     "recharts": "^1.1.0",
     "recompose": "^0.28.2",
     "socket.io": "^2.1.1",
-    "socket.io-client": "^2.1.1"
+    "socket.io-client": "^2.1.1",
+    "yoga-layout": "github:naminho/yoga-layout-windows",
+    "@react-pdf/renderer": "latest"
   },
   "scripts": {
     "start": "react-scripts-ts start",
