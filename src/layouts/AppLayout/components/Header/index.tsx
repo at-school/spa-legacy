@@ -44,6 +44,9 @@ const Header: React.SFC<IHeaderProps> = ({
   } else if (pathname.includes("/teacher/messages")) {
     headerDisplayText = "Messages";
   }
+  else if (pathname.includes("/teacher/user")) {
+    headerDisplayText = "User";
+  }
   return (
     <Layout.Header className="main-layout-layout-header">
       <div className="main-layout-layout-header-left">

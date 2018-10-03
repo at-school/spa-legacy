@@ -1,6 +1,6 @@
 import Lodash from "lodash";
 import React from "react";
-import { compose, graphql, Query, withApollo } from "react-apollo";
+import { compose, graphql, withApollo } from "react-apollo";
 import { branch, renderComponent } from "recompose";
 import Spinner from "../../../components/Spinner";
 import AppContext from "../../../contexts/AppContext";
@@ -8,12 +8,7 @@ import MessageSocket from "../../../contexts/Teacher/TeacherMessageSocket";
 import MessageContent from "./MessageContent";
 import MessageInfo from "./MessageInfo";
 import MessageList from "./MessageList";
-import {
-  addMessageMutation,
-  getChatRoomMessageQuery,
-  getChatRoomQuery,
-  getLatestChatroom
-} from "./queries/queries";
+import { addMessageMutation, getChatRoomMessageQuery, getChatRoomQuery } from "./queries/queries";
 import "./styles/styles.css";
 
 interface IMessageItem {
@@ -66,6 +61,7 @@ class Messages extends React.Component<
   };
 
   public componentDidMount() {
+    console.log(this.props.messageList)
     this.setState({ selectedRoomId: this.props.selectedRoomId });
     this.scrollToBottom(false);
 
@@ -132,6 +128,7 @@ class Messages extends React.Component<
     this.setState({ message: e.target.value });
   };
 
+
   public sendMessage = () => {
     const messageContent = this.state.message;
     if (messageContent.length > 0) {
@@ -184,6 +181,7 @@ class Messages extends React.Component<
   };
 
   public componentDidUpdate(prevProps: any, prevState: any) {
+    console.log(this.props.messageList)
     if (prevState.selectedRoomId !== this.state.selectedRoomId) {
       this.scrollToBottom(false);
     } else if (
@@ -203,14 +201,13 @@ class Messages extends React.Component<
 
   public render() {
     const chatrooms = this.props.chatRoomList.user[0].chatrooms;
-    console.log(chatrooms)
+    console.log(chatrooms);
     return (
       <div className="messages">
         <MessageList
           toggleAddChatRoom={this.toggleAddChatRoom}
           roomList={chatrooms ? chatrooms : []}
           changeSelectedRoomId={this.changeSelectedRoomId}
-          // selectedRoom={this.state.selectedRoom}
         />
 
         <MessageContent
@@ -220,8 +217,6 @@ class Messages extends React.Component<
           }
           toggleAddChatRoom={this.toggleAddChatRoom}
           selectedRoomId={this.state.selectedRoomId}
-          // selectAddChatRoomUser={this.selectAddChatRoomUser}
-          // addNewRoom={this.addNewRoom}
           sendMessage={this.sendMessage}
           updateMessage={this.updateMessage}
           currentMessage={this.state.message}
@@ -270,35 +265,14 @@ export default (props: any) => (
     {value => (
       <MessageSocket.Consumer>
         {socket => (
-          <Query
-            query={getLatestChatroom}
-            variables={{ username: value.username }}
-          >
-            {({ loading, data }) => {
-              if (loading) {
-                return <Spinner />;
-              }
-              const { user } = data;
-
-              const { latestChatroom } = user[0];
-              const { Id } =
-                latestChatroom && latestChatroom.length > 0
-                  ? latestChatroom[0]
-                  : "";
-              console.log(data)
-
-              return (
-                <MessagesWithChatRoom
-                  socket={socket.socket}
-                  {...props}
-                  token={value.token!}
-                  username={value.username!}
-                  avatar={value.avatarUrl!}
-                  selectedRoomId={Id}
-                />
-              );
-            }}
-          </Query>
+          <MessagesWithChatRoom
+            socket={socket.socket}
+            {...props}
+            token={value.token!}
+            username={value.username!}
+            avatar={value.avatarUrl!}
+            selectedRoomId={socket.selectedRoomId}
+          />
         )}
       </MessageSocket.Consumer>
     )}

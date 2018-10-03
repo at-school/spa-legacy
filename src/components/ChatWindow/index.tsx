@@ -1,4 +1,5 @@
 import { Icon, Input } from "antd";
+import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { CSSTransition } from "react-transition-group";
 import "./styles.css";
@@ -24,7 +25,7 @@ export default class ChatWindow extends React.Component<
 
   public render() {
     return (
-      <div className="chat-window" ref={this.setWindowRef}>
+      <div className={css(styles.chatWindow) + " chat-window"} ref={this.setWindowRef}>
         <div
           className="chat-window-main-icon"
           onClick={this.handleWindowVisible}
@@ -91,3 +92,11 @@ export default class ChatWindow extends React.Component<
     this.setState(prevState => ({ windowVisible: !prevState.windowVisible }));
   };
 }
+
+const styles = StyleSheet.create({
+  chatWindow: {
+    position: "fixed",
+    bottom: "10px",
+    right: "10px"
+  }
+});

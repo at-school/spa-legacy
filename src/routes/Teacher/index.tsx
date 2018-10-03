@@ -20,12 +20,13 @@ import {
   getScheduleQuery
 } from "./queries";
 import RollCall from "./RollCall";
+import User from "./User"
 
 class Content extends React.Component<any, any> {
   public messageSocket: any;
 
   public state = {
-    selectedRoom: null,
+    selectedRoomId: "",
     classroomId: "",
     classroomName: "",
     classroomDescription: "string",
@@ -71,8 +72,9 @@ class Content extends React.Component<any, any> {
           }
         })
         .then((chatrooms: any) => {
-          console.log(chatrooms);
-          if (chatrooms) {
+          if (chatrooms.constructor === Array && chatrooms.length > 0) {
+            console.log(chatrooms)
+            this.setState({ selectedRoomId: chatrooms[0].Id });
             for (const chatroom of chatrooms) {
               this.messageSocket.emit("sendMessage", {
                 chatroomId: chatroom.Id
@@ -89,12 +91,13 @@ class Content extends React.Component<any, any> {
     }
   }
 
-  public shouldComponentUpdate() {
-    return true;
-  }
+  public changeSelectedRoomId = (selectedRoomId: string) => {
+    if (this.state.selectedRoomId !== selectedRoomId) {
+      this.setState({ selectedRoomId });
+    }
+  };
 
   public render() {
-    console.log(this.props);
     let studentList = [];
     let scheduleId = "";
     let classId = "";
@@ -115,7 +118,13 @@ class Content extends React.Component<any, any> {
       classId = this.props.getClassQuery.classroom[0].Id;
     }
     return (
-      <TeacherMessageSocket.Provider value={{ socket: this.messageSocket }}>
+      <TeacherMessageSocket.Provider
+        value={{
+          socket: this.messageSocket,
+          selectedRoomId: this.state.selectedRoomId,
+          changeSelectedRoomId: this.changeSelectedRoomId
+        }}
+      >
         <ClassroomContext.Provider
           value={{
             Id: this.state.classroomId,
@@ -151,6 +160,16 @@ class Content extends React.Component<any, any> {
           />
           <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
           <Route exact={true} path={"/teacher/messages"} component={Messages} />
+          <Route
+            exact={true}
+            path="/teacher/user"
+            component={User}
+          />
+          <Route
+            exact={true}
+            path="/teacher/user/:id"
+            component={User}
+          />
           {!this.props.history.location.pathname.includes("messages") && (
             <ChatWindow />
           )}
