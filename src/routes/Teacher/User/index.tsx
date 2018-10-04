@@ -68,7 +68,9 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   basicUserInfo: {
-    flex: 0.3
+    flex: 0.3,
+    maxWidth: "200px",
+    marginRight: "48px"
   }
 });
 
