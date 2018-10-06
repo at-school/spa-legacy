@@ -18,6 +18,15 @@ const httpLink = createHttpLink({
   uri: "http://127.0.0.1:5000/graphql"
 });
 
+const isJSON = (sequence: string) => {
+  try {
+    JSON.parse(sequence);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export default class AppNavigator extends React.Component {
   public state = {
     token: null,
@@ -44,27 +53,22 @@ export default class AppNavigator extends React.Component {
 
   public signinUser = (userInfo: any) => {
     this.setState({ ...userInfo });
-    localStorage.atschool = JSON.stringify(userInfo)
+    localStorage.atschool = JSON.stringify(userInfo);
   };
 
   public componentWillMount() {
-    console.log(localStorage)
     this.client = new ApolloClient({
       link: this.authLink.concat(httpLink),
       cache: new InMemoryCache()
     });
 
-    if (typeof Storage !== "undefined") {
-      if (localStorage.atschool) {
-        try {
-          this.setState({ ...JSON.parse(localStorage.atschool) }, () => {console.log(this.state)});
-        } catch {
-          // do nonthing
-          
-        }
-      }
-    } else {
-      // Sorry! No Web Storage support..
+    // check if the token exists in the local storage
+    if (
+      typeof Storage !== "undefined" &&
+      localStorage.atschool &&
+      isJSON(localStorage.atschool)
+    ) {
+      this.setState({ ...JSON.parse(localStorage.atschool) });
     }
   }
 

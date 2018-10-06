@@ -8,6 +8,7 @@ export const getUserInfoQuery = gql`
       firstname
       lastname
       username
+      bio
       classrooms {
         Id
         name
@@ -39,6 +40,14 @@ export const createSkillMutation = gql`
       color
       name
       userId
+    }
+  }
+`;
+
+export const removeSkillMutation = gql`
+  mutation RemoveSkillMutation($Id: ID!) {
+    removeSkill(arguments: { Id: $Id }) {
+      Id
     }
   }
 `;

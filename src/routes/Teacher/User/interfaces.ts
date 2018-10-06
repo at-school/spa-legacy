@@ -16,6 +16,7 @@ export interface IUserProps extends IUserWithGraphQlProps {
   getUserInfoQuery: {
     user?: IUser[];
   };
+  token: string
 }
 
 export interface IBasicUserInfoProps {
@@ -25,9 +26,11 @@ export interface IBasicUserInfoProps {
   classrooms: IClassroom[];
   studentClassrooms: IClassroom[];
   skills: ISkill[];
+  self: boolean;
 }
 
 export interface ISkillTagsWithContextProps {
+  self: boolean;
   skills: ISkill[];
 }
 
@@ -49,6 +52,24 @@ export interface ISkillTagsProps extends ISkillTagsWithGraphQlProps {
       ) => void;
     }
   ) => any;
+  removeSkillMutation: (
+    options: {
+      variables: {
+        Id: string;
+      };
+      update: (
+        cache: DataProxy,
+        mutationResult: { data: { Id: string } }
+      ) => void;
+    }
+  ) => any;
+}
+
+export interface IDetailsUserInfoProps {
+  bio: string;
+  self: boolean;
+  token: string;
+  userId: string;
 }
 
 export interface IUser {
@@ -60,6 +81,7 @@ export interface IUser {
   classrooms: IClassroom[];
   studentClassroom: IClassroom[];
   skills: ISkill[];
+  bio: string;
 }
 
 export interface ISkill {

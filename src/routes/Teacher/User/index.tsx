@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import AppContext from "../../../contexts/AppContext";
 import BasicUserInfo from "./BasicUserInfo";
+import DetailsUserInfo from "./DetailsUserInfo";
 import {
   IUser,
   IUserProps,
@@ -13,13 +14,21 @@ import {
 } from "./interfaces";
 import { getUserInfoQuery } from "./queries";
 
-class User extends React.Component<IUserProps> {
+class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
+  public state = {
+    self: false,
+    bio: ""
+  };
   public componentDidMount() {
-    console.log(this.props.match.params.id);
+    if (
+      this.props.match.params.id === this.props.currentUserId ||
+      !this.props.match.params.id
+    ) {
+      this.setState({ self: true });
+    }
   }
 
   public render() {
-    console.log(this.props);
     let user = {
       firstname: "undefined",
       lastname: "undefined",
@@ -48,9 +57,17 @@ class User extends React.Component<IUserProps> {
                 classrooms={user.classrooms}
                 studentClassrooms={user.studentClassroom}
                 skills={user.skills}
+                self={this.state.self}
               />
             </div>
-            <div>Hello</div>
+            <div className={css(styles.detailsUserInfo)}>
+              <DetailsUserInfo
+                userId={this.props.currentUserId}
+                token={this.props.token}
+                self={this.state.self}
+                bio={user.bio}
+              />
+            </div>
           </div>
         ) : (
           <Spinner />
@@ -65,12 +82,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: "12px",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    minHeight: "100%"
   },
   basicUserInfo: {
     flex: 0.3,
     maxWidth: "200px",
     marginRight: "48px"
+  },
+  detailsUserInfo: {
+    flex: 0.7
   }
 });
 
@@ -92,7 +113,13 @@ const UserWithGraphQl = compose(
 const UserWithContext = (props: IUserWithContextProps) => {
   return (
     <AppContext.Consumer>
-      {value => <UserWithGraphQl {...props} currentUserId={value.userId} />}
+      {value => (
+        <UserWithGraphQl
+          {...props}
+          token={value.token}
+          currentUserId={value.userId}
+        />
+      )}
     </AppContext.Consumer>
   );
 };

@@ -10,7 +10,8 @@ const BasicUserInfo = ({
   username,
   classrooms,
   studentClassrooms,
-  skills
+  skills,
+  self
 }: IBasicUserInfoProps) => {
   return (
     <div>
@@ -40,10 +41,14 @@ const BasicUserInfo = ({
           ))}
         </div>
       )}
-      <Divider name="Skills" />
-      <div>
-        <SkillTags skills={skills}/>
-      </div>
+      {(skills.length > 0 || self) && (
+        <React.Fragment>
+          <Divider name="Skills" />
+          <div>
+            <SkillTags self={self} skills={skills} />
+          </div>
+        </React.Fragment>
+      )}
     </div>
   );
 };
@@ -66,4 +71,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default BasicUserInfo;
+export default BasicUserInfo

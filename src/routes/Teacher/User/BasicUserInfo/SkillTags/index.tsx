@@ -1,10 +1,10 @@
 import { Icon, Input, Tag, Tooltip } from "antd";
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
-import { graphql } from "react-apollo";
+import { compose, graphql } from "react-apollo";
 import AppContext from "../../../../../contexts/AppContext";
 import { ISkillTagsProps, ISkillTagsWithContextProps, ISkillTagsWithGraphQlProps, IUser } from "../../interfaces";
-import { createSkillMutation, getUserInfoQuery } from "../../queries";
+import { createSkillMutation, getUserInfoQuery, removeSkillMutation } from "../../queries";
 
 class SkillTags extends React.Component<ISkillTagsProps> {
   public state = {
@@ -84,14 +84,36 @@ class SkillTags extends React.Component<ISkillTagsProps> {
     });
   };
 
+  public handleRemovingItem = (Id: string) => () => {
+    this.props.removeSkillMutation({
+      variables: { Id },
+      update: cache => {
+        const data =
+          (cache.readQuery({
+            query: getUserInfoQuery,
+            variables: { Id: this.props.userId }
+          }) as { user: IUser[] }) || null;
+        if (data && data.user && data.user.length > 0) {
+          data.user[0].skills = data.user[0].skills.filter(
+            skill => skill.Id !== Id
+          );
+          cache.writeQuery({
+            query: getUserInfoQuery,
+            variables: { Id: this.props.userId },
+            data
+          });
+        }
+      }
+    });
+  };
+
   public render() {
     const {
       nameInputVisible,
       tagname,
       colorInputVisible,
-      colorname
+      colorname,
     } = this.state;
-    console.log(this.props);
     return (
       <div>
         {this.props.skills.map(skill => {
@@ -100,8 +122,9 @@ class SkillTags extends React.Component<ISkillTagsProps> {
             <Tag
               className={css(styles.tag)}
               key={skill.Id}
-              closable={false}
+              closable={true}
               color={skill.color}
+              onClose={this.handleRemovingItem(skill.Id)}
             >
               {isLongTag ? `${skill.name.slice(0, 20)}...` : skill.name}
             </Tag>
@@ -114,54 +137,62 @@ class SkillTags extends React.Component<ISkillTagsProps> {
             tagElem
           );
         })}
-        {nameInputVisible && (
-          <Input
-            ref={this.nameInputRef}
-            type="text"
-            size="small"
-            style={{ width: 78 }}
-            value={tagname}
-            onChange={this.handleInputChange("tagname")}
-            onBlur={this.handleInputBlur}
-            onPressEnter={this.handleNameInputConfirm}
-            placeholder="Tag name"
-          />
-        )}
-        {colorInputVisible && (
-          <Input
-            ref={this.colorInputRef}
-            type="text"
-            size="small"
-            style={{ width: 78 }}
-            value={colorname}
-            onChange={this.handleInputChange("colorname")}
-            onBlur={this.handleInputBlur}
-            onPressEnter={this.handleColorInputConfirm}
-            placeholder="Color name"
-          />
-        )}
-        {!(nameInputVisible || colorInputVisible) && (
-          <Tag
-            onClick={this.showInput("name")}
-            style={{ background: "#fff", borderStyle: "dashed" }}
-          >
-            <Icon type="plus" /> New Tag
-          </Tag>
+        {this.props.self && (
+          <React.Fragment>
+            {nameInputVisible && (
+              <Input
+                ref={this.nameInputRef}
+                type="text"
+                size="small"
+                style={{ width: 78 }}
+                value={tagname}
+                onChange={this.handleInputChange("tagname")}
+                onBlur={this.handleInputBlur}
+                onPressEnter={this.handleNameInputConfirm}
+                placeholder="Tag name"
+              />
+            )}
+            {colorInputVisible && (
+              <Input
+                ref={this.colorInputRef}
+                type="text"
+                size="small"
+                style={{ width: 78 }}
+                value={colorname}
+                onChange={this.handleInputChange("colorname")}
+                onBlur={this.handleInputBlur}
+                onPressEnter={this.handleColorInputConfirm}
+                placeholder="Color name"
+              />
+            )}
+            {!(nameInputVisible || colorInputVisible) && (
+              <Tag
+                onClick={this.showInput("name")}
+                style={{ background: "#fff", borderStyle: "dashed" }}
+              >
+                <Icon type="plus" /> New Tag
+              </Tag>
+            )}
+          </React.Fragment>
         )}
       </div>
     );
   }
 }
 
-const SkillTagsWithGraphQl = graphql(createSkillMutation, {
-  name: "createSkillMutation"
-})(SkillTags as any) as React.ComponentClass<ISkillTagsWithGraphQlProps>;
+const SkillTagsWithGraphQl = compose(
+  graphql(createSkillMutation, {
+    name: "createSkillMutation"
+  }),
+  graphql(removeSkillMutation, { name: "removeSkillMutation" })
+)(SkillTags as any) as React.ComponentClass<ISkillTagsWithGraphQlProps>;
 
 const SkillTagsWithContext: React.SFC<ISkillTagsWithContextProps> = ({
-  skills
+  skills,
+  self
 }) => (
   <AppContext.Consumer>
-    {value => <SkillTagsWithGraphQl skills={skills} userId={value.userId!} />}
+    {value => <SkillTagsWithGraphQl self={self} skills={skills} userId={value.userId!} />}
   </AppContext.Consumer>
 );
 
