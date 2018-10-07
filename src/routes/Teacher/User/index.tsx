@@ -44,6 +44,7 @@ class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
     ) {
       user = this.props.getUserInfoQuery.user[0];
     }
+
     return (
       <React.Fragment>
         {this.props.getUserInfoQuery.user &&
@@ -66,6 +67,9 @@ class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
                 token={this.props.token}
                 self={this.state.self}
                 bio={user.bio}
+                currentUserAccessLevel={this.props.accessLevel}
+                userSearchAccessLevel={user.accessLevel}
+                name={user.firstname + " " + user.lastname}
               />
             </div>
           </div>
@@ -79,7 +83,6 @@ class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: "white",
     padding: "12px",
     display: "flex",
     flexDirection: "row",
@@ -87,11 +90,15 @@ const styles = StyleSheet.create({
   },
   basicUserInfo: {
     flex: 0.3,
-    maxWidth: "200px",
-    marginRight: "48px"
+    maxWidth: "300px",
+    marginRight: "48px",
+    backgroundColor: "white",
+    padding: 24,
   },
   detailsUserInfo: {
-    flex: 0.7
+    backgroundColor: "white",
+    flexGrow: 1,
+    padding: 24
   }
 });
 
@@ -118,6 +125,7 @@ const UserWithContext = (props: IUserWithContextProps) => {
           {...props}
           token={value.token}
           currentUserId={value.userId}
+          accessLevel={value.accessLevel}
         />
       )}
     </AppContext.Consumer>

@@ -9,6 +9,7 @@ export const getUserInfoQuery = gql`
       lastname
       username
       bio
+      accessLevel
       classrooms {
         Id
         name

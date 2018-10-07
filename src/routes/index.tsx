@@ -82,6 +82,7 @@ export default class AppNavigator extends React.Component {
           fullname: null
         })
       );
+      localStorage.removeItem("atschool");
     }
   };
 

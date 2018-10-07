@@ -10,13 +10,14 @@ export interface IUserWithContextProps {
 
 export interface IUserWithGraphQlProps extends IUserWithContextProps {
   currentUserId: string;
+  accessLevel: number;
 }
 
 export interface IUserProps extends IUserWithGraphQlProps {
   getUserInfoQuery: {
     user?: IUser[];
   };
-  token: string
+  token: string;
 }
 
 export interface IBasicUserInfoProps {
@@ -70,6 +71,9 @@ export interface IDetailsUserInfoProps {
   self: boolean;
   token: string;
   userId: string;
+  currentUserAccessLevel: number;
+  userSearchAccessLevel: number;
+  name: string;
 }
 
 export interface IUser {
@@ -82,6 +86,7 @@ export interface IUser {
   studentClassroom: IClassroom[];
   skills: ISkill[];
   bio: string;
+  accessLevel: number;
 }
 
 export interface ISkill {

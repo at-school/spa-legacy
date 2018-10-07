@@ -19,7 +19,7 @@ class DetailsUserInfoBio extends React.Component<
     if (this.state.bioEditable) {
       this.setState({ bioEditable: false, bioValue: "" });
     } else {
-      this.setState({ bioEditable: true });
+      this.setState({ bioEditable: true, bioValue: this.props.bio });
     }
   };
 
@@ -38,7 +38,7 @@ class DetailsUserInfoBio extends React.Component<
           });
           if (data && data.user && data.user.length > 0) {
             data.user[0].bio = this.state.bioValue;
-            console.log(data.user[0])
+            console.log(data.user[0]);
             this.props.client.writeQuery({
               query: getUserInfoQuery,
               variables: {
@@ -60,12 +60,14 @@ class DetailsUserInfoBio extends React.Component<
         {!bioEditable && (
           <div className={css(styles.bioText)}>
             {this.props.bio ? this.props.bio : "Your bio will go here "}
-            <Icon
-              onClick={this.toggleBioEdit}
-              style={{ color: "#1890ff" }}
-              type="edit"
-              theme="outlined"
-            />
+            {this.props.self && (
+              <Icon
+                onClick={this.toggleBioEdit}
+                style={{ color: "#1890ff" }}
+                type="edit"
+                theme="outlined"
+              />
+            )}
           </div>
         )}
         {bioEditable && (
