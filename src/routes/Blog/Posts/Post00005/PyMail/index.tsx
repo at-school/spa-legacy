@@ -16,7 +16,7 @@ const PyMail = () => {
 			With the module we have been able to create a small demo that can display the main headers: From, Subject and Time.
 			We are also able to get the html or plain text format of the message and display it.
 		</div>
-		<div className="gif-image">
+		<div className="image" style={{height: "360px"}}>
 			<img src="/mail-api.gif" alt=""/>
 	  	</div>
 	 	<div>

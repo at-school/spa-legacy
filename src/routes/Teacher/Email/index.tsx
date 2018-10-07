@@ -2,23 +2,27 @@ import { Icon } from "antd"
 import {css, StyleSheet} from "aphrodite"
 import React, { Fragment } from "react";
 import AppContext from "../../../contexts/AppContext";
-
+import * as mailData from './mockData.json'
 
 const { Consumer, Provider } = React.createContext({} as INavItem)
 
 interface INavItem {
-	active: any,
-	handleClick: any,
+	activeInbox: number,
+	activeMail: number,
 	menu: any,
 	inbox: any,
+	mail: any,
+	handleClick: any,
 	item: any,
-	mail: any
+	// mailData: any
+	mailData?: any
 }
 
 class Email extends React.Component<any> {
 
 	public state = {
-		active: 0,
+		activeInbox: 0,
+		activeMail: 0,
 		menu: [
 				{
 					"text": "New Message",
@@ -52,8 +56,7 @@ class Email extends React.Component<any> {
 				"icon": "delete"
 			},
 			{
-				"text": "New folder",
-				"icon": ""
+				"text": "New Folder",
 			},
 		],
 		mail: [
@@ -61,26 +64,54 @@ class Email extends React.Component<any> {
 				"from": "charl",
 				"subject": "hello",
 				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM"
+				"time": "Fri 10:02 PM",
+				"type": "pushpin"
 			},
 			{
 				"from": "charl",
 				"subject": "hello",
 				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM"
+				"time": "Fri 10:02 PM",
 			},
 			{
 				"from": "charl",
 				"subject": "hello",
 				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM"
+				"time": "Fri 10:02 PM",
+				"type": "flag"
 			}
 		]
 	}
 
-	public handleClick = (index: any) => () => {
+	public componentDidMount() {
+		this.TestMailData()
+	}
+
+	public TestMailData = async () => {
+		console.log('atleast i tried')
+		await fetch("http://0.0.0.0:5000/email", {
+			headers: {
+				"Content-Type": "application/json",
+				authorization: 'Bearer ' + this.props.accessToken,
+			},
+			body: JSON.stringify({
+				studentId: this.props.userId
+			}),
+			method: "POST"
+		})
+
+		console.log('returned from the domain')
+		// .then(data => data.json())
+		// console.log("This was the reply", reply)
+	}
+
+	public handleClick = (index: any, key: any) => () => {
 		console.log("clicked", index)
-		this.setState({ active: index })
+		if ( key === "inbox" ) {
+			this.setState({ activeInbox: index })
+		} else {
+			this.setState({ activeMail: index })
+		}
 	}
 
 	public render() {
@@ -109,29 +140,35 @@ class Email extends React.Component<any> {
 							</Provider>
 						</div>
 					</div>
-					<div className={css(styles.messages)}>
-							<div className={css(styles.mailHeader)}>
-								<div className={css(styles.sort)}>
-									<span>Sort</span>
-									<Icon type="sort-ascending"/>
+					<div className={css(styles.messageWrapper)}>
+						<div className={css(styles.messages)}>
+								<div className={css(styles.mailHeader)}>
+									<div>
+										<span>Sort</span>
+										<Icon type="sort-ascending"/>
+									</div>
+									<div className={css(styles.filter)}>
+										<span>Filter</span>
+										<Icon type="filter"/>
+									</div>
 								</div>
-								<div className={css(styles.filter)}>
-									<span>Filter</span>
-									<Icon type="filter"/>
-								</div>
-							</div>
 
-							<Provider value={{
-								...this.state,
-								handleClick:
-								this.handleClick,
-								item: "inbox"
-							}}>
-								<MailItem />
-							</Provider>
+								<Provider value={{
+									...this.state,
+									mailData,
+									handleClick: this.handleClick,
+									item: "inbox"
+								}}>
+									<MailItem />
+								</Provider>
+						</div>
 					</div>
-
-					<div className={css(styles.bodies)}/>
+					<div className={css(styles.bodies)}>
+						<div className={css(styles.body)}
+							dangerouslySetInnerHTML=
+							{{__html: mailData[this.state.activeMail].html}}
+						/>
+					</div>
 				</div>
 			</div>
 		);
@@ -139,11 +176,14 @@ class Email extends React.Component<any> {
 }
 
 const Item = (props: any) => (
-	<div
-		className={css(styles.item)}
-	>
-		<Icon type={props.icon}/>
-		<span>
+	<div className={css(styles.item)}>
+		{
+			props.icon ?
+			<Icon type={props.icon} style={{ fontSize: "17.5px" }}/>
+			:
+			<span style={{ width: "17.5px" }}/>
+		}
+		<span style={{ paddingLeft: "10px", color: (props.text === "New Folder" ? blue : "")}}>
 			{props.text}
 		</span>
 	</div>
@@ -153,10 +193,39 @@ const MailItem = () => (
 	<Consumer>
 		{ value =>
 			<Fragment>
-				{ value.mail.map( (item: any, index: number) =>
-					<div key={index}>
-						<span>{item.from}</span>
-						<span>{item.subject}</span>
+				{ value.mailData.slice(0, 20).map( (item: any, index: number) =>
+					<div
+						key={index}
+						className={css(styles.mailItem, (value.activeMail === index && styles.active))}
+						style={{ borderBottom:
+							(index+1 === value.mail.length ?
+								`solid 1px ${gray}`
+								:
+								'none'
+								)
+						}}
+						onClick={value.handleClick(index, 'mail')}
+					>
+						<div>
+							{
+								item.timeDate
+							}
+						</div>
+						<div>
+							<span><strong>{item.From}</strong></span>
+							{ item.type &&
+								<span style={{ float: "right" }}>
+									<Icon type={item.type}/>
+								</span>
+							}
+						</div>
+
+						<div className={css(styles.middle)}>
+							<span>{item.Subject}</span>
+							<span style={{ float: "right" }}>
+								{item.dateTime}
+							</span>
+						</div>
 						<span>{item.plain}</span>
 					</div>
 				)}
@@ -186,8 +255,8 @@ const InboxItem = () => (
 				{ value[value.item].map( (item: any, index: number) =>
 					<div
 						key={index}
-						className={css(styles.inboxItem, (value.active === index && styles.active))}
-						onClick={value.handleClick(index)}
+						className={css(styles.inboxItem, (value.activeInbox === index && styles.active))}
+						onClick={value.handleClick(index, "inbox")}
 					>
 						<Item icon={item.icon} text={item.text} class=""/>
 					</div>
@@ -199,7 +268,7 @@ const InboxItem = () => (
 
 export default (props: any) => (
   <AppContext.Consumer>
-	{value => <Email {...props} accessToken={value.token} />}
+	{value => <Email userId={value.userId} {...props} accessToken={value.token} />}
   </AppContext.Consumer>
 );
 
@@ -209,6 +278,20 @@ const gray = "rgb(245,245,245)"
 const grayBorder = "solid 1px rgb(230,230,230)"
 
 const styles = StyleSheet.create({
+	mailItem: {
+		flexGrow: 1,
+		overflow: "auto",
+		cursor: "pointer",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		padding: "10px 20px",
+		lineHeight: "1.2",
+		borderTop: `1px solid ${gray}`,
+	},
+	middle: {
+
+	},
 	active: {
 		color: blue,
 		backgroundColor: lightBlue
@@ -217,13 +300,11 @@ const styles = StyleSheet.create({
 		height: "50px",
 		display: "flex",
 		alignItems: "center",
+		justifyContent: "center",
 		color: blue,
 	},
-	sort: {
-		float: "left"
-	},
 	filter: {
-		float: "right"
+		marginLeft: "50px"
 	},
 	outerContainer: {
 		margin: "-48px -24px",
@@ -262,20 +343,43 @@ const styles = StyleSheet.create({
 			cursor: "pointer"
 		}
 	},
-	messages: {
+	messageWrapper: {
 		height: "100%",
 		width: "30%",
 		minWidth: "225px",
 		backgroundColor: "white",
-		borderBottom: grayBorder
+		borderBottom: grayBorder,
+		borderRight: grayBorder,
+		display: "flex",
+		flexDirection: "column",
+	},
+	messages: {
+		flexGrow: 1,
+		display: "flex",
+		flexDirection: "column",
+		minHeight: "0"
 	},
 	bodies: {
-		height: "100%",
+		display: "flex",
+		// alignItems: "center",
+		justifyContent: "center",
+		maxHeight: "100%",
 		width: "50%",
 		minWidth: "375px",
-		backgroundColor: gray
+		backgroundColor: gray,
+		overflow: "scroll"
+	},
+	body: {
+		marginTop: "30px",
+		backgroundColor: "white",
+		width: "95%",
+		height: "80%",
+		maxHeight: "925px",
+		overflow: "scroll"
 	},
 	item: {
+		display: "flex",
+		alignItems: "center",
 		paddingLeft: "20px",
 		":hover" : {
 			cursor: "pointer",

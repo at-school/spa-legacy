@@ -28,3 +28,4 @@ export default (props: any) => (
     {value => <Dashboard {...props} accessToken={value.token} />}
   </AppContext.Consumer>
 );
+
