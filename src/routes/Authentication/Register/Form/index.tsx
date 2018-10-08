@@ -1,13 +1,24 @@
-import { Button, Checkbox, Form, Input, message as notification, Select } from "antd";
+import {
+  Button,
+  Checkbox,
+  DatePicker,
+  Form,
+  Input,
+  message as notification,
+  Select
+} from "antd";
+import moment, { Moment } from "moment";
 import React from "react";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import { checkDuplicateUsername, register } from "../../../../api/auth";
 import { IError } from "../../IFormError";
-
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+const dateFormat = "DD/MM/YYYY";
+const consoleItem = (something: Moment) =>
+  console.log(String(something.format(dateFormat)));
 interface IFormData {
   email: string;
   username: string;
@@ -19,6 +30,8 @@ interface IFormData {
   phone: string;
   accessLevel: string;
   agreement: boolean;
+  dob: Moment;
+  gender: string;
 }
 
 interface IFormError {
@@ -65,9 +78,12 @@ class RegisterForm extends React.Component<any> {
         }
         if (!err) {
           try {
-            register(values).then(() => {
-              notification.success("Create account successfully!", 4)
-              this.props.history.push('/authentication/signin')
+            register({
+              ...values,
+              dob: values.dob.format(dateFormat)
+            }).then(() => {
+              notification.success("Create account successfully!", 4);
+              this.props.history.push("/authentication/signin");
             });
           } catch (err) {
             const message = JSON.parse(err.message);
@@ -108,11 +124,11 @@ class RegisterForm extends React.Component<any> {
     const { getFieldDecorator } = this.props.form;
 
     const prefixSelector = getFieldDecorator("prefix", {
-      initialValue: "86"
+      initialValue: "+61"
     })(
       <Select>
-        <Option value="86">+61</Option>
-        <Option value="87">+64</Option>
+        <Option value="+61">+61</Option>
+        <Option value="+64">+64</Option>
       </Select>
     );
 
@@ -192,6 +208,32 @@ class RegisterForm extends React.Component<any> {
             ]
           })(<Input type="text" />)}
         </FormItem>
+        <FormItem label="Date of Birth">
+          {getFieldDecorator("dob", {
+            rules: [
+              {
+                required: true,
+                message: "Please enter your date of birth!"
+              }
+            ]
+          })(
+            <DatePicker
+              onChange={consoleItem}
+              defaultValue={moment("01/01/2000", dateFormat)}
+              format={dateFormat}
+            />
+          )}
+        </FormItem>
+        <FormItem label="Gender">
+          {getFieldDecorator("gender", {
+            rules: [{ required: true, message: "Please select your gender!" }]
+          })(
+            <Select>
+              <Option value="male">Male</Option>
+              <Option value="female">Female</Option>
+            </Select>
+          )}
+        </FormItem>
         <FormItem label="Phone Number">
           {getFieldDecorator("phone", {
             rules: [
@@ -230,7 +272,7 @@ class RegisterForm extends React.Component<any> {
 
   private checkDuplicatedUsername = async (
     e: React.ChangeEvent<HTMLInputElement>
-   ) => {
+  ) => {
     // const username = event.currentTarget.value;
 
     // new state so that there is loading spinner in the input
@@ -242,29 +284,28 @@ class RegisterForm extends React.Component<any> {
     });
 
     try {
-      const duplicated = await checkDuplicateUsername(e.target.value)
+      const duplicated = await checkDuplicateUsername(e.target.value);
       if (duplicated) {
         this.setState({
           usernameValidate: {
             status: "error",
             errMessage: "Username already exists!"
           }
-        })
-      }
-      else {
+        });
+      } else {
         this.setState({
           usernameValidate: {
             status: "success",
             errMessage: "",
             success: true
           }
-        })
+        });
       }
-    } catch(err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   };
 }
 
-const RegisterFormNoRouter = Form.create()(RegisterForm)
-export default withRouter(RegisterFormNoRouter as any)
+const RegisterFormNoRouter = Form.create()(RegisterForm);
+export default withRouter(RegisterFormNoRouter as any);

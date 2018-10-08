@@ -13,13 +13,9 @@ import ClassroomScreenRoot from "./Classroom/RootScreen";
 import Dashboard from "./Dashboard";
 import Email from "./Email";
 import Messages from "./Messages";
-import { getChatRoomIdQuery } from "./Messages/queries/queries";
-import {
-  getAllScheduleQuery,
-  getClassQueryByLine,
-  getScheduleDetailsQuery,
-  getScheduleQuery
-} from "./queries";
+import MessageRedirect from "./Messages/MessageRedirect";
+import { getChatRoomQuery } from "./Messages/queries/queries";
+import { getAllScheduleQuery, getClassQueryByLine, getScheduleDetailsQuery, getScheduleQuery } from "./queries";
 import RollCall from "./RollCall";
 import User from "./User";
 
@@ -61,8 +57,8 @@ class Content extends React.Component<any, any> {
       // subscribe listener to all chatrooms
       this.props.client
         .query({
-          query: getChatRoomIdQuery,
-          variables: { username: this.props.username }
+          query: getChatRoomQuery,
+          variables: { Id: this.props.userId }
         })
         .then((res: any) => {
           try {
@@ -74,7 +70,6 @@ class Content extends React.Component<any, any> {
         })
         .then((chatrooms: any) => {
           if (chatrooms.constructor === Array && chatrooms.length > 0) {
-            console.log(chatrooms);
             this.setState({ selectedRoomId: chatrooms[0].Id });
             for (const chatroom of chatrooms) {
               this.messageSocket.emit("sendMessage", {
@@ -92,7 +87,7 @@ class Content extends React.Component<any, any> {
     }
   }
 
-  public changeSelectedRoomId = (selectedRoomId: string) => {
+  public changeSelectedRoomId = (selectedRoomId: string) => () => {
     if (this.state.selectedRoomId !== selectedRoomId) {
       this.setState({ selectedRoomId });
     }
@@ -160,7 +155,16 @@ class Content extends React.Component<any, any> {
             component={ClassDetails}
           />
           <Route exact={true} path={"/teacher/rollcall"} component={RollCall} />
-          <Route exact={true} path={"/teacher/messages"} component={Messages} />
+          <Route
+            exact={true}
+            path={"/teacher/messages"}
+            component={MessageRedirect}
+          />
+          <Route
+            exact={true}
+            path={"/teacher/messages/:id"}
+            component={Messages}
+          />
           <Route exact={true} path="/teacher/user" component={User} />
           <Route exact={true} path="/teacher/user/:id" component={User} />
           <Route exact={true} path="/teacher/email" component={Email} />
@@ -258,6 +262,7 @@ const ContentWithContext = ({ history }: any) => (
         username={value.username}
         token={value.token}
         history={history}
+        userId={value.userId}
       />
     )}
   </AppContext.Consumer>

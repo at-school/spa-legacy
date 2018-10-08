@@ -1,35 +1,50 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 
-const DetailsUserInfoTabsContacts = () => {
+interface IDetailsUserInfoTabsContactsProps {
+  email: string;
+  phone: string;
+  dob: string;
+  gender: string;
+}
+
+const DetailsUserInfoTabsContacts: React.SFC<
+  IDetailsUserInfoTabsContactsProps
+> = ({ email, phone, dob, gender }) => {
   return (
     <div>
       <div>
         <div className={css(styles.heading)}>Contact Information</div>
         <div>
           <table>
-            <tr className={css(styles.tableRow)}>
-              <td className={css(styles.tableTitle)}>Phone:</td>
-              <td>08711293</td>
-            </tr>
-            <tr className={css(styles.tableRow)}>
-              <td className={css(styles.tableTitle)}>Email:</td>
-              <td>phamduyanh249@live.com</td>
-            </tr>
+            <tbody>
+              <tr className={css(styles.tableRow)}>
+                <td className={css(styles.tableTitle)}>Phone:</td>
+                <td>{phone}</td>
+              </tr>
+              <tr className={css(styles.tableRow)}>
+                <td className={css(styles.tableTitle)}>Email:</td>
+                <td>
+                  <a>{email}</a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
       <div>
         <div className={css(styles.heading)}>Basic Information</div>
         <table>
-          <tr className={css(styles.tableRow)}>
-            <td className={css(styles.tableTitle)}>Birthday:</td>
-            <td>24/09/2000</td>
-          </tr>
-          <tr className={css(styles.tableRow)}>
-            <td className={css(styles.tableTitle)}>Gender:</td>
-            <td>Male</td>
-          </tr>
+          <tbody>
+            <tr className={css(styles.tableRow)}>
+              <td className={css(styles.tableTitle)}>Birthday:</td>
+              <td>{dob}</td>
+            </tr>
+            <tr className={css(styles.tableRow)}>
+              <td className={css(styles.tableTitle)}>Gender:</td>
+              <td>{gender.charAt(0).toUpperCase() + gender.slice(1)}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>

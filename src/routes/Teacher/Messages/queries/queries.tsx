@@ -1,9 +1,23 @@
 import { gql } from "apollo-boost";
 
 const addChatRoomMutation = gql`
-  mutation($firstId: ID) {
-    createChatroom(arguments: { firstId: $firstId }) {
+  mutation($firstId: ID, $secondId: ID, $name: String!) {
+    createChatroom(
+      arguments: { firstId: $firstId, secondId: $secondId, name: $name }
+    ) {
       Id
+      name
+      users {
+        Id
+        firstname
+        lastname
+        avatar
+        accessLevel
+      }
+      latestMessage {
+        messageContent
+        senderAvatar
+      }
     }
   }
 `;
@@ -22,28 +36,22 @@ const addMessageMutation = gql`
 `;
 
 const getChatRoomQuery = gql`
-  query GetChatroom($username: String) {
-    user(arguments: { username: $username }) {
+  query GetChatroom($Id: ID) {
+    user(arguments: { Id: $Id }) {
       chatrooms {
         Id
         name
         users {
           Id
+          firstname
+          lastname
           avatar
+          accessLevel
         }
         latestMessage {
           messageContent
+          senderAvatar
         }
-      }
-    }
-  }
-`;
-
-const getChatRoomIdQuery = gql`
-  query GetChatroom($username: String) {
-    user(arguments: { username: $username }) {
-      chatrooms {
-        Id
       }
     }
   }
@@ -60,21 +68,9 @@ const getChatRoomMessageQuery = gql`
   }
 `;
 
-const getLatestChatroom = gql`
-  query GetLatestChatroom($username: String) {
-    user(arguments: { username: $username }) {
-      latestChatroom {
-        Id
-      }
-    }
-  }
-`;
-
 export {
   addChatRoomMutation,
   getChatRoomQuery,
   addMessageMutation,
-  getChatRoomMessageQuery,
-  getChatRoomIdQuery,
-  getLatestChatroom
+  getChatRoomMessageQuery
 };

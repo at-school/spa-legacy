@@ -21,13 +21,15 @@ class Messages extends React.Component<
   {
     token: string;
     avatar: string;
-    username: string;
+    userId: string;
     chatRoomList: any;
     addMessageMutation: any;
     messageList: any;
     socket: any;
     selectedRoomId: string;
     client: any;
+    username: string;
+    changeSelectedRoomId: (selectedRoomId: string) => () => void;
   },
   {
     messageData: IMessageItem[];
@@ -61,7 +63,6 @@ class Messages extends React.Component<
   };
 
   public componentDidMount() {
-    console.log(this.props.messageList)
     this.setState({ selectedRoomId: this.props.selectedRoomId });
     this.scrollToBottom(false);
 
@@ -69,7 +70,6 @@ class Messages extends React.Component<
   }
 
   public onNewMessage = (res: any) => {
-    console.log(this.props.messageList);
     if (res.senderUsername !== this.props.username) {
       if (res.chatroomId === this.state.selectedRoomId) {
         // Read the data from our cache for this query.
@@ -78,7 +78,6 @@ class Messages extends React.Component<
           variables: { chatroomId: res.chatroomId }
         });
         // Add the new message from the mutation to the end.
-        console.log(data);
         data.message.push(res);
         // Write our data back to the cache.
         this.props.client.writeQuery({
@@ -90,7 +89,7 @@ class Messages extends React.Component<
 
       const roomData = this.props.client.readQuery({
         query: getChatRoomQuery,
-        variables: { username: this.props.username }
+        variables: { Id: this.props.userId }
       });
       roomData.user[0].chatrooms = Lodash.sortBy(
         roomData.user[0].chatrooms,
@@ -102,7 +101,7 @@ class Messages extends React.Component<
         res.messageContent;
       this.props.client.writeQuery({
         query: getChatRoomQuery,
-        variables: { username: this.props.username },
+        variables: { Id: this.props.userId },
         data: roomData
       });
     }
@@ -128,7 +127,6 @@ class Messages extends React.Component<
     this.setState({ message: e.target.value });
   };
 
-
   public sendMessage = () => {
     const messageContent = this.state.message;
     if (messageContent.length > 0) {
@@ -150,7 +148,7 @@ class Messages extends React.Component<
             });
             const roomData = store.readQuery({
               query: getChatRoomQuery,
-              variables: { username: this.props.username }
+              variables: { Id: this.props.userId }
             });
             roomData.user[0].chatrooms = Lodash.sortBy(
               roomData.user[0].chatrooms,
@@ -169,7 +167,7 @@ class Messages extends React.Component<
             });
             store.writeQuery({
               query: getChatRoomQuery,
-              variables: { username: this.props.username },
+              variables: { Id: this.props.userId },
               data: roomData
             });
             this.setState({ message: "" });
@@ -181,7 +179,6 @@ class Messages extends React.Component<
   };
 
   public componentDidUpdate(prevProps: any, prevState: any) {
-    console.log(this.props.messageList)
     if (prevState.selectedRoomId !== this.state.selectedRoomId) {
       this.scrollToBottom(false);
     } else if (
@@ -192,22 +189,29 @@ class Messages extends React.Component<
     }
   }
 
-  public changeSelectedRoomId = (selectedRoomId: any) => () => {
-    this.setState({ selectedRoomId });
-    this.props.messageList
-      .refetch({ chatroomId: selectedRoomId })
-      .then(() => this.scrollToBottom(false));
-  };
-
   public render() {
-    const chatrooms = this.props.chatRoomList.user[0].chatrooms;
-    console.log(chatrooms);
+    const chatrooms = this.props.chatRoomList.user[0].chatrooms
+      ? this.props.chatRoomList.user[0].chatrooms
+      : [];
+    const currentRoom = chatrooms.find(
+      (chatroom: any) => chatroom.Id === this.props.selectedRoomId
+    );
+    let otherUser = null;
+    if (currentRoom) {
+      otherUser = currentRoom.users.find(
+        (user: any) => this.props.userId !== user.Id
+      );
+      if (!otherUser && currentRoom.users) {
+        otherUser = currentRoom.users[0];
+      }
+    }
     return (
       <div className="messages">
         <MessageList
           toggleAddChatRoom={this.toggleAddChatRoom}
-          roomList={chatrooms ? chatrooms : []}
-          changeSelectedRoomId={this.changeSelectedRoomId}
+          roomList={chatrooms}
+          changeSelectedRoomId={this.props.changeSelectedRoomId}
+          userId={this.props.userId}
         />
 
         <MessageContent
@@ -224,9 +228,11 @@ class Messages extends React.Component<
         />
 
         <MessageInfo
-          userName={this.props.username}
+          username={this.props.username}
           addChatRoom={this.state.addChatRoom.formVisible}
           userAvatar={this.props.avatar}
+          currentRoom={currentRoom}
+          otherUser={otherUser}
         />
       </div>
     );
@@ -249,7 +255,7 @@ const MessagesWithChatRoom = compose(
     options: (props: any) => {
       return {
         variables: {
-          username: props.username
+          Id: props.userId
         }
       };
     },
@@ -269,9 +275,11 @@ export default (props: any) => (
             socket={socket.socket}
             {...props}
             token={value.token!}
-            username={value.username!}
+            userId={value.userId!}
+            username={value.username}
             avatar={value.avatarUrl!}
             selectedRoomId={socket.selectedRoomId}
+            changeSelectedRoomId={socket.changeSelectedRoomId}
           />
         )}
       </MessageSocket.Consumer>

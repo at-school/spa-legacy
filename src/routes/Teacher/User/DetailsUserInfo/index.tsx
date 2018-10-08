@@ -13,7 +13,11 @@ const DetailsUserInfo: React.SFC<IDetailsUserInfoProps> = ({
   userId,
   bio,
   currentUserAccessLevel,
-  userSearchAccessLevel
+  userSearchAccessLevel,
+  email,
+  dob,
+  phone,
+  gender
 }) => {
   return (
     <div>
@@ -21,9 +25,9 @@ const DetailsUserInfo: React.SFC<IDetailsUserInfoProps> = ({
       <DetailsUserInfoBio bio={bio} userId={userId} token={token} self={self} />
       <DetailsUserInfoTools />
       {currentUserAccessLevel > 1 && userSearchAccessLevel <= 1 ? (
-        <DetailsUserInfoTabs />
+        <DetailsUserInfoTabs gender={gender} email={email} dob={dob} phone={phone} />
       ) : (
-        <DetailsUserInfoTabsContacts />
+        <DetailsUserInfoTabsContacts email={email} dob={dob} phone={phone} gender={gender} />
       )}
     </div>
   );

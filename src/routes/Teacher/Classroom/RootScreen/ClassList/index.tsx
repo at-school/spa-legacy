@@ -1,19 +1,14 @@
 import Lodash from "lodash";
 import React from "react";
 import { ApolloConsumer, graphql } from "react-apollo";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../components/Spinner";
 import AppContext from "../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
 import { getClassQueryByLine } from "../../../queries";
-import {
-  editClassroomMutation,
-  getClassQuery,
-  getClassQueryById,
-  removeClassMutation
-} from "../../queries";
+import { editClassroomMutation, getClassQuery, getClassQueryById, removeClassMutation } from "../../queries";
 import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
@@ -193,9 +188,6 @@ class ClassList extends React.Component<
             classData={this.state.classData}
           />
         )}
-        <Link to="/teacher/classroom/123123/students">
-          <h1>Go to the next URL</h1>
-        </Link>
       </div>
     );
   }

@@ -27,20 +27,15 @@ class AddChatRoom extends React.Component<
     token: string;
     toggleAddChatRoom: () => void;
     addChatRoomMutation: any;
-    username: string;
+    userId: string;
   },
   IAddChatRoomState
 > {
   public state = {
     dataSource: [],
-    selectedId: ""
+    selectedId: "",
+    selectedName: ""
   };
-
-  public componentDidMount() {
-    console.log(this.props);
-  }
-
-  
 
   public render() {
     return (
@@ -65,21 +60,38 @@ class AddChatRoom extends React.Component<
 
   private handleAdd = () => {
     if (this.state.selectedId) {
-      console.log(this.props.username)
-      this.props
-        .addChatRoomMutation({
-          variables: {
-            firstId: this.state.selectedId
-          },
-          refetchQueries: [
-            {
-              query: getChatRoomQuery,
-              variables: { username: this.props.username }
-            }
-          ],
-          awaitRefetchQueries: true
-        })
-        .then(this.props.toggleAddChatRoom);
+      const name = (this.state.dataSource.find(
+        (item: any) => item.id === this.state.selectedId
+      ) as any).name;
+
+      this.props.addChatRoomMutation({
+        variables: {
+          firstId: this.state.selectedId,
+          secondId: this.props.userId,
+          name
+        },
+        update: (store: any, { data: { createChatroom } }: any) => {
+          const data = store.readQuery({
+            query: getChatRoomQuery,
+            variables: { Id: this.props.userId }
+          });
+
+          if (
+            data &&
+            data.user &&
+            data.user.length === 1 &&
+            data.user[0].chatrooms
+          ) {
+            data.user[0].chatrooms.unshift(createChatroom);
+          }
+          store.writeQuery({
+            query: getChatRoomQuery,
+            variables: { Id: this.props.userId },
+            data
+          });
+          this.props.toggleAddChatRoom();
+        }
+      });
     }
   };
 
@@ -109,7 +121,7 @@ class AddChatRoom extends React.Component<
 
 const AddChatRoomWithContext = (props: any) => (
   <AppContext.Consumer>
-    {value => <AddChatRoom {...props} username={value.username} />}
+    {value => <AddChatRoom {...props} userId={value.userId} />}
   </AppContext.Consumer>
 );
 

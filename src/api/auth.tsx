@@ -9,6 +9,8 @@ interface IRegisterData {
   phone: string;
   accessLevel: string;
   agreement: boolean;
+  dob: string;
+  gender: string;
 }
 
 export const register = async (data:IRegisterData) => {
