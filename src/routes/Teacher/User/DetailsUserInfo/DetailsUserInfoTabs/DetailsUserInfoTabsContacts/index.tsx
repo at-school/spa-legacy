@@ -42,7 +42,7 @@ const DetailsUserInfoTabsContacts: React.SFC<
             </tr>
             <tr className={css(styles.tableRow)}>
               <td className={css(styles.tableTitle)}>Gender:</td>
-              <td>{gender.charAt(0).toUpperCase() + gender.slice(1)}</td>
+              <td className={css(styles.capitalize)}>{gender}</td>
             </tr>
           </tbody>
         </table>
@@ -62,6 +62,9 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     height: 42
+  },
+  capitalize: {
+    textTransform: "capitalize"
   }
 });
 

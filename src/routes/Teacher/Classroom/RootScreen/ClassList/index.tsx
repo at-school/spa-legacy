@@ -8,7 +8,12 @@ import Spinner from "../../../../../components/Spinner";
 import AppContext from "../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
 import { getClassQueryByLine } from "../../../queries";
-import { editClassroomMutation, getClassQuery, getClassQueryById, removeClassMutation } from "../../queries";
+import {
+  editClassroomMutation,
+  getClassQuery,
+  getClassQueryById,
+  removeClassMutation
+} from "../../queries";
 import { IClassData } from "../interfaces";
 import ClassCard from "./ClassCard";
 import EditClassForm from "./ClassForm/EditClassForm";
@@ -121,13 +126,12 @@ class ClassList extends React.Component<
             teacherUsername: this.props.username
           }
         });
-        
 
         try {
           data.user[0].classrooms = data.user[0].classrooms.filter(
             (classroom: any) => classroom.Id !== removeClassroom.Id
           );
-          data1.classroom = []
+          data1.classroom = [];
           store.writeQuery({
             query: getClassQuery,
             variables: { Id: this.props.userId },
@@ -151,10 +155,12 @@ class ClassList extends React.Component<
 
   public render() {
     let classList = [];
-    console.log(this.props.data);
     try {
-      classList = this.props.data.user[0].classrooms;
-    } catch (err) {
+      const classrooms = this.props.data.user[0].classrooms;
+      if (classrooms) {
+        classList = classrooms;
+      }
+    } catch {
       classList = [];
     }
     return (

@@ -15,7 +15,12 @@ import Email from "./Email";
 import Messages from "./Messages";
 import MessageRedirect from "./Messages/MessageRedirect";
 import { getChatRoomQuery } from "./Messages/queries/queries";
-import { getAllScheduleQuery, getClassQueryByLine, getScheduleDetailsQuery, getScheduleQuery } from "./queries";
+import {
+  getAllScheduleQuery,
+  getClassQueryByLine,
+  getScheduleDetailsQuery,
+  getScheduleQuery
+} from "./queries";
 import RollCall from "./RollCall";
 import User from "./User";
 
@@ -40,7 +45,7 @@ class Content extends React.Component<any, any> {
     loading: false
   };
 
-  public componentDidMount() {
+  public componentWillMount() {
     this.messageSocket = io.connect(
       "http://127.0.0.1:5000/message",
       {
@@ -53,45 +58,48 @@ class Content extends React.Component<any, any> {
         }
       }
     );
-    this.messageSocket.on("connect", () => {
-      // subscribe listener to all chatrooms
-      this.props.client
-        .query({
-          query: getChatRoomQuery,
-          variables: { Id: this.props.userId }
-        })
-        .then((res: any) => {
-          try {
-            return res.data.user[0].chatrooms;
-          } catch (err) {
-            console.log(err);
-            return [];
-          }
-        })
-        .then((chatrooms: any) => {
-          if (chatrooms.constructor === Array && chatrooms.length > 0) {
-            this.setState({ selectedRoomId: chatrooms[0].Id });
-            for (const chatroom of chatrooms) {
-              this.messageSocket.emit("sendMessage", {
-                chatroomId: chatroom.Id
-              });
-            }
-          }
-        });
-    });
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(prevProps: any) {
     if (!this.props.token) {
       this.props.history.push("/authentication/signin");
+    }
+    if (
+      prevProps.getChatroomQuery.loading &&
+      !this.props.getChatroomQuery.loading
+    ) {
+      const { user } = this.props.getChatroomQuery;
+      if (
+        user &&
+        user.length > 0 &&
+        user[0].chatrooms &&
+        user[0].chatrooms.length > 0
+      ) {
+        this.changeSelectedRoomId(user[0].chatrooms[0].Id)();
+        for (const chatroom of user[0].chatrooms) {
+          this.messageSocket.emit("sendMessage", {
+            chatroomId: chatroom.Id
+          });
+        }
+      }
     }
   }
 
   public changeSelectedRoomId = (selectedRoomId: string) => () => {
-    if (this.state.selectedRoomId !== selectedRoomId) {
-      this.setState({ selectedRoomId });
-    }
+    this.props.history.push("/teacher/messages/" + selectedRoomId);
   };
+
+  public renderMessages = () => (
+    <Messages
+      chatrooms={(() => {
+        const { user } = this.props.getChatroomQuery;
+        if (user && user.length > 0 && user[0].chatrooms) {
+          return user[0].chatrooms;
+        }
+        return [];
+      })()}
+    />
+  );
 
   public render() {
     let studentList = [];
@@ -113,11 +121,26 @@ class Content extends React.Component<any, any> {
     ) {
       classId = this.props.getClassQuery.classroom[0].Id;
     }
+
+    let chatrooms = [];
+    const { user } = this.props.getChatroomQuery;
+    if (user && user.length > 0 && user[0].chatrooms) {
+      chatrooms = user[0].chatrooms;
+    }
+
+    let line = "";
+    if (
+      !this.props.getScheduleQuery.loading &&
+      this.props.getScheduleQuery.latestLine
+    ) {
+      line = this.props.getScheduleQuery.latestLine.line;
+    }
+
     return (
       <TeacherMessageSocket.Provider
         value={{
           socket: this.messageSocket,
-          selectedRoomId: this.state.selectedRoomId,
+          chatrooms,
           changeSelectedRoomId: this.changeSelectedRoomId
         }}
       >
@@ -128,9 +151,7 @@ class Content extends React.Component<any, any> {
             avatar: this.state.classroomAvatar,
             name: this.state.classroomName,
             description: this.state.classroomDescription,
-            line: this.props.getScheduleQuery.loading
-              ? ""
-              : this.props.getScheduleQuery.latestLine.line,
+            line,
             students: studentList,
             schedule: this.props.getAllScheduleQuery.loading
               ? []
@@ -163,7 +184,7 @@ class Content extends React.Component<any, any> {
           <Route
             exact={true}
             path={"/teacher/messages/:id"}
-            component={Messages}
+            component={this.renderMessages}
           />
           <Route exact={true} path="/teacher/user" component={User} />
           <Route exact={true} path="/teacher/user/:id" component={User} />
@@ -252,6 +273,16 @@ const ContentWithApollo = compose(
       !props.getClassQuery ||
       !props.getClassQuery.classroom ||
       props.getClassQuery.classroom.length === 0
+  }),
+  graphql(getChatRoomQuery, {
+    name: "getChatroomQuery",
+    options: (props: any) => {
+      return {
+        variables: {
+          Id: props.userId
+        }
+      };
+    }
   })
 )(withApollo(Content)) as any;
 

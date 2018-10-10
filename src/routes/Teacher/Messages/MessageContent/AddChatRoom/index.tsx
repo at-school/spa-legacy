@@ -1,6 +1,7 @@
 import { AutoComplete, Icon } from "antd";
 import React from "react";
 import { compose, graphql } from "react-apollo";
+import { withRouter } from "react-router-dom";
 import { searchUsers } from "../../../../../api/message";
 import AppContext from "../../../../../contexts/AppContext";
 import { addChatRoomMutation, getChatRoomQuery } from "../../queries/queries";
@@ -28,6 +29,10 @@ class AddChatRoom extends React.Component<
     toggleAddChatRoom: () => void;
     addChatRoomMutation: any;
     userId: string;
+    history: {
+      push: (newLocation: string) => void;
+    };
+    userSocket: any;
   },
   IAddChatRoomState
 > {
@@ -84,11 +89,17 @@ class AddChatRoom extends React.Component<
           ) {
             data.user[0].chatrooms.unshift(createChatroom);
           }
+          this.props.userSocket.emit("user", {
+            createChatroom,
+            otherUser: this.state.selectedId,
+            activityType: "createChatroom"
+          });
           store.writeQuery({
             query: getChatRoomQuery,
             variables: { Id: this.props.userId },
             data
           });
+          this.props.history.push("/teacher/messages/" + createChatroom.Id);
           this.props.toggleAddChatRoom();
         }
       });
@@ -121,10 +132,14 @@ class AddChatRoom extends React.Component<
 
 const AddChatRoomWithContext = (props: any) => (
   <AppContext.Consumer>
-    {value => <AddChatRoom {...props} userId={value.userId} />}
+    {value => (
+      <AddChatRoom userSocket={value.socket} {...props} userId={value.userId} />
+    )}
   </AppContext.Consumer>
 );
 
-export default compose(
-  graphql(addChatRoomMutation, { name: "addChatRoomMutation" })
-)(AddChatRoomWithContext);
+export default withRouter(
+  compose(graphql(addChatRoomMutation, { name: "addChatRoomMutation" }))(
+    AddChatRoomWithContext
+  )
+) as any;

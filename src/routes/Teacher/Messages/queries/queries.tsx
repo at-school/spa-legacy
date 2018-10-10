@@ -68,9 +68,18 @@ const getChatRoomMessageQuery = gql`
   }
 `;
 
+const removeChatroomMutation = gql`
+  mutation($Id: ID) {
+    removeChatroom(arguments: { Id: $Id }) {
+      Id
+    }
+  }
+`;
+
 export {
   addChatRoomMutation,
   getChatRoomQuery,
   addMessageMutation,
-  getChatRoomMessageQuery
+  getChatRoomMessageQuery,
+  removeChatroomMutation
 };

@@ -1,14 +1,17 @@
 import Lodash from "lodash";
 import React from "react";
 import { compose, graphql, withApollo } from "react-apollo";
-import { branch, renderComponent } from "recompose";
-import Spinner from "../../../components/Spinner";
+import { withRouter } from "react-router-dom";
 import AppContext from "../../../contexts/AppContext";
 import MessageSocket from "../../../contexts/Teacher/TeacherMessageSocket";
 import MessageContent from "./MessageContent";
 import MessageInfo from "./MessageInfo";
 import MessageList from "./MessageList";
-import { addMessageMutation, getChatRoomMessageQuery, getChatRoomQuery } from "./queries/queries";
+import {
+  addMessageMutation,
+  getChatRoomMessageQuery,
+  getChatRoomQuery
+} from "./queries/queries";
 import "./styles/styles.css";
 
 interface IMessageItem {
@@ -22,7 +25,7 @@ class Messages extends React.Component<
     token: string;
     avatar: string;
     userId: string;
-    chatRoomList: any;
+    chatrooms: any;
     addMessageMutation: any;
     messageList: any;
     socket: any;
@@ -30,6 +33,7 @@ class Messages extends React.Component<
     client: any;
     username: string;
     changeSelectedRoomId: (selectedRoomId: string) => () => void;
+    match: any;
   },
   {
     messageData: IMessageItem[];
@@ -190,11 +194,10 @@ class Messages extends React.Component<
   }
 
   public render() {
-    const chatrooms = this.props.chatRoomList.user[0].chatrooms
-      ? this.props.chatRoomList.user[0].chatrooms
-      : [];
+    const roomId = this.props.match.params.id;
+    const { chatrooms } = this.props;
     const currentRoom = chatrooms.find(
-      (chatroom: any) => chatroom.Id === this.props.selectedRoomId
+      (chatroom: any) => chatroom.Id === roomId
     );
     let otherUser = null;
     if (currentRoom) {
@@ -243,30 +246,18 @@ const MessagesWithChatRoom = compose(
   graphql(addMessageMutation, { name: "addMessageMutation" }),
   graphql(getChatRoomMessageQuery, {
     options: (props: any) => {
+      console.log(props);
       return {
         variables: {
-          chatroomId: props.selectedRoomId
+          chatroomId: props.match.params.id
         }
       };
     },
     name: "messageList"
-  }),
-  graphql(getChatRoomQuery, {
-    options: (props: any) => {
-      return {
-        variables: {
-          Id: props.userId
-        }
-      };
-    },
-    name: "chatRoomList"
-  }),
-  branch(({ chatRoomList }) => {
-    return !chatRoomList.user && chatRoomList.loading;
-  }, renderComponent(Spinner))
+  })
 )(withApollo(Messages as any));
 
-export default (props: any) => (
+export default withRouter((props: any) => (
   <AppContext.Consumer>
     {value => (
       <MessageSocket.Consumer>
@@ -278,11 +269,10 @@ export default (props: any) => (
             userId={value.userId!}
             username={value.username}
             avatar={value.avatarUrl!}
-            selectedRoomId={socket.selectedRoomId}
             changeSelectedRoomId={socket.changeSelectedRoomId}
           />
         )}
       </MessageSocket.Consumer>
     )}
   </AppContext.Consumer>
-);
+));

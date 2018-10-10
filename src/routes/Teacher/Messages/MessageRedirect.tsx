@@ -1,10 +1,18 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { withMessageContext } from "../../../contexts/MessageContext";
+import Spinner from "../../../components/Spinner";
+import { withTeacherMessageSocket } from "../../../contexts/Teacher/TeacherMessageSocket";
 
 const MessageRedirect = (props: any) => {
-  console.log(props);
-  return <Redirect to="sdf" />;
+  if (props.teacherMessageSocket.chatrooms[0]) {
+    return (
+      <Redirect
+        to={"/teacher/messages/" + props.teacherMessageSocket.chatrooms[0].Id}
+      />
+    );
+  } else {
+    return <Spinner />;
+  }
 };
 
-export default withMessageContext(MessageRedirect);
+export default withTeacherMessageSocket(MessageRedirect);
