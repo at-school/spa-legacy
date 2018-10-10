@@ -18,6 +18,12 @@ interface INavItem {
 	mailData?: any
 }
 
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+						'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+const testArr = Array(25).fill(0).map((_, i) => i)
+console.log('TESTARRAY', testArr)
+
 class Email extends React.Component<any> {
 
 	public state = {
@@ -89,10 +95,11 @@ class Email extends React.Component<any> {
 
 	public TestMailData = async () => {
 		console.log('atleast i tried')
-		await fetch("http://0.0.0.0:5000/email", {
+		await fetch("http://0.0.0.0:5000/getmail", {
 			headers: {
 				"Content-Type": "application/json",
 				authorization: 'Bearer ' + this.props.accessToken,
+
 			},
 			body: JSON.stringify({
 				studentId: this.props.userId
@@ -103,6 +110,11 @@ class Email extends React.Component<any> {
 		console.log('returned from the domain')
 		// .then(data => data.json())
 		// console.log("This was the reply", reply)
+	}
+
+	public getDate = (oldDate: string) => {
+		const date = new Date(oldDate)
+		return months[date.getMonth()].toString()+" "+date.getDate()
 	}
 
 	public handleClick = (index: any, key: any) => () => {
@@ -141,29 +153,33 @@ class Email extends React.Component<any> {
 						</div>
 					</div>
 					<div className={css(styles.messageWrapper)}>
-						<div className={css(styles.messages)}>
-								<div className={css(styles.mailHeader)}>
-									<div>
-										<span>Sort</span>
-										<Icon type="sort-ascending"/>
-									</div>
-									<div className={css(styles.filter)}>
-										<span>Filter</span>
-										<Icon type="filter"/>
-									</div>
-								</div>
-
+						<div className={css(styles.mailHeader)}>
+							<div>
+								<span>Sort</span>
+								<Icon type="sort-ascending"/>
+							</div>
+							<div className={css(styles.filter)}>
+								<span>Filter</span>
+								<Icon type="filter"/>
+							</div>
+						</div>
+						<div className={css(styles.messagesContainer)}>
+							<div className={css(styles.messages)}>
 								<Provider value={{
 									...this.state,
 									mailData,
 									handleClick: this.handleClick,
 									item: "inbox"
 								}}>
-									<MailItem />
+									<MailItem date={this.getDate}/>
 								</Provider>
+							</div>
 						</div>
 					</div>
 					<div className={css(styles.bodies)}>
+						<div className={css(styles.bodyHead)}>
+							{mailData[this.state.activeMail].Subject}
+						</div>
 						<div className={css(styles.body)}
 							dangerouslySetInnerHTML=
 							{{__html: mailData[this.state.activeMail].html}}
@@ -183,20 +199,23 @@ const Item = (props: any) => (
 			:
 			<span style={{ width: "17.5px" }}/>
 		}
-		<span style={{ paddingLeft: "10px", color: (props.text === "New Folder" ? blue : "")}}>
+		<span style={{
+				paddingLeft: "10px",
+				color: (props.text === "New Folder" ? blue : "")}}>
 			{props.text}
 		</span>
 	</div>
 )
 
-const MailItem = () => (
+const MailItem = (props: any) => (
 	<Consumer>
 		{ value =>
 			<Fragment>
 				{ value.mailData.slice(0, 20).map( (item: any, index: number) =>
 					<div
 						key={index}
-						className={css(styles.mailItem, (value.activeMail === index && styles.active))}
+						className={css(styles.mailItem,
+							(value.activeMail === index && styles.active))}
 						style={{ borderBottom:
 							(index+1 === value.mail.length ?
 								`solid 1px ${gray}`
@@ -213,18 +232,24 @@ const MailItem = () => (
 						</div>
 						<div>
 							<span><strong>{item.From}</strong></span>
+							<span
+								style={{ float: "right" }}
+								className={css(styles.date)}
+							>
+								{props.date(item.dateTime)}
+							</span>
 							{ item.type &&
 								<span style={{ float: "right" }}>
 									<Icon type={item.type}/>
 								</span>
 							}
 						</div>
-
 						<div className={css(styles.middle)}>
-							<span>{item.Subject}</span>
-							<span style={{ float: "right" }}>
-								{item.dateTime}
-							</span>
+							<div className={css(styles.subject)}>
+								<div className={css(styles.subjectSpan)}>
+									{item.Subject}
+								</div>
+							</div>
 						</div>
 						<span>{item.plain}</span>
 					</div>
@@ -239,8 +264,11 @@ const NavItem = () => (
 		{ value =>
 			<Fragment>
 				{ value[value.item].map( (item: any, index: number) =>
-					<div key={index} className={css(styles[(item.style ? item.style : "" )])}>
-						<Item icon={item.icon} text={item.text} class=""/>
+					<div
+						key={index}
+						className={css(styles[(item.style ? item.style : "" )])}
+					>
+						<Item icon={item.icon} text={item.text} />
 					</div>
 				)}
 			</Fragment>
@@ -274,21 +302,10 @@ export default (props: any) => (
 
 const blue = "rgba(3, 131, 220, 1)"
 const lightBlue = "rgba(187, 219, 244, 0.5)"
-const gray = "rgb(245,245,245)"
+const gray = "rgb(240,242,245)"
 const grayBorder = "solid 1px rgb(230,230,230)"
 
 const styles = StyleSheet.create({
-	mailItem: {
-		flexGrow: 1,
-		overflow: "auto",
-		cursor: "pointer",
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "center",
-		padding: "10px 20px",
-		lineHeight: "1.2",
-		borderTop: `1px solid ${gray}`,
-	},
 	middle: {
 
 	},
@@ -296,19 +313,12 @@ const styles = StyleSheet.create({
 		color: blue,
 		backgroundColor: lightBlue
 	},
-	mailHeader: {
-		height: "50px",
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		color: blue,
-	},
 	filter: {
 		marginLeft: "50px"
 	},
 	outerContainer: {
 		margin: "-48px -24px",
-		height: "calc(100% + 96px)",
+		height: "calc(100vh - 64px)",
 	},
 	topNav: {
 		width: "100%",
@@ -321,7 +331,7 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		display: "flex",
-		flesDirection: "row",
+		flexDirection: "row",
 		height: "calc(100% - 50px)",
 		width: "100%"
 	},
@@ -331,11 +341,12 @@ const styles = StyleSheet.create({
 	},
 	inboxes: {
 		height: "100%",
+		maxHeight: "100%",
 		backgroundColor: gray,
 		borderRight: grayBorder
 	},
 	inboxItem: {
-		height: "50px",
+		height: "54px",
 		display: "flex",
 		alignItems: "center",
 		":hover": {
@@ -345,35 +356,75 @@ const styles = StyleSheet.create({
 	},
 	messageWrapper: {
 		height: "100%",
-		width: "30%",
+		width: "25%",
 		minWidth: "225px",
 		backgroundColor: "white",
 		borderBottom: grayBorder,
 		borderRight: grayBorder,
+		overflow: "hidden",
+		postition: "absolute"
+	},
+	mailHeader: {
+		height: "54px",
 		display: "flex",
-		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		color: blue,
+		borderBottom: grayBorder,
+	},
+	messagesContainer: {
+		height: "100%"
 	},
 	messages: {
-		flexGrow: 1,
+		height: "100%",
+		marginBottom: "50px",
+		overflowY: "scroll",
+	},
+	mailItem: {
+		height: '65px',
+		cursor: "pointer",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: "0"
+		justifyContent: "center",
+		padding: "10px 20px",
+		lineHeight: "1.2",
+		borderBottom: `1px solid ${gray}`,
+	},
+	subject: {
+		overflow: "hidden",
+		maxHeight: "16px",
+		position: 'relative'
+	},
+	subjectSpan: {
+		width: "100%",
+		textOverflow: "ellipsis",
+		overflow: "hidden",
+		whiteSpace: "nowrap"
+	},
+	date: {
+		color: "rgb(100,100,100)",
+		fontSize: '14px'
 	},
 	bodies: {
 		display: "flex",
-		// alignItems: "center",
-		justifyContent: "center",
-		maxHeight: "100%",
-		width: "50%",
+		flexDirection: "column",
+		alignItems: "center",
+		width: "60%",
 		minWidth: "375px",
 		backgroundColor: gray,
 		overflow: "scroll"
 	},
+	bodyHead: {
+		display: "flex",
+		alignItems: "center",
+		backgroundColor: gray,
+		fontWeight: "bold",
+		fontSize: "18px",
+		height: "54px"
+	},
 	body: {
-		marginTop: "30px",
 		backgroundColor: "white",
 		width: "95%",
-		height: "80%",
 		maxHeight: "925px",
 		overflow: "scroll"
 	},
