@@ -1,12 +1,14 @@
-import { Avatar, Icon, Input } from "antd";
+import { Icon, Input } from "antd";
 import React from "react";
+import PeopleRow from "./PeopleRow";
 
 const MessageList = ({
   toggleAddChatRoom,
   roomList,
   changeSelectedRoomId,
   selectedRoom,
-  userId
+  userId,
+  addChatroom
 }: any) => {
   return (
     <div className="message-list-container">
@@ -21,11 +23,13 @@ const MessageList = ({
         {roomList.map((room: any) => {
           let avatarData = "";
           let chatname = "";
+          let userActive = false;
           if (room.users.length > 1) {
             avatarData = room.users[0].avatar;
             const u = room.users.find((user: any) => userId !== user.Id);
             if (u) {
               chatname = u.firstname + " " + u.lastname;
+              userActive = u.active;
             } else {
               chatname = room.users[0].firstname + " " + room.users[0].lastname;
             }
@@ -34,7 +38,7 @@ const MessageList = ({
             chatname = "Team @ School";
           }
           return (
-            <MessageItem
+            <PeopleRow
               changeSelectedRoom={changeSelectedRoomId(room.Id)}
               key={room.Id}
               avatarData={avatarData}
@@ -44,7 +48,8 @@ const MessageList = ({
                   ? room.latestMessage[0].messageContent
                   : ""
               }
-              active={JSON.stringify(selectedRoom) === JSON.stringify(room)}
+              userActive={userActive}
+              active={selectedRoom === room.Id && !addChatroom}
             />
           );
         })}
@@ -52,26 +57,5 @@ const MessageList = ({
     </div>
   );
 };
-
-const MessageItem = ({
-  avatarData,
-  name,
-  changeSelectedRoom,
-  lastMessage,
-  active
-}: any) => (
-  <div
-    onClick={changeSelectedRoom}
-    className={"message-item " + (active ? "active" : "")}
-  >
-    <div className="message-item-avatar">
-      <Avatar src={avatarData} size="large" icon="user" />
-    </div>
-    <div className="message-item-content">
-      <div className="message-item-name">{name}</div>
-      <div className="message-item-details">{lastMessage}</div>
-    </div>
-  </div>
-);
 
 export default MessageList;

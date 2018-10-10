@@ -13,6 +13,7 @@ const addChatRoomMutation = gql`
         lastname
         avatar
         accessLevel
+        active
       }
       latestMessage {
         messageContent
@@ -47,6 +48,7 @@ const getChatRoomQuery = gql`
           lastname
           avatar
           accessLevel
+          active
         }
         latestMessage {
           messageContent

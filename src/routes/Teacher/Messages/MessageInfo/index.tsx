@@ -4,6 +4,10 @@ import ChatroomDetails from "./ChatroomDetails";
 
 export default class MessageInfo extends React.Component<any, any> {
   public shouldComponentUpdate(prevProps: any) {
+    if (prevProps.addChatRoom !== this.props.addChatRoom) {
+      return true;
+    }
+
     if (
       JSON.stringify(prevProps.otherUser) ===
       JSON.stringify(this.props.otherUser)
@@ -30,7 +34,7 @@ export default class MessageInfo extends React.Component<any, any> {
           } else if (otherUser) {
             return <ChatroomDetails otherUser={otherUser} />;
           }
-          return null
+          return null;
         })()}
       </div>
     );

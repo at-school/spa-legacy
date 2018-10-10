@@ -240,13 +240,11 @@ const ContentWithApollo = compose(
       return {
         variables: {
           teacherUsername: props.username,
-          lineId:
-            props.getScheduleQuery.latestLine &&
-            props.getScheduleQuery.latestLine.line
-        },
-        skip: props.getScheduleQuery.loading
+          lineId: props.getScheduleQuery.latestLine.line
+        }
       };
-    }
+    },
+    skip: (props: any) => !(props.getScheduleQuery.latestLine && props.getScheduleQuery.latestLine.line)
   }),
   graphql(getScheduleDetailsQuery, {
     name: "getScheduleDetailsQuery",

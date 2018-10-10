@@ -34,6 +34,7 @@ class Messages extends React.Component<
     username: string;
     changeSelectedRoomId: (selectedRoomId: string) => () => void;
     match: any;
+    userSocket: any;
   },
   {
     messageData: IMessageItem[];
@@ -71,6 +72,24 @@ class Messages extends React.Component<
     this.scrollToBottom(false);
 
     this.props.socket.on("newMessage", this.onNewMessage);
+
+    // subsribe to all user offline and online socket
+    const { chatrooms } = this.props;
+    const users = Array.from(
+      new Set(
+        chatrooms
+          .map((chatroom: any) =>
+            chatroom.users
+              .filter((user: any) => user.Id !== this.props.userId)
+              .map((user: any) => user.Id)
+          )
+          .flat(2)
+      )
+    );
+    this.props.userSocket.emit("user", {
+      activityType: "joinUserStatus",
+      users
+    });
   }
 
   public onNewMessage = (res: any) => {
@@ -215,6 +234,8 @@ class Messages extends React.Component<
           roomList={chatrooms}
           changeSelectedRoomId={this.props.changeSelectedRoomId}
           userId={this.props.userId}
+          selectedRoom={this.props.match.params.id}
+          addChatroom={this.state.addChatRoom.formVisible}
         />
 
         <MessageContent
@@ -270,6 +291,7 @@ export default withRouter((props: any) => (
             username={value.username}
             avatar={value.avatarUrl!}
             changeSelectedRoomId={socket.changeSelectedRoomId}
+            userSocket={value.socket}
           />
         )}
       </MessageSocket.Consumer>
