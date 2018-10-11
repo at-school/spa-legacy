@@ -3,13 +3,17 @@ import { gql } from "apollo-boost";
 export const getUserInfoQuery = gql`
   query GetUserInfo($Id: ID) {
     user(arguments: { Id: $Id }) {
-      Id
+      accessLevel
       avatar
+      bio
+      dob
+      email
       firstname
+      gender
+      Id
       lastname
       username
-      bio
-      accessLevel
+      phone
       classrooms {
         Id
         name

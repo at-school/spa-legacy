@@ -85,6 +85,9 @@ class SignInForm extends React.Component<any> {
             Log in
           </Button>
         </Form.Item>
+        <div style={{ textAlign: "left" }}>
+          Don't have an account? Register <a href="/authentication/register">here</a>
+        </div>
       </Form>
     );
   }

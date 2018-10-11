@@ -4,8 +4,14 @@ const TeacherMessageSocket = React.createContext({} as IAppProviderStore);
 
 interface IAppProviderStore {
   socket: any;
-  selectedRoomId: string;
+  chatrooms: any;
   changeSelectedRoomId: (selectedRoomId: string) => void;
 }
+
+export const withTeacherMessageSocket = (Component: any) => (props: any) => (
+  <TeacherMessageSocket.Consumer>
+    {value => <Component teacherMessageSocket={{ ...value }} {...props} />}
+  </TeacherMessageSocket.Consumer>
+);
 
 export default TeacherMessageSocket;

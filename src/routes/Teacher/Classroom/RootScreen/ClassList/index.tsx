@@ -1,7 +1,7 @@
 import Lodash from "lodash";
 import React from "react";
 import { ApolloConsumer, graphql } from "react-apollo";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { branch, compose, renderComponent } from "recompose";
 import Spinner from "../../../../../components/Spinner";
@@ -126,13 +126,12 @@ class ClassList extends React.Component<
             teacherUsername: this.props.username
           }
         });
-        
 
         try {
           data.user[0].classrooms = data.user[0].classrooms.filter(
             (classroom: any) => classroom.Id !== removeClassroom.Id
           );
-          data1.classroom = []
+          data1.classroom = [];
           store.writeQuery({
             query: getClassQuery,
             variables: { Id: this.props.userId },
@@ -156,10 +155,12 @@ class ClassList extends React.Component<
 
   public render() {
     let classList = [];
-    console.log(this.props.data);
     try {
-      classList = this.props.data.user[0].classrooms;
-    } catch (err) {
+      const classrooms = this.props.data.user[0].classrooms;
+      if (classrooms) {
+        classList = classrooms;
+      }
+    } catch {
       classList = [];
     }
     return (
@@ -193,9 +194,6 @@ class ClassList extends React.Component<
             classData={this.state.classData}
           />
         )}
-        <Link to="/teacher/classroom/123123/students">
-          <h1>Go to the next URL</h1>
-        </Link>
       </div>
     );
   }

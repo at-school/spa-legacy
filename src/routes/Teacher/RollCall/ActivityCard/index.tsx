@@ -1,9 +1,11 @@
-import { Card, List } from "antd";
+import { Card } from "antd";
 import moment from "moment";
 import React from "react";
 import { graphql } from "react-apollo";
+import { withRouter } from "react-router-dom";
 import { withClassroomContext } from "../../../../contexts/Teacher/ClassroomContext";
 import { getRollMarkingActivitiesQuery } from "../queries";
+import ActivityList from "./ActivityList";
 
 class ActivityCard extends React.Component<any, any> {
   public state = {
@@ -12,11 +14,8 @@ class ActivityCard extends React.Component<any, any> {
   };
   public timerInterval: any;
   public componentDidUpdate(prevProps: any) {
-    console.log("Preparing to be updated");
     const prevGetRollMarkingActivities = prevProps.getRollMarkingActivities;
     const { getRollMarkingActivities } = this.props;
-    console.log(prevGetRollMarkingActivities);
-    console.log(getRollMarkingActivities);
     if (prevGetRollMarkingActivities && getRollMarkingActivities) {
       if (
         prevGetRollMarkingActivities.loading &&
@@ -48,9 +47,12 @@ class ActivityCard extends React.Component<any, any> {
     clearInterval(this.timerInterval);
   }
 
+  public goToUserProfile = (userId:string) => () => {
+    this.props.history.push("/teacher/user/" + userId)
+  }
+
   public render() {
     const { getRollMarkingActivities } = this.props;
-    console.log(getRollMarkingActivities);
     return (
       <Card
         bordered={false}
@@ -80,56 +82,12 @@ class ActivityCard extends React.Component<any, any> {
               ? []
               : getRollMarkingActivities.rollMarkingActivites
           }
+          goToUserProfile={this.goToUserProfile}
         />
       </Card>
     );
   }
 }
-
-const ActivityList = (props: any) => {
-  console.log(props.activities);
-  const data = props.activities.map((activity: any) => {
-    if (activity.activityType === 1) {
-      return {
-        title: (
-          <div key={activity.Id}>
-            {activity.students.map((student: any, index: number) => {
-              if (index === activity.students.length - 1) {
-                return (
-                  <a key={student.Id}>
-                    {student.firstname + " " + student.lastname}
-                  </a>
-                );
-              }
-              return (
-                <a key={student.Id}>
-                  {student.firstname + " " + student.lastname + ", "}
-                </a>
-              );
-            })}{" "}
-            just got in class
-          </div>
-        ),
-        description: moment(activity.timestamp).fromNow()
-      };
-    }
-    return;
-  });
-
-  return (
-    <List
-      itemLayout="horizontal"
-      dataSource={data}
-      renderItem={ActivityListItem}
-    />
-  );
-};
-
-const ActivityListItem = (item: any) => (
-  <List.Item>
-    <List.Item.Meta title={item.title} description={item.description} />
-  </List.Item>
-);
 
 const ActivityCardWithGraphQl = graphql(getRollMarkingActivitiesQuery, {
   options: ({ userId }: any) => {
@@ -142,4 +100,4 @@ const ActivityCardWithGraphQl = graphql(getRollMarkingActivitiesQuery, {
   name: "getRollMarkingActivities"
 })(ActivityCard) as any;
 
-export default withClassroomContext(ActivityCardWithGraphQl);
+export default withRouter(withClassroomContext(ActivityCardWithGraphQl));

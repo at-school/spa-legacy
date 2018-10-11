@@ -5,32 +5,53 @@ const MessageList = ({
   toggleAddChatRoom,
   roomList,
   changeSelectedRoomId,
-  selectedRoom
-}: any) => (
-  <div className="message-list-container">
-    <div className="message-list-search-container">
-      <Input.Search
-        placeholder="Search for a message"
-        className="message-list-search"
-      />
-      <Icon type="plus-square-o" onClick={toggleAddChatRoom} />
-    </div>
-    <div className="message-list">
-      {roomList.map((room: any) => (
-        <MessageItem
-          changeSelectedRoom={changeSelectedRoomId(room.Id)}
-          key={room.Id}
-          avatarData={room.users[0].avatar}
-          name={room.name}
-          lastMessage={
-            room.latestMessage.length > 0 ? room.latestMessage[0].messageContent : ""
-          }
-          active={JSON.stringify(selectedRoom) === JSON.stringify(room)}
+  selectedRoom,
+  userId
+}: any) => {
+  return (
+    <div className="message-list-container">
+      <div className="message-list-search-container">
+        <Input.Search
+          placeholder="Search for a message"
+          className="message-list-search"
         />
-      ))}
+        <Icon type="plus-square-o" onClick={toggleAddChatRoom} />
+      </div>
+      <div className="message-list">
+        {roomList.map((room: any) => {
+          let avatarData = "";
+          let chatname = "";
+          if (room.users.length > 1) {
+            avatarData = room.users[0].avatar;
+            const u = room.users.find((user: any) => userId !== user.Id);
+            if (u) {
+              chatname = u.firstname + " " + u.lastname;
+            } else {
+              chatname = room.users[0].firstname + " " + room.users[0].lastname;
+            }
+          } else {
+            avatarData = room.latestMessage[0].senderAvatar;
+            chatname = "Team @ School";
+          }
+          return (
+            <MessageItem
+              changeSelectedRoom={changeSelectedRoomId(room.Id)}
+              key={room.Id}
+              avatarData={avatarData}
+              name={chatname}
+              lastMessage={
+                room.latestMessage.length > 0
+                  ? room.latestMessage[0].messageContent
+                  : ""
+              }
+              active={JSON.stringify(selectedRoom) === JSON.stringify(room)}
+            />
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const MessageItem = ({
   avatarData,

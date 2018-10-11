@@ -70,6 +70,10 @@ class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
                 currentUserAccessLevel={this.props.accessLevel}
                 userSearchAccessLevel={user.accessLevel}
                 name={user.firstname + " " + user.lastname}
+                email={user.email}
+                phone={user.phone}
+                dob={user.dob}
+                gender={user.gender}
               />
             </div>
           </div>
@@ -96,8 +100,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   detailsUserInfo: {
+    flex: 0.7,
     backgroundColor: "white",
-    flexGrow: 1,
     padding: 24
   }
 });

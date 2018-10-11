@@ -13,6 +13,12 @@ interface IAppProviderStore {
   signinUser: (userInfo: any) => void;
   signoutUser: () => void;
   userId: string | null;
+  socket: any;
 }
 
+export const withAppContext = (Component: any) => (props: any) => (
+  <AppContext.Consumer>
+    {value => <Component appContext={{ ...value }} {...props} />}
+  </AppContext.Consumer>
+);
 export default AppContext;

@@ -17,7 +17,7 @@ const BasicUserInfo = ({
     <div>
       <img className={css(styles.avatar)} src={avatar} />
       <div className={css(styles.username)}>@{username}</div>
-      {studentClassrooms.length > 0 && (
+      {studentClassrooms && studentClassrooms.length > 0 && (
         <div>
           <Divider name="Classes" />
           {classrooms.map(classroom => (
@@ -29,7 +29,7 @@ const BasicUserInfo = ({
           ))}
         </div>
       )}
-      {classrooms.length > 0 && (
+      {classrooms && classrooms.length > 0 && (
         <div>
           <Divider name="Classes Taught" />
           {classrooms.map(classroom => (
@@ -41,7 +41,7 @@ const BasicUserInfo = ({
           ))}
         </div>
       )}
-      {(skills.length > 0 || self) && (
+      {skills && (skills.length > 0 || self) && (
         <React.Fragment>
           <Divider name="Skills" />
           <div>

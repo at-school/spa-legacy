@@ -74,6 +74,10 @@ export interface IDetailsUserInfoProps {
   currentUserAccessLevel: number;
   userSearchAccessLevel: number;
   name: string;
+  email: string;
+  phone: string;
+  dob: string;
+  gender: string;
 }
 
 export interface IUser {
@@ -87,6 +91,10 @@ export interface IUser {
   skills: ISkill[];
   bio: string;
   accessLevel: number;
+  dob: string;
+  gender: string;
+  email: string;
+  phone: string;
 }
 
 export interface ISkill {

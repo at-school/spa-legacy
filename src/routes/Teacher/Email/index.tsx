@@ -1,152 +1,241 @@
-import { Icon } from "antd"
-import {css, StyleSheet} from "aphrodite"
+import { Icon, Spin, } from "antd";
+import { css, StyleSheet } from "aphrodite";
 import React, { Fragment } from "react";
 import AppContext from "../../../contexts/AppContext";
-import * as mailData from './mockData.json'
 
-const { Consumer, Provider } = React.createContext({} as INavItem)
+const { Consumer, Provider } = React.createContext({} as INavItem);
 
 interface INavItem {
-	activeInbox: number,
+	activeInbox: number
 	activeMail: number,
-	menu: any,
-	inbox: any,
-	mail: any,
-	handleClick: any,
-	item: any,
-	// mailData: any
+	addMailbox?: boolean,
+	menu: any
+	inbox: any
+	handleClick: any
+	item: any;
 	mailData?: any
+	getDate?: any
+	loading?: any
+	setup?: any
 }
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
-						'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 const testArr = Array(25).fill(0).map((_, i) => i)
 console.log('TESTARRAY', testArr)
 
 class Email extends React.Component<any> {
-
 	public state = {
+		setup: false,
+		addMailbox: false,
+		loading: true,
 		activeInbox: 0,
 		activeMail: 0,
+		mailData: [
+				{
+					from: "charl",
+					Subject: "hello",
+					plain: "here is some plain text",
+					time: "Fri 10:02 PM",
+					type: "pushpin"
+				},
+				{
+					from: "charl",
+					Subject: "hello",
+					plain: "here is some plain text",
+					time: "Fri 10:02 PM"
+				},
+				{
+					from: "charl",
+					Subject: "hello",
+					plain: "here is some plain text",
+					time: "Fri 10:02 PM",
+					type: "flag"
+				}
+		],
 		menu: [
-				{
-					"text": "New Message",
-					"icon": "plus",
-					"style": "left"
-				},
-				{
-					"text": "Delete",
-					"icon": "delete"
-				},
-				{
-					"text": "Junk",
-					"icon": "stop"
-				},
-			],
+			{
+				text: "New Message",
+				icon: "plus",
+				style: "left"
+			},
+			{
+				text: "Delete",
+				icon: "delete"
+			},
+			{
+				text: "Junk",
+				icon: "stop"
+			}
+		],
 		inbox: [
 			{
-				"text": "Inbox",
-				"icon": "inbox"
+				text: "Inbox",
+				icon: "inbox"
 			},
 			{
-				"text": "Drafts",
-				"icon": "edit"
+				text: "Drafts",
+				icon: "edit"
 			},
 			{
-				"text": "Sent",
-				"icon": "paper-clip"
+				text: "Sent",
+				icon: "paper-clip"
 			},
 			{
-				"text": "Deleted",
-				"icon": "delete"
+				text: "Deleted",
+				icon: "delete"
 			},
 			{
-				"text": "New Folder",
-			},
-		],
-		mail: [
-			{
-				"from": "charl",
-				"subject": "hello",
-				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM",
-				"type": "pushpin"
-			},
-			{
-				"from": "charl",
-				"subject": "hello",
-				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM",
-			},
-			{
-				"from": "charl",
-				"subject": "hello",
-				"plain": "here is some plain text",
-				"time": "Fri 10:02 PM",
-				"type": "flag"
+				text: "New Folder"
 			}
-		]
-	}
+		],
+	};
 
 	public componentDidMount() {
-		this.TestMailData()
+		this.GetMailData();
 	}
 
-	public TestMailData = async () => {
-		console.log('atleast i tried')
-		await fetch("http://0.0.0.0:5000/getmail", {
+	public GetMailData = async (visited=false) => {
+		console.log("testing mail data")
+		const mailAuth = await fetch("http://localhost:5000/getmail", {
 			headers: {
 				"Content-Type": "application/json",
-				authorization: 'Bearer ' + this.props.accessToken,
-
+				authorization: "Bearer " + this.props.accessToken
 			},
 			body: JSON.stringify({
-				studentId: this.props.userId
+				studentId: this.props.userId,
+				visited
 			}),
 			method: "POST"
-		})
-
-		console.log('returned from the domain')
-		// .then(data => data.json())
-		// console.log("This was the reply", reply)
+		}).then(res => res.json())
+		if (mailAuth.response === "first-time") {
+			console.log('1')
+			this.setState({ setup: true, addMailbox: false })
+			this.GetMailData(visited=true)
+		}
+		else if (mailAuth.response === "auth") {
+			console.log('2')
+			this.setState({addMailbox: true})
+		} else {
+			console.log("3")
+			this.setState({mailData: mailAuth})
+			setTimeout(() => (this.setState({ setup: false })), 5000)
+		}
+		this.setState({loading: true})
 	}
 
-	public getDate = (oldDate: string) => {
-		const date = new Date(oldDate)
-		return months[date.getMonth()].toString()+" "+date.getDate()
+	public getToken = () => {
+		window.location.replace("http://localhost:5000/authorize?id="
+				+ this.props.userId)
 	}
 
 	public handleClick = (index: any, key: any) => () => {
-		console.log("clicked", index)
-		if ( key === "inbox" ) {
-			this.setState({ activeInbox: index })
+		console.log("clicked", index);
+		if (key === "inbox") {
+			this.setState({ activeInbox: index });
 		} else {
-			this.setState({ activeMail: index })
+			this.setState({ activeMail: index });
 		}
+	};
+
+	public getDate = (oldDate: string) => {
+		const date = new Date(oldDate)
+		return months[date.getMonth()].toString() + " " + date.getDate()
 	}
 
 	public render() {
 		return (
-			<div className={css(styles.outerContainer)}>
+			<Provider value={{
+				...this.state,
+				handleClick: this.handleClick,
+				getDate: this.getDate,
+				item: "menu",
+			}}
+			>
+				{
+					this.state.loading === true
+					?
+					<Loading />
+					:
+					this.state.setup === true ?
+					<Setup />
+					:
+					this.state.addMailbox === true ?
+					<AddMailbox getToken={this.getToken}/>
+					:
+					<MailApp />
+				}
+			</Provider>
+			);
+		}
+}
+
+const Setup = () => (
+	<div
+		style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+	>
+		<h1>
+			Setting up mailbox ...
+		</h1>
+	</div>
+)
+
+const AddMailbox = (props: any) => (
+	<div
+		style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+	>
+		<button onClick={props.getToken}>
+			<h1>
+				Add Mailbox +
+			</h1>
+		</button>
+	</div>
+)
+
+const Loading = () => (
+	<div
+		className={css(styles.outerContainer)}
+		style={{
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "center"
+		}}
+	>
+		<span
+			style={{ fontSize: "30px" }}
+		>
+			Loading
+		</span>
+		<br/>
+		<Spin indicator={
+			<Icon
+				type="loading"
+				style={{ fontSize: 50 }}
+				spin={true}
+			/>}
+		/>
+	</div>
+)
+
+const MailApp = () => (
+	<Consumer>
+		{ value =>
+		<div className={css(styles.outerContainer)}>
 				<div className={css(styles.topNav)}>
 					<Provider value={{
-							...this.state,
-							handleClick: this.handleClick,
-							item: "menu",
-						}}
-					>
-						<NavItem/>
+						...value
+					}} >
+						<NavItem />
 					</Provider>
+
 				</div>
 				<div className={css(styles.content)}>
 					<div className={css(styles.left)}>
 						<div className={css(styles.inboxes)}>
 							<Provider value={{
-								...this.state,
-								handleClick:
-								this.handleClick,
-								item: "inbox"
+								...value
 							}}>
 								<InboxItem />
 							</Provider>
@@ -156,52 +245,54 @@ class Email extends React.Component<any> {
 						<div className={css(styles.mailHeader)}>
 							<div>
 								<span>Sort</span>
-								<Icon type="sort-ascending"/>
+								<Icon type="sort-ascending" />
 							</div>
 							<div className={css(styles.filter)}>
 								<span>Filter</span>
-								<Icon type="filter"/>
+								<Icon type="filter" />
 							</div>
 						</div>
 						<div className={css(styles.messagesContainer)}>
 							<div className={css(styles.messages)}>
 								<Provider value={{
-									...this.state,
-									mailData,
-									handleClick: this.handleClick,
-									item: "inbox"
+									...value
 								}}>
-									<MailItem date={this.getDate}/>
+									<MailItem date={value.getDate} />
 								</Provider>
 							</div>
 						</div>
 					</div>
 					<div className={css(styles.bodies)}>
 						<div className={css(styles.bodyHead)}>
-							{mailData[this.state.activeMail].Subject}
+						{
+							console.log("The lask mail",value.mailData)
+						}
+							{ "Subject" in value.mailData[value.activeMail] &&
+							value.mailData[value.activeMail].Subject }
 						</div>
 						<div className={css(styles.body)}
 							dangerouslySetInnerHTML=
-							{{__html: mailData[this.state.activeMail].html}}
+							{{ __html: value.mailData[value.activeMail].html }}
 						/>
 					</div>
 				</div>
 			</div>
-		);
-	}
-}
+			}
+		</Consumer>
+)
 
 const Item = (props: any) => (
 	<div className={css(styles.item)}>
 		{
 			props.icon ?
-			<Icon type={props.icon} style={{ fontSize: "17.5px" }}/>
-			:
-			<span style={{ width: "17.5px" }}/>
+				<Icon type={props.icon} style={{ fontSize: "17.5px" }} />
+				:
+				<span style={{ width: "17.5px" }} />
 		}
 		<span style={{
-				paddingLeft: "10px",
-				color: (props.text === "New Folder" ? blue : "")}}>
+			paddingLeft: "10px",
+			color: (props.text === "New Folder" ? blue : "")
+		}}>
 			{props.text}
 		</span>
 	</div>
@@ -209,18 +300,19 @@ const Item = (props: any) => (
 
 const MailItem = (props: any) => (
 	<Consumer>
-		{ value =>
+		{value =>
 			<Fragment>
-				{ value.mailData.slice(0, 20).map( (item: any, index: number) =>
+				{value.mailData.map((item: any, index: number) => // .slice(0, 20)
 					<div
 						key={index}
 						className={css(styles.mailItem,
 							(value.activeMail === index && styles.active))}
-						style={{ borderBottom:
-							(index+1 === value.mail.length ?
-								`solid 1px ${gray}`
-								:
-								'none'
+						style={{
+							borderBottom:
+								(index + 1 === value.mailData.length ?
+									`solid 1px ${gray}`
+									:
+									'none'
 								)
 						}}
 						onClick={value.handleClick(index, 'mail')}
@@ -238,9 +330,9 @@ const MailItem = (props: any) => (
 							>
 								{props.date(item.dateTime)}
 							</span>
-							{ item.type &&
+							{item.type &&
 								<span style={{ float: "right" }}>
-									<Icon type={item.type}/>
+									<Icon type={item.type} />
 								</span>
 							}
 						</div>
@@ -261,12 +353,12 @@ const MailItem = (props: any) => (
 
 const NavItem = () => (
 	<Consumer>
-		{ value =>
+		{value =>
 			<Fragment>
-				{ value[value.item].map( (item: any, index: number) =>
+				{value[value.item].map((item: any, index: number) =>
 					<div
 						key={index}
-						className={css(styles[(item.style ? item.style : "" )])}
+						className={css(styles[(item.style ? item.style : "")])}
 					>
 						<Item icon={item.icon} text={item.text} />
 					</div>
@@ -278,26 +370,31 @@ const NavItem = () => (
 
 const InboxItem = () => (
 	<Consumer>
-		{ value =>
+		{value => (
 			<Fragment>
-				{ value[value.item].map( (item: any, index: number) =>
+				{value[value.item].map((item: any, index: number) => (
 					<div
 						key={index}
-						className={css(styles.inboxItem, (value.activeInbox === index && styles.active))}
+						className={css(
+							styles.inboxItem,
+							value.activeInbox === index && styles.active
+						)}
 						onClick={value.handleClick(index, "inbox")}
 					>
-						<Item icon={item.icon} text={item.text} class=""/>
+						<Item icon={item.icon} text={item.text} class="" />
 					</div>
-				)}
+				))}
 			</Fragment>
-		}
+		)}
 	</Consumer>
-)
+);
 
 export default (props: any) => (
-  <AppContext.Consumer>
-	{value => <Email userId={value.userId} {...props} accessToken={value.token} />}
-  </AppContext.Consumer>
+	<AppContext.Consumer>
+		{value => (
+			<Email userId={value.userId} {...props} accessToken={value.token} />
+		)}
+	</AppContext.Consumer>
 );
 
 const blue = "rgba(3, 131, 220, 1)"
@@ -406,6 +503,7 @@ const styles = StyleSheet.create({
 		fontSize: '14px'
 	},
 	bodies: {
+		height: "100%",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -432,7 +530,7 @@ const styles = StyleSheet.create({
 		display: "flex",
 		alignItems: "center",
 		paddingLeft: "20px",
-		":hover" : {
+		":hover": {
 			cursor: "pointer",
 		}
 	}
