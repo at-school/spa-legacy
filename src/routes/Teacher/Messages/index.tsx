@@ -93,15 +93,15 @@ class Messages extends React.Component<
   }
 
   public onNewMessage = (res: any) => {
-    if (res.senderUsername !== this.props.username) {
-      if (res.chatroomId === this.state.selectedRoomId) {
+    if (res.createMessage.senderId !== this.props.userId) {
+      if (res.chatroomId === this.props.match.params.id) {
         // Read the data from our cache for this query.
         const data = this.props.client.readQuery({
           query: getChatRoomMessageQuery,
           variables: { chatroomId: res.chatroomId }
         });
         // Add the new message from the mutation to the end.
-        data.message.push(res);
+        data.message.push(res.createMessage);
         // Write our data back to the cache.
         this.props.client.writeQuery({
           query: getChatRoomMessageQuery,
@@ -121,7 +121,7 @@ class Messages extends React.Component<
         }
       );
       roomData.user[0].chatrooms[0].latestMessage[0].messageContent =
-        res.messageContent;
+        res.createMessage.messageContent;
       this.props.client.writeQuery({
         query: getChatRoomQuery,
         variables: { Id: this.props.userId },
@@ -156,18 +156,20 @@ class Messages extends React.Component<
       this.props
         .addMessageMutation({
           variables: {
-            chatroomId: this.state.selectedRoomId,
-            messageContent
+            chatroomId: this.props.match.params.id,
+            messageContent,
+            avatar: this.props.avatar
           },
           update: (store: any, { data: { createMessage } }: any) => {
             this.props.socket.emit("sendMessage", {
-              ...createMessage,
-              chatroomId: this.state.selectedRoomId
+              createMessage,
+              activityType: "newMessage",
+              chatroomId: this.props.match.params.id
             });
             // Read the data from our cache for this query.
             const data = store.readQuery({
               query: getChatRoomMessageQuery,
-              variables: { chatroomId: this.state.selectedRoomId }
+              variables: { chatroomId: this.props.match.params.id }
             });
             const roomData = store.readQuery({
               query: getChatRoomQuery,
@@ -176,16 +178,24 @@ class Messages extends React.Component<
             roomData.user[0].chatrooms = Lodash.sortBy(
               roomData.user[0].chatrooms,
               item => {
-                return item.Id === this.state.selectedRoomId ? 0 : 1;
+                return item.Id === this.props.match.params.id ? 0 : 1;
               }
             );
-            roomData.user[0].chatrooms[0].latestMessage[0].messageContent = this.state.message;
+            if (roomData.user[0].chatrooms[0].latestMessage) {
+              if (roomData.user[0].chatrooms[0].latestMessage.length === 0) {
+                roomData.user[0].chatrooms[0].latestMessage.push({
+                  messageContent: this.state.message
+                });
+              } else {
+                roomData.user[0].chatrooms[0].latestMessage[0].messageContent = this.state.message;
+              }
+            }
             // Add the new message from the mutation to the end.
             data.message.push(createMessage);
             // Write our data back to the cache.
             store.writeQuery({
               query: getChatRoomMessageQuery,
-              variables: { chatroomId: this.state.selectedRoomId },
+              variables: { chatroomId: this.props.match.params.id },
               data
             });
             store.writeQuery({
@@ -267,7 +277,6 @@ const MessagesWithChatRoom = compose(
   graphql(addMessageMutation, { name: "addMessageMutation" }),
   graphql(getChatRoomMessageQuery, {
     options: (props: any) => {
-      console.log(props);
       return {
         variables: {
           chatroomId: props.match.params.id

@@ -17,16 +17,15 @@ const addChatRoomMutation = gql`
       }
       latestMessage {
         messageContent
-        senderAvatar
       }
     }
   }
 `;
 
 const addMessageMutation = gql`
-  mutation($chatroomId: ID, $messageContent: String) {
+  mutation($chatroomId: ID, $messageContent: String, $avatar: String!) {
     createMessage(
-      arguments: { chatroomId: $chatroomId, messageContent: $messageContent }
+      arguments: { chatroomId: $chatroomId, messageContent: $messageContent, senderAvatar: $avatar }
     ) {
       Id
       messageContent
@@ -52,7 +51,6 @@ const getChatRoomQuery = gql`
         }
         latestMessage {
           messageContent
-          senderAvatar
         }
       }
     }

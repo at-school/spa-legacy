@@ -78,7 +78,8 @@ class Content extends React.Component<any, any> {
         this.changeSelectedRoomId(user[0].chatrooms[0].Id)();
         for (const chatroom of user[0].chatrooms) {
           this.messageSocket.emit("sendMessage", {
-            chatroomId: chatroom.Id
+            chatroomId: chatroom.Id,
+            activityType: "join"
           });
         }
       }
@@ -244,7 +245,11 @@ const ContentWithApollo = compose(
         }
       };
     },
-    skip: (props: any) => !(props.getScheduleQuery.latestLine && props.getScheduleQuery.latestLine.line)
+    skip: (props: any) =>
+      !(
+        props.getScheduleQuery.latestLine &&
+        props.getScheduleQuery.latestLine.line
+      )
   }),
   graphql(getScheduleDetailsQuery, {
     name: "getScheduleDetailsQuery",
