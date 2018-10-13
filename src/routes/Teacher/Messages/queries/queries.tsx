@@ -13,19 +13,19 @@ const addChatRoomMutation = gql`
         lastname
         avatar
         accessLevel
+        active
       }
       latestMessage {
         messageContent
-        senderAvatar
       }
     }
   }
 `;
 
 const addMessageMutation = gql`
-  mutation($chatroomId: ID, $messageContent: String) {
+  mutation($chatroomId: ID, $messageContent: String, $avatar: String!) {
     createMessage(
-      arguments: { chatroomId: $chatroomId, messageContent: $messageContent }
+      arguments: { chatroomId: $chatroomId, messageContent: $messageContent, senderAvatar: $avatar }
     ) {
       Id
       messageContent
@@ -47,10 +47,10 @@ const getChatRoomQuery = gql`
           lastname
           avatar
           accessLevel
+          active
         }
         latestMessage {
           messageContent
-          senderAvatar
         }
       }
     }

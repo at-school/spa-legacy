@@ -6,6 +6,7 @@ interface IAppProviderStore {
   socket: any;
   chatrooms: any;
   changeSelectedRoomId: (selectedRoomId: string) => void;
+  selectedRoomId: string;
 }
 
 export const withTeacherMessageSocket = (Component: any) => (props: any) => (

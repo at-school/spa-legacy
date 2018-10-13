@@ -7,16 +7,12 @@ import { onError } from "apollo-link-error";
 import { createHttpLink } from "apollo-link-http";
 import React from "react";
 import { ApolloProvider } from "react-apollo";
-import { BrowserRouter, Route } from "react-router-dom";
+import Loadable from "react-loadable";
+import { Route, withRouter } from "react-router-dom";
 import io from "socket.io-client";
 import { signout } from "../api/auth";
 import AppContext from "../contexts/AppContext";
-import About from "./About";
-import Authentication from "./Authentication";
-import Blog from "./Blog/index";
-import Landing from "./Landing";
 import "./styles.css";
-import Teacher from "./Teacher";
 import { getChatRoomQuery } from "./Teacher/Messages/queries/queries";
 
 const isJSON = (sequence: string) => {
@@ -28,7 +24,7 @@ const isJSON = (sequence: string) => {
   }
 };
 
-export default class AppNavigator extends React.Component {
+class AppNavigator extends React.Component<any> {
   public state = {
     token: null,
     avatarUrl: null,
@@ -107,14 +103,64 @@ export default class AppNavigator extends React.Component {
         activityType: "join",
         userIdentity: userInfo.userId
       });
-      this.userSocket.on("deleteChatroom", (data: { chatroomId: string }) => {
-        if (window.location.pathname.includes("/messages")) {
-          const data1 = this.client.readQuery({
+      this.userSocket.on("userOnline", (data: { newUserId: string }) => {
+        const data1 = this.client.readQuery({
+          query: getChatRoomQuery,
+          variables: { Id: userInfo.userId }
+        });
+        if (data1 && data1.user && data1.user.length === 1) {
+          data1.user[0].chatrooms = data1.user[0].chatrooms.map(
+            (chatroom: any) => {
+              chatroom.users = chatroom.users.map((user: any) => {
+                if (user.Id === data.newUserId) {
+                  return { ...user, active: true };
+                }
+                return user;
+              });
+              return chatroom;
+            }
+          );
+          this.client.writeQuery({
             query: getChatRoomQuery,
-            variables: { Id: userInfo.userId }
+            variables: { Id: userInfo.userId },
+            data: data1
           });
-          console.log("Finising reading query in delete chatroom")
-          if (data1 && data1.user && data1.user.length === 1) {
+        }
+      });
+      this.userSocket.on("userOffline", (data: { leaveUserId: string }) => {
+        const data1 = this.client.readQuery({
+          query: getChatRoomQuery,
+          variables: { Id: userInfo.userId }
+        });
+        if (data1 && data1.user && data1.user.length === 1) {
+          data1.user[0].chatrooms = data1.user[0].chatrooms.map(
+            (chatroom: any) => {
+              chatroom.users = chatroom.users.map((user: any) => {
+                if (user.Id === data.leaveUserId) {
+                  return { ...user, active: false };
+                }
+                return user;
+              });
+              return chatroom;
+            }
+          );
+          this.client.writeQuery({
+            query: getChatRoomQuery,
+            variables: { Id: userInfo.userId },
+            data: data1
+          });
+        }
+      });
+      this.userSocket.on("deleteChatroom", (data: { chatroomId: string }) => {
+        const data1 = this.client.readQuery({
+          query: getChatRoomQuery,
+          variables: { Id: userInfo.userId }
+        });
+        if (data1 && data1.user && data1.user.length === 1) {
+          if (
+            window.location.pathname.includes("/messages") &&
+            window.location.pathname.includes(data.chatroomId)
+          ) {
             // change the cache
             const { chatrooms } = data1.user[0];
             const currentRoomIndex = chatrooms.findIndex(
@@ -127,17 +173,16 @@ export default class AppNavigator extends React.Component {
               roomToRedirect = chatrooms[currentRoomIndex - 1].Id;
             }
 
-            data1.user[0].chatrooms = data1.user[0].chatrooms.filter(
-              (chatroom: any) => chatroom.Id !== data.chatroomId
-            );
-            console.log("Preparing to write query in delete chat room")
-            this.client.writeQuery({
-              query: getChatRoomQuery,
-              variables: { Id: userInfo.userId },
-              data: data1
-            })
-            console.log(roomToRedirect)
+            this.props.history.push("/teacher/messages/" + roomToRedirect);
           }
+          data1.user[0].chatrooms = data1.user[0].chatrooms.filter(
+            (chatroom: any) => chatroom.Id !== data.chatroomId
+          );
+          this.client.writeQuery({
+            query: getChatRoomQuery,
+            variables: { Id: userInfo.userId },
+            data: data1
+          });
         }
       });
 
@@ -147,8 +192,6 @@ export default class AppNavigator extends React.Component {
           query: getChatRoomQuery,
           variables: { Id: userInfo.userId }
         });
-        console.log("On create chatroom receive")
-        console.log(data.user)
         if (
           data &&
           data.user &&
@@ -156,7 +199,7 @@ export default class AppNavigator extends React.Component {
           data.user[0].chatrooms
         ) {
           data.user[0].chatrooms.unshift(createChatroom);
-          console.log("Here in write query")
+          console.log("Here in write query");
           this.client.writeQuery({
             query: getChatRoomQuery,
             variables: { Id: userInfo.userId },
@@ -218,6 +261,10 @@ export default class AppNavigator extends React.Component {
       );
       localStorage.removeItem("atschool");
     }
+
+    if (this.userSocket) {
+      this.userSocket.close();
+    }
   };
 
   public render() {
@@ -234,18 +281,43 @@ export default class AppNavigator extends React.Component {
           }}
         >
           <ApolloProvider client={this.client}>
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
-              <React.Fragment>
-                <Route exact={true} path="/" component={Landing} />
-                <Route path="/teacher" component={Teacher} />
-                <Route path="/authentication" component={Authentication} />
-                <Route path="/blog" component={Blog} />
-                <Route path="/about" component={About} />
-              </React.Fragment>
-            </BrowserRouter>
+            <React.Fragment>
+              <Route exact={true} path="/" component={Landing} />
+              <Route path="/teacher" component={Teacher} />
+              <Route path="/authentication" component={Authentication} />
+              <Route path="/blog" component={Blog} />
+              <Route path="/about" component={About} />
+            </React.Fragment>
           </ApolloProvider>
         </AppContext.Provider>
       );
     }
   }
 }
+
+const Teacher = Loadable({
+  loader: () => import("./Teacher"),
+  loading: () => null
+});
+
+const Authentication = Loadable({
+  loader: () => import("./Authentication"),
+  loading: () => null
+});
+
+const Blog = Loadable({
+  loader: () => import("./Blog"),
+  loading: () => null
+});
+
+const Landing = Loadable({
+  loader: () => import("./Landing"),
+  loading: () => null
+});
+
+const About = Loadable({
+  loader: () => import("./About"),
+  loading: () => null
+});
+
+export default withRouter(AppNavigator);
