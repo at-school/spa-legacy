@@ -35,6 +35,7 @@ class Messages extends React.Component<
     changeSelectedRoomId: (selectedRoomId: string) => () => void;
     match: any;
     userSocket: any;
+    history: any;
   },
   {
     messageData: IMessageItem[];
@@ -67,11 +68,13 @@ class Messages extends React.Component<
     }));
   };
 
+  public changeRoom = (roomId: string) => () => {
+    this.props.history.push("/teacher/messages/" + roomId);
+  };
+
   public componentDidMount() {
     this.setState({ selectedRoomId: this.props.selectedRoomId });
     this.scrollToBottom(false);
-
-    this.props.socket.on("newMessage", this.onNewMessage);
 
     // subsribe to all user offline and online socket
     const { chatrooms } = this.props;
@@ -92,48 +95,6 @@ class Messages extends React.Component<
     });
   }
 
-  public onNewMessage = (res: any) => {
-    if (res.createMessage.senderId !== this.props.userId) {
-      if (res.chatroomId === this.props.match.params.id) {
-        // Read the data from our cache for this query.
-        const data = this.props.client.readQuery({
-          query: getChatRoomMessageQuery,
-          variables: { chatroomId: res.chatroomId }
-        });
-        // Add the new message from the mutation to the end.
-        data.message.push(res.createMessage);
-        // Write our data back to the cache.
-        this.props.client.writeQuery({
-          query: getChatRoomMessageQuery,
-          variables: { chatroomId: res.chatroomId },
-          data
-        });
-      }
-
-      const roomData = this.props.client.readQuery({
-        query: getChatRoomQuery,
-        variables: { Id: this.props.userId }
-      });
-      roomData.user[0].chatrooms = Lodash.sortBy(
-        roomData.user[0].chatrooms,
-        item => {
-          return item.Id === res.chatroomId ? 0 : 1;
-        }
-      );
-      roomData.user[0].chatrooms[0].latestMessage[0].messageContent =
-        res.createMessage.messageContent;
-      this.props.client.writeQuery({
-        query: getChatRoomQuery,
-        variables: { Id: this.props.userId },
-        data: roomData
-      });
-    }
-  };
-
-  public componentWillUnmount() {
-    this.props.socket.removeListener("newMessage", this.onNewMessage);
-  }
-
   public setScrollToBottomDiv = (ref: any) => {
     this.scrollToBottomDiv = ref;
   };
@@ -151,64 +112,15 @@ class Messages extends React.Component<
   };
 
   public sendMessage = () => {
-    const messageContent = this.state.message;
-    if (messageContent.length > 0) {
-      this.props
-        .addMessageMutation({
-          variables: {
-            chatroomId: this.props.match.params.id,
-            messageContent,
-            avatar: this.props.avatar
-          },
-          update: (store: any, { data: { createMessage } }: any) => {
-            this.props.socket.emit("sendMessage", {
-              createMessage,
-              activityType: "newMessage",
-              chatroomId: this.props.match.params.id
-            });
-            // Read the data from our cache for this query.
-            const data = store.readQuery({
-              query: getChatRoomMessageQuery,
-              variables: { chatroomId: this.props.match.params.id }
-            });
-            const roomData = store.readQuery({
-              query: getChatRoomQuery,
-              variables: { Id: this.props.userId }
-            });
-            roomData.user[0].chatrooms = Lodash.sortBy(
-              roomData.user[0].chatrooms,
-              item => {
-                return item.Id === this.props.match.params.id ? 0 : 1;
-              }
-            );
-            if (roomData.user[0].chatrooms[0].latestMessage) {
-              if (roomData.user[0].chatrooms[0].latestMessage.length === 0) {
-                roomData.user[0].chatrooms[0].latestMessage.push({
-                  messageContent: this.state.message
-                });
-              } else {
-                roomData.user[0].chatrooms[0].latestMessage[0].messageContent = this.state.message;
-              }
-            }
-            // Add the new message from the mutation to the end.
-            data.message.push(createMessage);
-            // Write our data back to the cache.
-            store.writeQuery({
-              query: getChatRoomMessageQuery,
-              variables: { chatroomId: this.props.match.params.id },
-              data
-            });
-            store.writeQuery({
-              query: getChatRoomQuery,
-              variables: { Id: this.props.userId },
-              data: roomData
-            });
-            this.setState({ message: "" });
-          }
-        })
-        .then((res: any) => console.log(this.props))
-        .catch((err: any) => console.log(err));
-    }
+    sendMessage(
+      this.state.message,
+      this.props.match.params.id,
+      this.props.avatar,
+      this.props.userId,
+      this.props.addMessageMutation,
+      this.props.socket,
+      () => this.setState({ message: "" })
+    );
   };
 
   public componentDidUpdate(prevProps: any, prevState: any) {
@@ -242,7 +154,7 @@ class Messages extends React.Component<
         <MessageList
           toggleAddChatRoom={this.toggleAddChatRoom}
           roomList={chatrooms}
-          changeSelectedRoomId={this.props.changeSelectedRoomId}
+          changeSelectedRoomId={this.changeRoom}
           userId={this.props.userId}
           selectedRoom={this.props.match.params.id}
           addChatroom={this.state.addChatRoom.formVisible}
@@ -307,3 +219,69 @@ export default withRouter((props: any) => (
     )}
   </AppContext.Consumer>
 ));
+
+export const sendMessage = (
+  messageContent: string,
+  chatroomId: string,
+  avatar: string,
+  userId: string,
+  addMessageHandler: any,
+  socket: any,
+  callback: any
+) => {
+  if (messageContent.length > 0) {
+    addMessageHandler({
+      variables: {
+        chatroomId,
+        messageContent,
+        avatar
+      },
+      update: (store: any, { data: { createMessage } }: any) => {
+        socket.emit("sendMessage", {
+          createMessage,
+          activityType: "newMessage",
+          chatroomId
+        });
+        // Read the data from our cache for this query.
+        const data = store.readQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId }
+        });
+        const roomData = store.readQuery({
+          query: getChatRoomQuery,
+          variables: { Id: userId }
+        });
+        roomData.user[0].chatrooms = Lodash.sortBy(
+          roomData.user[0].chatrooms,
+          item => {
+            return item.Id === chatroomId ? 0 : 1;
+          }
+        );
+        if (roomData.user[0].chatrooms[0].latestMessage) {
+          if (roomData.user[0].chatrooms[0].latestMessage.length === 0) {
+            roomData.user[0].chatrooms[0].latestMessage.push({
+              messageContent,
+              __typename: "MessageSchema"
+            });
+          } else {
+            roomData.user[0].chatrooms[0].latestMessage[0].messageContent = messageContent;
+          }
+        }
+        // Add the new message from the mutation to the end.
+        data.message.push(createMessage);
+        // Write our data back to the cache.
+        store.writeQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId },
+          data
+        });
+        store.writeQuery({
+          query: getChatRoomQuery,
+          variables: { Id: userId },
+          data: roomData
+        });
+        callback();
+      }
+    }).catch((err: any) => console.log(err));
+  }
+};

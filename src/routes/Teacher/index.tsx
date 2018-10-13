@@ -1,3 +1,4 @@
+import Lodash from "lodash";
 import moment from "moment";
 import React from "react";
 import { compose, graphql, withApollo } from "react-apollo";
@@ -14,7 +15,10 @@ import Dashboard from "./Dashboard";
 import Email from "./Email";
 import Messages from "./Messages";
 import MessageRedirect from "./Messages/MessageRedirect";
-import { getChatRoomQuery } from "./Messages/queries/queries";
+import {
+  getChatRoomMessageQuery,
+  getChatRoomQuery
+} from "./Messages/queries/queries";
 import {
   getAllScheduleQuery,
   getClassQueryByLine,
@@ -58,25 +62,49 @@ class Content extends React.Component<any, any> {
         }
       }
     );
+    this.messageSocket.on("connect", () => {
+      this.messageSocket.on("newMessage", this.onNewMessage);
+    });
+  }
+
+  public componentWillUnmount() {
+    this.messageSocket.removeEventListener("newMessage", this.onNewMessage);
+  }
+
+  public componentDidMount() {
+    const { user } = this.props.getChatroomQuery;
+    if (
+      user &&
+      user.length > 0 &&
+      user[0].chatrooms &&
+      user[0].chatrooms.length > 0
+    ) {
+      this.changeSelectedRoomId(user[0].chatrooms[0].Id)();
+      for (const chatroom of user[0].chatrooms) {
+        this.messageSocket.emit("sendMessage", {
+          chatroomId: chatroom.Id,
+          activityType: "join"
+        });
+      }
+    }
   }
 
   public componentDidUpdate(prevProps: any) {
     if (!this.props.token) {
       this.props.history.push("/authentication/signin");
     }
+
+    const { user } = this.props.getChatroomQuery;
     if (
-      prevProps.getChatroomQuery.loading &&
-      !this.props.getChatroomQuery.loading
+      JSON.stringify(prevProps.getChatroomQuery) !==
+      JSON.stringify(this.props.getChatroomQuery)
     ) {
-      const { user } = this.props.getChatroomQuery;
-      if (
-        user &&
-        user.length > 0 &&
-        user[0].chatrooms &&
-        user[0].chatrooms.length > 0
-      ) {
-        this.changeSelectedRoomId(user[0].chatrooms[0].Id)();
+      if (this.props.getChatroomQuery.user) {
+        if (!this.state.selectedRoomId) {
+          this.setState({ selectedRoomId: user[0].chatrooms[0].Id });
+        }
         for (const chatroom of user[0].chatrooms) {
+          console.log("Subscribing to all channels");
           this.messageSocket.emit("sendMessage", {
             chatroomId: chatroom.Id,
             activityType: "join"
@@ -87,7 +115,7 @@ class Content extends React.Component<any, any> {
   }
 
   public changeSelectedRoomId = (selectedRoomId: string) => () => {
-    this.props.history.push("/teacher/messages/" + selectedRoomId);
+    this.setState({ selectedRoomId });
   };
 
   public renderMessages = () => (
@@ -142,7 +170,8 @@ class Content extends React.Component<any, any> {
         value={{
           socket: this.messageSocket,
           chatrooms,
-          changeSelectedRoomId: this.changeSelectedRoomId
+          changeSelectedRoomId: this.changeSelectedRoomId,
+          selectedRoomId: this.state.selectedRoomId
         }}
       >
         <ClassroomContext.Provider
@@ -190,9 +219,15 @@ class Content extends React.Component<any, any> {
           <Route exact={true} path="/teacher/user" component={User} />
           <Route exact={true} path="/teacher/user/:id" component={User} />
           <Route exact={true} path="/teacher/email" component={Email} />
-          {!this.props.history.location.pathname.includes("messages") && (
-            <ChatWindow />
-          )}
+          {!this.props.history.location.pathname.includes("messages") &&
+            chatrooms.length > 0 && (
+              <ChatWindow
+                chatrooms={chatrooms}
+                selectedRoomId={this.state.selectedRoomId}
+                changeSelectedRoomId={this.changeSelectedRoomId}
+                socket={this.messageSocket}
+              />
+            )}
         </ClassroomContext.Provider>
       </TeacherMessageSocket.Provider>
     );
@@ -200,6 +235,55 @@ class Content extends React.Component<any, any> {
 
   public saveClassId = (currentClassId: string) => {
     this.setState({ currentClassId });
+  };
+
+  private onNewMessage = (res: any) => {
+    if (res.createMessage.senderId !== this.props.userId) {
+      // Read the data from our cache for this query.
+      try {
+        const data = this.props.client.readQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId: res.chatroomId }
+        });
+        // Add the new message from the mutation to the end.
+        data.message.push(res.createMessage);
+        // Write our data back to the cache.
+        this.props.client.writeQuery({
+          query: getChatRoomMessageQuery,
+          variables: { chatroomId: res.chatroomId },
+          data
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    const roomData = this.props.client.readQuery({
+      query: getChatRoomQuery,
+      variables: { Id: this.props.userId }
+    });
+    roomData.user[0].chatrooms = Lodash.sortBy(
+      roomData.user[0].chatrooms,
+      item => {
+        return item.Id === res.chatroomId ? 0 : 1;
+      }
+    );
+    if (roomData.user[0].chatrooms[0].latestMessage) {
+      if (roomData.user[0].chatrooms[0].latestMessage.length === 0) {
+        roomData.user[0].chatrooms[0].latestMessage.push({
+          messageContent: res.createMessage.messageContent,
+          __typename: "MessageSchema"
+        });
+      } else {
+        roomData.user[0].chatrooms[0].latestMessage[0].messageContent =
+          res.createMessage.messageContent;
+      }
+    }
+    this.props.client.writeQuery({
+      query: getChatRoomQuery,
+      variables: { Id: this.props.userId },
+      data: roomData
+    });
   };
 }
 // day: moment().format("dddd")

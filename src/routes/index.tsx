@@ -7,16 +7,12 @@ import { onError } from "apollo-link-error";
 import { createHttpLink } from "apollo-link-http";
 import React from "react";
 import { ApolloProvider } from "react-apollo";
+import Loadable from "react-loadable";
 import { Route, withRouter } from "react-router-dom";
 import io from "socket.io-client";
 import { signout } from "../api/auth";
 import AppContext from "../contexts/AppContext";
-import About from "./About";
-import Authentication from "./Authentication";
-import Blog from "./Blog/index";
-import Landing from "./Landing";
 import "./styles.css";
-import Teacher from "./Teacher";
 import { getChatRoomQuery } from "./Teacher/Messages/queries/queries";
 
 const isJSON = (sequence: string) => {
@@ -177,7 +173,7 @@ class AppNavigator extends React.Component<any> {
               roomToRedirect = chatrooms[currentRoomIndex - 1].Id;
             }
 
-            this.props.history.push("/teacher/messages/room/" + roomToRedirect);
+            this.props.history.push("/teacher/messages/" + roomToRedirect);
           }
           data1.user[0].chatrooms = data1.user[0].chatrooms.filter(
             (chatroom: any) => chatroom.Id !== data.chatroomId
@@ -196,8 +192,6 @@ class AppNavigator extends React.Component<any> {
           query: getChatRoomQuery,
           variables: { Id: userInfo.userId }
         });
-        console.log("On create chatroom receive");
-        console.log(data.user);
         if (
           data &&
           data.user &&
@@ -300,5 +294,30 @@ class AppNavigator extends React.Component<any> {
     }
   }
 }
+
+const Teacher = Loadable({
+  loader: () => import("./Teacher"),
+  loading: () => null
+});
+
+const Authentication = Loadable({
+  loader: () => import("./Authentication"),
+  loading: () => null
+});
+
+const Blog = Loadable({
+  loader: () => import("./Blog"),
+  loading: () => null
+});
+
+const Landing = Loadable({
+  loader: () => import("./Landing"),
+  loading: () => null
+});
+
+const About = Loadable({
+  loader: () => import("./About"),
+  loading: () => null
+});
 
 export default withRouter(AppNavigator);
