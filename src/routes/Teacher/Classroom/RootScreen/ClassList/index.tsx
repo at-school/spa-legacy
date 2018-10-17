@@ -123,7 +123,7 @@ class ClassList extends React.Component<
           query: getClassQueryByLine,
           variables: {
             lineId: this.props.classroomContext.line,
-            teacherUsername: this.props.username
+            teacherId: this.props.userId
           }
         });
 
@@ -142,7 +142,7 @@ class ClassList extends React.Component<
             query: getClassQueryByLine,
             variables: {
               lineId: this.props.classroomContext.line,
-              teacherUsername: this.props.username
+              teacherId: this.props.userId
             },
             data: data1
           });
@@ -167,9 +167,11 @@ class ClassList extends React.Component<
       <div className="class-list-container">
         <TransitionGroup className="class-list">
           <CSSTransition key={"-1"} timeout={500} classNames="fade">
-            <AddClassForm
-              getClassInfo={this.props.classroomContext.getClassInfo}
-            />
+            <div>
+              <AddClassForm
+                getClassInfo={this.props.classroomContext.getClassInfo}
+              />
+            </div>
           </CSSTransition>
           {classList.map((c: any, index: number) => (
             <CSSTransition key={c.Id} timeout={500} classNames="fade">

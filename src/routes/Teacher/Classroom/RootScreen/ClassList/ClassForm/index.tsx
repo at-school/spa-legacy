@@ -239,7 +239,7 @@ class ClassForm extends React.Component<
                 const data1 = store.readQuery({
                   query: getClassQueryByLine,
                   variables: {
-                    teacherUsername: this.props.username,
+                    teacherId: this.props.userId,
                     lineId: this.props.classroomContext.line
                   }
                 });
@@ -249,7 +249,7 @@ class ClassForm extends React.Component<
                 store.writeQuery({
                   query: getClassQueryByLine,
                   variables: {
-                    teacherUsername: this.props.username,
+                    teacherId: this.props.userId,
                     lineId: this.props.classroomContext.line
                   },
                   data: data1
@@ -264,10 +264,10 @@ class ClassForm extends React.Component<
                   variables: { Id: this.props.userId },
                   data
                 });
-                
               } catch (err) {
                 console.log(err);
               }
+
               this.props.toggleClassForm();
             }
           });

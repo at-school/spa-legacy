@@ -1,13 +1,36 @@
 import { Card } from "antd";
 import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-const data = [{ name: "Group A", value: 80 }, { name: "Group B", value: 21 }];
 const COLORS = ["rgb(24, 144, 255)", "rgb(250, 250, 250)"];
+import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
 
-export default class StudentOnTimeCard extends React.Component {
+class StudentOnTimeCard extends React.Component<{ classroomContext: any }> {
   public render() {
+    const { students } = this.props.classroomContext;
+    let percentageOnTime = 100;
+    if (students) {
+      const totalStudents = students.length;
+      let onTimeStudents = 0;
+      students.forEach((student: any) => {
+        if (!student.inClass) {
+          onTimeStudents++;
+        } else if (student.minsLate <= 0) {
+          onTimeStudents++;
+        }
+      });
+      percentageOnTime = (onTimeStudents / totalStudents) * 100;
+    }
+    const data = [
+      { name: "Group A", value: percentageOnTime },
+      { name: "Group B", value: 100 - percentageOnTime }
+    ];
+
     return (
-      <Card className="student-ontime-card" bordered={false} title="Student On Time">
+      <Card
+        className="student-ontime-card"
+        bordered={false}
+        title="Student On Time"
+      >
         <div style={{ width: "100%" }}>
           <ResponsiveContainer height={200} width="100%">
             <PieChart>
@@ -22,17 +45,22 @@ export default class StudentOnTimeCard extends React.Component {
                 paddingAngle={-1}
               >
                 {data.map((entry, index) => (
-                  <Cell key={index.toString()} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={index.toString()}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
         </div>
         <div style={{ textAlign: "center", marginTop: "-130px" }}>
-          <p style={{marginBottom: "0px"}}>80%</p>
+          <p style={{ marginBottom: "0px" }}>{percentageOnTime}%</p>
           <p>On Time</p>
         </div>
       </Card>
     );
   }
 }
+
+export default withClassroomContext(StudentOnTimeCard);

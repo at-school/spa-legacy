@@ -167,7 +167,11 @@ class RegisterForm extends React.Component<any> {
             rules: [
               {
                 required: true,
-                message: "Please input your password!"
+                message: "Please input your password!",
+              },
+              {
+                min: 8,
+                message: "Your password must be at least 8 characters"
               },
               {
                 validator: this.validateToNextPassword

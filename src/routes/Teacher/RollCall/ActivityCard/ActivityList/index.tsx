@@ -4,7 +4,7 @@ import moment from "moment";
 import React from "react";
 
 const ActivityList = (props: any) => {
-  const data = props.activities.map((activity: any) => {
+  const data = props.activities ? props.activities.map((activity: any) => {
     if (activity.activityType === 1) {
       return {
         title: (
@@ -30,7 +30,7 @@ const ActivityList = (props: any) => {
       };
     }
     return;
-  });
+  }) : [];
 
   return (
     <List

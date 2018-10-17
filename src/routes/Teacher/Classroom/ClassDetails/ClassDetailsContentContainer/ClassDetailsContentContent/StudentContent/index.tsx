@@ -13,11 +13,16 @@ import { removeStudentMutation } from "./queries";
 
 class StudentContent extends React.Component<any, any> {
   public state = {
-    visible: false
+    visible: false,
+    searchPattern: ""
   };
 
   public toggleAddStudentForm = () => {
     this.setState((prevState: any) => ({ visible: !prevState.visible }));
+  };
+
+  public handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchPattern: e.target.value });
   };
 
   public render() {
@@ -33,6 +38,13 @@ class StudentContent extends React.Component<any, any> {
     } catch (err) {
       noStudent = true;
       dataSource = [];
+    }
+    if (!noStudent) {
+      dataSource = dataSource.filter((student: any) =>
+        (student.firstname + " " + student.lastname).includes(
+          this.state.searchPattern
+        )
+      );
     }
     const renderItem = (student: any) => (
       <List.Item key={student.Id}>
@@ -50,12 +62,16 @@ class StudentContent extends React.Component<any, any> {
         </Button>
       </List.Item>
     );
+
     return (
       <div className={css(styles.mainContainer)}>
         <div className={css(styles.topMain)}>
           <Input.Search
             className={css(styles.searchStudent)}
             placeholder="Search for students"
+            disabled={noStudent}
+            value={this.state.searchPattern}
+            onChange={this.handleSearch}
           />
           <Button
             onClick={this.toggleAddStudentForm}

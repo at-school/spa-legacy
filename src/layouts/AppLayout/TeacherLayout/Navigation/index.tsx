@@ -17,6 +17,8 @@ const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
     menuKey = "5";
   } else if (pathname.includes("/teacher/email")) {
     menuKey = "6";
+  } else if (pathname.includes("/teacher/settings")) {
+    menuKey = "7";
   }
   return (
     <Menu theme="dark" mode="inline" selectedKeys={[menuKey]}>
@@ -54,6 +56,12 @@ const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
         <Link to="/teacher/email">
           <Icon type="mail" />
           <span className="nav-text">Email</span>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="7">
+        <Link to="/teacher/settings/general">
+          <Icon type="setting" theme="outlined" />
+          <span className="nav-text">Settings</span>
         </Link>
       </Menu.Item>
     </Menu>

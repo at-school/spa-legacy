@@ -14,6 +14,8 @@ interface IClassroomProviderStore {
   classId: string;
   scheduleId: string;
   getClassInfo: (lineId: string) => void;
+  startTime: string;
+  endTime: string;
 }
 
 interface IStudent {

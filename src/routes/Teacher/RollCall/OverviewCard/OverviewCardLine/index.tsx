@@ -1,8 +1,7 @@
 import { Card, Modal } from "antd";
 import { css, StyleSheet } from "aphrodite";
-import moment from "moment";
+import { default as moment } from "moment";
 import React from "react";
-import { withClassroomContext } from "../../../../../contexts/Teacher/ClassroomContext";
 
 class OverviewCardLine extends React.Component<any, any> {
   public state = {
@@ -11,10 +10,29 @@ class OverviewCardLine extends React.Component<any, any> {
   };
 
   public scheduleInfoModal = () => {
-    if (this.props.classroomContext.schedule) {
-      const schedule = this.props.classroomContext.schedule.map((item: any) => {
+    if (this.props.schedule) {
+      // get title based on days difference
+      let title = "";
+      const now = moment();
+      const startClass = moment(this.props.startTime);
+      const daysDiff = now.diff(startClass, "days");
+      if (daysDiff === 0) {
+        title = "Today Schedule";
+        // two cases: on the same day and on the previous day (since day is calculated as 24 hours)
+        if (startClass.format("dddd") === now.format("dddd")) {
+          title = "Today schedule";
+        } else {
+          title = "Tomorrow Schedule";
+        }
+      } else if (daysDiff === 1) {
+        title = "Tomorrow Schedule";
+      } else {
+        title = `Schedule in next ${daysDiff} days`;
+      }
+
+      const schedule = this.props.schedule.map((item: any) => {
         const className = css(
-          item.line === this.props.classroomContext.line && styles.bold,
+          item.line === this.props.line && styles.bold,
           styles.flexRow
         );
         return (
@@ -27,15 +45,13 @@ class OverviewCardLine extends React.Component<any, any> {
         );
       });
       Modal.info({
-        title: "Today Schedule",
+        title,
         content: schedule
       });
     }
   };
 
   public render() {
-    console.log(this.props);
-
 
     return (
       <React.Fragment>
@@ -50,7 +66,9 @@ class OverviewCardLine extends React.Component<any, any> {
               <div className="overview-info-card-text-container">
                 <p className="overview-info-card-text-title">Line</p>
                 <h3 className="overview-info-card-text-description">
-                  {this.props.classroomContext.line ? this.props.classroomContext.line : "N/A"}
+                  {this.props.line
+                    ? this.props.line
+                    : "N/A"}
                 </h3>
               </div>
             </div>
@@ -82,4 +100,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withClassroomContext(OverviewCardLine);
+export default OverviewCardLine;

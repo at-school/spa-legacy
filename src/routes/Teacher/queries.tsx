@@ -22,20 +22,19 @@ export const getAllScheduleQuery = gql`
 
 export const getScheduleDetailsQuery = gql`
   query GetScheduleDetails(
-    $teacherUsername: String
+    $teacherId: String
     $line: String
     $classId: String
   ) {
     scheduleDetails(
-      arguments: {
-        teacherUsername: $teacherUsername
-        classId: $classId
-        line: $line
-      }
+      arguments: { teacherId: $teacherId, classId: $classId, line: $line }
     ) {
       Id
+      startTime
+      endTime
       students {
         inClass
+        minsLate
         studentDetails {
           Id
           firstname
@@ -47,10 +46,8 @@ export const getScheduleDetailsQuery = gql`
 `;
 
 export const getClassQueryByLine = gql`
-  query GetClassQuery($teacherUsername: String!, $lineId: String!) {
-    classroom(
-      arguments: { teacherUsername: $teacherUsername, lineId: $lineId }
-    ) {
+  query GetClassQuery($teacherId: String!, $lineId: String!) {
+    classroom(arguments: { teacherId: $teacherId, lineId: $lineId }) {
       Id
     }
   }

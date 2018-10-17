@@ -5,6 +5,7 @@ import { compose, graphql, withApollo } from "react-apollo";
 import { Route, withRouter } from "react-router-dom";
 import io from "socket.io-client";
 import ChatWindow from "../../components/ChatWindow";
+import SettingsPage from "../../components/SettingsPage";
 import AppContext from "../../contexts/AppContext";
 import ClassroomContext from "../../contexts/Teacher/ClassroomContext";
 import TeacherMessageSocket from "../../contexts/Teacher/TeacherMessageSocket";
@@ -100,7 +101,7 @@ class Content extends React.Component<any, any> {
       JSON.stringify(this.props.getChatroomQuery)
     ) {
       if (this.props.getChatroomQuery.user) {
-        if (!this.state.selectedRoomId) {
+        if (!this.state.selectedRoomId && user && user.length > 0) {
           this.setState({ selectedRoomId: user[0].chatrooms[0].Id });
         }
         for (const chatroom of user[0].chatrooms) {
@@ -134,6 +135,9 @@ class Content extends React.Component<any, any> {
     let studentList = [];
     let scheduleId = "";
     let classId = "";
+    let startTime = "";
+    let endTime = "";
+    console.log(this.props.getScheduleDetailsQuery);
     if (this.props.getScheduleDetailsQuery) {
       const {
         getScheduleDetailsQuery: { scheduleDetails }
@@ -141,6 +145,8 @@ class Content extends React.Component<any, any> {
       if (scheduleDetails && scheduleDetails.students) {
         studentList = scheduleDetails.students;
         scheduleId = scheduleDetails.Id;
+        (startTime = scheduleDetails.startTime),
+          (endTime = scheduleDetails.endTime);
       }
     }
     if (
@@ -187,7 +193,9 @@ class Content extends React.Component<any, any> {
               ? []
               : this.props.getAllScheduleQuery.schedule,
             classId,
-            getClassInfo: this.saveClassId
+            getClassInfo: this.saveClassId,
+            startTime,
+            endTime
           }}
         >
           <Route
@@ -219,6 +227,7 @@ class Content extends React.Component<any, any> {
           <Route exact={true} path="/teacher/user" component={User} />
           <Route exact={true} path="/teacher/user/:id" component={User} />
           <Route exact={true} path="/teacher/email" component={Email} />
+          <Route path="/teacher/settings" component={SettingsPage} />
           {!this.props.history.location.pathname.includes("messages") &&
             chatrooms.length > 0 && (
               <ChatWindow
@@ -324,7 +333,7 @@ const ContentWithApollo = compose(
     options: (props: any) => {
       return {
         variables: {
-          teacherUsername: props.username,
+          teacherId: props.userId,
           lineId: props.getScheduleQuery.latestLine.line
         }
       };
@@ -348,7 +357,7 @@ const ContentWithApollo = compose(
       }
       return {
         variables: {
-          teacherUsername: props.username,
+          teacherId: props.userId,
           line:
             props.getScheduleQuery.latestLine &&
             props.getScheduleQuery.latestLine.line,

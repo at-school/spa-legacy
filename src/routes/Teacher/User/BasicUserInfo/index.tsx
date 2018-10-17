@@ -13,6 +13,7 @@ const BasicUserInfo = ({
   skills,
   self
 }: IBasicUserInfoProps) => {
+  console.log(studentClassrooms)
   return (
     <div>
       <img className={css(styles.avatar)} src={avatar} />
@@ -20,7 +21,7 @@ const BasicUserInfo = ({
       {studentClassrooms && studentClassrooms.length > 0 && (
         <div>
           <Divider name="Classes" />
-          {classrooms.map(classroom => (
+          {studentClassrooms.map(classroom => (
             <ClassroomInfo
               key={classroom.Id}
               name={classroom.name}

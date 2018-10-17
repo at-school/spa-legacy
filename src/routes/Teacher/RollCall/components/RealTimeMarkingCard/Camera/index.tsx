@@ -1,3 +1,4 @@
+import Moment from "moment";
 import React from "react";
 import { withApollo } from "react-apollo";
 import Webcam from "react-webcam";
@@ -11,7 +12,8 @@ const uploadImage = async (
   studentList: any,
   scheduleId: string,
   userId: string,
-  token: string
+  token: string,
+  startTime: string
 ) => {
   const response = await fetch("http://127.0.0.1:5000/camera/upload", {
     method: "POST",
@@ -19,7 +21,14 @@ const uploadImage = async (
       "content-type": "application/json",
       Authorization: "Bearer " + token
     },
-    body: JSON.stringify({ imageData, studentList, scheduleId, userId })
+    body: JSON.stringify({
+      imageData,
+      studentList,
+      scheduleId,
+      userId,
+      current: String(Moment()),
+      startTime
+    })
   });
   if (response.ok) {
     return response.json();
@@ -46,7 +55,6 @@ class Camera extends React.Component<any, any> {
     return imageSrc;
   };
   public upload = () => {
-    console.log(this.props.classroomContext.students);
     if (this.webcam) {
       const imageSrc = this.webcam.getScreenshot();
       const studentsNotInClass = this.props.classroomContext.students
@@ -58,14 +66,14 @@ class Camera extends React.Component<any, any> {
           studentsNotInClass,
           this.props.classroomContext.scheduleId,
           this.props.userId,
-          this.props.token
+          this.props.token,
+          this.props.classroomContext.startTime
         )
           .then(data => {
-            console.log(data);
             const storeData = this.props.client.readQuery({
               query: getScheduleDetailsQuery,
               variables: {
-                teacherUsername: this.props.username,
+                teacherId: this.props.userId,
                 line: this.props.classroomContext.line,
                 classId: this.props.classroomContext.classId
               }
@@ -76,10 +84,14 @@ class Camera extends React.Component<any, any> {
               scheduleDetails.students &&
               scheduleDetails.students.length > 0
             ) {
+              const studentsMarkedList = data.studentList.map((s: any) => s.Id);
               storeData.scheduleDetails.students = storeData.scheduleDetails.students.map(
                 (student: any) => {
-                  if (data.studentList.includes(student.studentDetails.Id)) {
-                    return { ...student, inClass: true };
+                  if (studentsMarkedList.includes(student.studentDetails.Id)) {
+                    const minsLate = data.studentList.find(
+                      (s: any) => s.Id === student.studentDetails.Id
+                    ).minsLate;
+                    return { ...student, inClass: true, minsLate };
                   }
                   return { ...student };
                 }
@@ -88,7 +100,7 @@ class Camera extends React.Component<any, any> {
             this.props.client.writeQuery({
               query: getScheduleDetailsQuery,
               variables: {
-                teacherUsername: this.props.username,
+                teacherId: this.props.userId,
                 line: this.props.classroomContext.line,
                 classId: this.props.classroomContext.classId
               },
@@ -103,14 +115,15 @@ class Camera extends React.Component<any, any> {
                 }
               });
               const { rollMarkingActivites } = activityStoreData;
-              console.log(rollMarkingActivites);
+              console.log(rollMarkingActivites.length)
+
               if (rollMarkingActivites) {
                 rollMarkingActivites.unshift({
                   ...data.activity,
                   __typename: "RollMarkingActivitiesSchema",
-                  students: data.studentList.map((studentId: any) => {
+                  students: data.studentList.map((s: any) => {
                     const studentData = this.props.classroomContext.students.find(
-                      (student: any) => student.studentDetails.Id === studentId
+                      (student: any) => student.studentDetails.Id === s.Id
                     );
                     return {
                       Id: studentData.studentDetails.Id,
@@ -120,6 +133,7 @@ class Camera extends React.Component<any, any> {
                     };
                   })
                 });
+                console.log(rollMarkingActivites.length)
                 this.props.client.writeQuery({
                   query: getRollMarkingActivitiesQuery,
                   variables: {

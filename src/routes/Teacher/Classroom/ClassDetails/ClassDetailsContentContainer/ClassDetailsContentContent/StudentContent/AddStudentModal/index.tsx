@@ -4,10 +4,8 @@ import React from "react";
 import { graphql, withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { searchStudents } from "../../../../../../../../api/classroom";
-import {
-  getScheduleDetailsQuery,
-  getStudentsQuery
-} from "../../../../../../queries";
+import { withAppContext } from "../../../../../../../../contexts/AppContext";
+import { getScheduleDetailsQuery, getStudentsQuery } from "../../../../../../queries";
 import { addStudentMutation } from "../queries";
 import AddStudentInput from "./AddStudentInput";
 import StudentRow from "./StudentRow";
@@ -26,14 +24,17 @@ export const addStudentsToSchedule = async (
   scheduleId: string,
   token: string
 ) => {
-  const response = await fetch("http://127.0.0.1:5000/classroom/schedule/students", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ studentList, scheduleId })
-  });
+  const response = await fetch(
+    "http://127.0.0.1:5000/classroom/schedule/students",
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ studentList, scheduleId })
+    }
+  );
 
   if (response.ok) {
     return response.json();
@@ -74,7 +75,7 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
           this.props.classroomContext.classId === classId
         ) {
           console.log("Yes");
-          
+
           addStudentsToSchedule(
             values.map((value: any) => value.addStudentToClassroom.Id),
             this.props.classroomContext.scheduleId,
@@ -83,38 +84,42 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
             const data1 = this.props.client.readQuery({
               query: getScheduleDetailsQuery,
               variables: {
-                teacherUsername: this.props.username,
+                teacherId: this.props.appContext.userId,
                 line: this.props.classroomContext.line,
                 classId: this.props.classroomContext.classId
               }
             });
-            const {studentList} = res
-            data1.scheduleDetails.students.push(...studentList.map((studentId: string) => {
-              const studentDetails = values.find((value: any) => value.addStudentToClassroom.Id === studentId) as any
-              return {
-                inClass: false,
-                __typename: "StudentsScheduleDetailsSchema",
-                studentDetails: {
-                  Id: studentId,
-                  firstname: studentDetails.addStudentToClassroom.firstname,
-                  lastname: studentDetails.addStudentToClassroom.lastname,
-                  __typename: "UserSchema"
-                }
-              }
-            }))
+            const { studentList } = res;
+            data1.scheduleDetails.students.push(
+              ...studentList.map((studentId: string) => {
+                const studentDetails = values.find(
+                  (value: any) => value.addStudentToClassroom.Id === studentId
+                ) as any;
+                return {
+                  inClass: false,
+                  minsLate: 0,
+                  __typename: "StudentsScheduleDetailsSchema",
+                  studentDetails: {
+                    Id: studentId,
+                    firstname: studentDetails.addStudentToClassroom.firstname,
+                    lastname: studentDetails.addStudentToClassroom.lastname,
+                    __typename: "UserSchema"
+                  }
+                };
+              })
+            );
             this.props.client.writeQuery({
               query: getScheduleDetailsQuery,
               variables: {
-                teacherUsername: this.props.username,
+                teacherId: this.props.appContext.userId,
                 line: this.props.classroomContext.line,
                 classId: this.props.classroomContext.classId
               },
               data: data1
             });
             console.log(values);
-          console.log(data1);
+            console.log(data1);
           });
-          
         }
       }
       for (const value of values) {
@@ -239,5 +244,5 @@ class AddStudentModal extends React.Component<any, IAddStudentModalState> {
 }
 
 export default graphql(addStudentMutation)(
-  withRouter(withApollo(AddStudentModal))
+  withAppContext(withRouter(withApollo(AddStudentModal)))
 ) as any;

@@ -1,10 +1,13 @@
 import React from "react";
 import AppContext from "../../../contexts/AppContext";
+import DashboardCalendar from "./DashboardCalendar";
 
 class Dashboard extends React.Component<any> {
   public render() {
     return (
       <div>
+        <DashboardCalendar userId={this.props.userId} />
+
         <h1>Hello</h1>
         <button onClick={this.onClick}>Get identity</button>
       </div>
@@ -25,7 +28,6 @@ class Dashboard extends React.Component<any> {
 
 export default (props: any) => (
   <AppContext.Consumer>
-    {value => <Dashboard {...props} accessToken={value.token} />}
+    {value => <Dashboard userId={value.userId} {...props} accessToken={value.token} />}
   </AppContext.Consumer>
 );
-
