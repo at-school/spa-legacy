@@ -95,21 +95,30 @@ class Content extends React.Component<any, any> {
       this.props.history.push("/authentication/signin");
     }
 
-    const { user } = this.props.getChatroomQuery;
     if (
       JSON.stringify(prevProps.getChatroomQuery) !==
       JSON.stringify(this.props.getChatroomQuery)
     ) {
-      if (this.props.getChatroomQuery.user) {
-        if (!this.state.selectedRoomId && user && user.length > 0) {
+      const { user } = this.props.getChatroomQuery;
+
+      if (this.props.getChatroomQuery.user && user && user.length > 0) {
+        if (
+          !this.state.selectedRoomId &&
+          user &&
+          user.length &&
+          user[0].chatrooms &&
+          user[0].chatrooms.length
+        ) {
           this.setState({ selectedRoomId: user[0].chatrooms[0].Id });
         }
-        for (const chatroom of user[0].chatrooms) {
-          console.log("Subscribing to all channels");
-          this.messageSocket.emit("sendMessage", {
-            chatroomId: chatroom.Id,
-            activityType: "join"
-          });
+        if (user && user.length && user[0].chatrooms) {
+          for (const chatroom of user[0].chatrooms) {
+            console.log("Subscribing to all channels");
+            this.messageSocket.emit("sendMessage", {
+              chatroomId: chatroom.Id,
+              activityType: "join"
+            });
+          }
         }
       }
     }

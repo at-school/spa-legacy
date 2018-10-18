@@ -80,7 +80,7 @@ class AppNavigator extends React.Component<any> {
       this.userSocket.close();
     }
     this.userSocket = io.connect(
-      "http://127.0.0.1:5000/user",
+      "http://127.0.0.1:5000/",
       {
         transportOptions: {
           polling: {
