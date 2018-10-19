@@ -2,10 +2,12 @@ import { Button, Input } from "antd";
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import LzEditor from "react-lz-editor";
+import { withRouter } from "react-router-dom";
 import "./index.css";
 class WriteEmailView extends React.Component<{
   accessToken: string;
   handleClick: any;
+  location: any;
 }> {
   public state = {
     htmlContent: "",
@@ -46,6 +48,12 @@ class WriteEmailView extends React.Component<{
     this.setState({ htmlContent: "", email: "", subject: "" });
   }
 
+  public componentDidMount() {
+    if (this.props.location.state && this.props.location.state.email) {
+      this.setState({ email: this.props.location.state.email });
+    }
+  }
+
   public render() {
     const uploadProps = {
       action: "http://v0.api.upyun.com/devopee",
@@ -64,11 +72,13 @@ class WriteEmailView extends React.Component<{
           <Input
             onChange={this.changeMetaData("email")}
             placeholder="Receiver"
+            value={this.state.email}
           />
           <Input
             onChange={this.changeMetaData("subject")}
             className={css(styles.middleInput)}
             placeholder="Email Subject"
+            value={this.state.subject}
           />
           <Button
             disabled={!Boolean(this.state.email)}
@@ -109,4 +119,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default WriteEmailView;
+export default withRouter(WriteEmailView as any) as any;

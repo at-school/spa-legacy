@@ -1,16 +1,20 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
+import { withRouter } from "react-router-dom";
 
 interface IDetailsUserInfoTabsContactsProps {
   email: string;
   phone: string;
   dob: string;
   gender: string;
+  history;
 }
 
 const DetailsUserInfoTabsContacts: React.SFC<
   IDetailsUserInfoTabsContactsProps
-> = ({ email, phone, dob, gender }) => {
+> = ({ email, phone, dob, gender, history }) => {
+  const goToEmail = () =>
+    history.push({ pathname: "/teacher/email/new", state: { email } });
   return (
     <div>
       <div>
@@ -25,7 +29,7 @@ const DetailsUserInfoTabsContacts: React.SFC<
               <tr className={css(styles.tableRow)}>
                 <td className={css(styles.tableTitle)}>Email:</td>
                 <td>
-                  <a>{email}</a>
+                  <a onClick={goToEmail}>{email}</a>
                 </td>
               </tr>
             </tbody>
@@ -68,4 +72,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DetailsUserInfoTabsContacts;
+export default withRouter(DetailsUserInfoTabsContacts as any) as any;

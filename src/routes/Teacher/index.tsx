@@ -141,12 +141,16 @@ class Content extends React.Component<any, any> {
   );
 
   public render() {
+
+    if (!this.props.token || !this.props.userId) {
+      return "Loading"
+    }
+
     let studentList = [];
     let scheduleId = "";
     let classId = "";
     let startTime = "";
     let endTime = "";
-    console.log(this.props.getScheduleDetailsQuery);
     if (this.props.getScheduleDetailsQuery) {
       const {
         getScheduleDetailsQuery: { scheduleDetails }
@@ -180,6 +184,7 @@ class Content extends React.Component<any, any> {
       line = this.props.getScheduleQuery.latestLine.line;
     }
 
+    
     return (
       <TeacherMessageSocket.Provider
         value={{
@@ -235,7 +240,7 @@ class Content extends React.Component<any, any> {
           />
           <Route exact={true} path="/teacher/user" component={User} />
           <Route exact={true} path="/teacher/user/:id" component={User} />
-          <Route exact={true} path="/teacher/email" component={Email} />
+          <Route path="/teacher/email" component={Email} />
           <Route path="/teacher/settings" component={SettingsPage} />
           {!this.props.history.location.pathname.includes("messages") &&
             chatrooms.length > 0 && (

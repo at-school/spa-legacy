@@ -16,6 +16,7 @@ export const getEmailDetails = gql`
   query GetEmailDetails($userId: String!, $Id: ID!) {
     email(arguments: { userId: $userId, Id: $Id }) {
       html
+      subject
     }
   }
 `;

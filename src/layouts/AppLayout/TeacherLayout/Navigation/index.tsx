@@ -53,7 +53,7 @@ const Navigation: React.SFC<{ pathname: string }> = ({ pathname }) => {
         </Link>
       </Menu.Item>
       <Menu.Item key="6">
-        <Link to="/teacher/email">
+        <Link to="/teacher/email/all">
           <Icon type="mail" />
           <span className="nav-text">Email</span>
         </Link>

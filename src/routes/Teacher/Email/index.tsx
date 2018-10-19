@@ -1,5 +1,6 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import AppContext from "../../../contexts/AppContext";
 import MainMail from "./MainMail";
 import SplashLoadingEmail from "./SplashScreens/SplashLoadingEmail";
@@ -33,25 +34,22 @@ class Email extends React.Component<any> {
 
   public componentDidMount() {
     this.checkAuth();
-    this.props.userSocket.on("email", (data: any) => {
-      this.checkAuth();
-    });
   }
 
   public checkAuth() {
-    fetch(process.env.REACT_APP_LOCAL_URI  + "hasauth", {
+    fetch(process.env.REACT_APP_LOCAL_URI + "hasauth", {
       headers: {
         "Content-Type": "application/json",
         authorization: "Bearer " + this.props.accessToken
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ userId: this.props.userId }),
       method: "POST"
     })
       .then(res => res.json())
       .then(res => {
         if (!res.auth) {
           window.location.replace(
-            process.env.REACT_APP_LOCAL_URI + "authorize?id=" + this.props.userId
+            "http://localhost:8080/" + "authorize?id=" + this.props.userId
           );
         }
         if (res.auth) {
@@ -94,12 +92,17 @@ class Email extends React.Component<any> {
 
   public getToken = () => {
     window.location.replace(
-      process.env.REACT_APP_LOCAL_URI + "authorize?id=" + this.props.userId
+      "http://localhost:8080/authorize" + "authorize?id=" + this.props.userId
     );
   };
 
   public handleClick = (index: any, key: any) => () => {
     if (key === "inbox") {
+      if (index === 0) {
+        this.props.history.push("/teacher/email/new");
+      } else if (index === 1) {
+        this.props.history.push("/teacher/email/all");
+      }
       this.setState({ activeInbox: index });
     } else {
       this.setState({ selectedMail: index });
@@ -117,7 +120,7 @@ class Email extends React.Component<any> {
         {(() => {
           if (this.state.loading === true) {
             return <SplashLoadingEmail tipText="Checking identity" />;
-          } 
+          }
           return (
             <MainMail
               userSocket={this.props.userSocket}
@@ -137,7 +140,7 @@ class Email extends React.Component<any> {
   }
 }
 
-export default (props: any) => (
+export default withRouter((props: any) => (
   <AppContext.Consumer>
     {value => (
       <Email
@@ -148,7 +151,7 @@ export default (props: any) => (
       />
     )}
   </AppContext.Consumer>
-);
+));
 
 const styles = StyleSheet.create({
   mainContainer: {

@@ -4,16 +4,16 @@ import React from "react";
 
 const VerticalNav = ({
   activeInbox,
-  handleClick
+  navigateToOtherMenu
 }: {
   activeInbox: number;
-  handleClick: (index: number, name: string) => () => void;
+  navigateToOtherMenu: (menu: string) => () => void;
 }) => {
   return (
     <div className={css(styles.mainContainer)}>
       <div
         className={css(styles.inboxItem, activeInbox === 0 && styles.active)}
-        onClick={handleClick(0, "inbox")}
+        onClick={navigateToOtherMenu("new")}
       >
         <div className={css(styles.item)}>
           <Icon type="plus" style={{ fontSize: "17.5px" }} />
@@ -29,7 +29,7 @@ const VerticalNav = ({
       </div>
       <div
         className={css(styles.inboxItem, activeInbox === 1 && styles.active)}
-        onClick={handleClick(1, "inbox")}
+        onClick={navigateToOtherMenu("all")}
       >
         <div className={css(styles.item)}>
           <Icon type="inbox" style={{ fontSize: "17.5px" }} />
@@ -40,22 +40,6 @@ const VerticalNav = ({
             }}
           >
             Inbox
-          </span>
-        </div>
-      </div>
-      <div
-        className={css(styles.inboxItem, activeInbox === 2 && styles.active)}
-        onClick={handleClick(2, "inbox")}
-      >
-        <div className={css(styles.item)}>
-          <Icon type="stop" style={{ fontSize: "17.5px" }} />
-
-          <span
-            style={{
-              paddingLeft: "10px"
-            }}
-          >
-            Junk
           </span>
         </div>
       </div>
@@ -102,7 +86,7 @@ const styles = StyleSheet.create({
     ":hover": {
       backgroundColor: lightBlue,
       cursor: "pointer"
-    },
+    }
   }
 });
 
