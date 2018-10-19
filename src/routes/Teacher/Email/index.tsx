@@ -39,7 +39,7 @@ class Email extends React.Component<any> {
   }
 
   public checkAuth() {
-    fetch("http://localhost:5000/hasauth", {
+    fetch(process.env.REACT_APP_LOCAL_URI  + "hasauth", {
       headers: {
         "Content-Type": "application/json",
         authorization: "Bearer " + this.props.accessToken
@@ -51,7 +51,7 @@ class Email extends React.Component<any> {
       .then(res => {
         if (!res.auth) {
           window.location.replace(
-            "http://localhost:5000/authorize?id=" + this.props.userId
+            process.env.REACT_APP_LOCAL_URI + "authorize?id=" + this.props.userId
           );
         }
         if (res.auth) {
@@ -61,7 +61,7 @@ class Email extends React.Component<any> {
   }
 
   public getMailData = async (visited = false) => {
-    const mailAuth = await fetch("http://localhost:5000/getmail", {
+    const mailAuth = await fetch(process.env.REACT_APP_LOCAL_URI + "getmail", {
       headers: {
         "Content-Type": "application/json",
         authorization: "Bearer " + this.props.accessToken
@@ -94,7 +94,7 @@ class Email extends React.Component<any> {
 
   public getToken = () => {
     window.location.replace(
-      "http://localhost:5000/authorize?id=" + this.props.userId
+      process.env.REACT_APP_LOCAL_URI + "authorize?id=" + this.props.userId
     );
   };
 

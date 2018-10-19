@@ -15,7 +15,7 @@ const uploadImage = async (
   token: string,
   startTime: string
 ) => {
-  const response = await fetch("http://127.0.0.1:5000/camera/upload", {
+  const response = await fetch(process.env.REACT_APP_LOCAL_URI + "camera/upload", {
     method: "POST",
     headers: {
       "content-type": "application/json",

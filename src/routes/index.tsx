@@ -65,7 +65,7 @@ class AppNavigator extends React.Component<any> {
   });
 
   public httpLink = createHttpLink({
-    uri: "http://127.0.0.1:5000/graphql"
+    uri: process.env.REACT_APP_LOCAL_URI + "graphql"
   });
 
   public signinUser = (userInfo: any) => {
@@ -80,7 +80,7 @@ class AppNavigator extends React.Component<any> {
       this.userSocket.close();
     }
     this.userSocket = io.connect(
-      "http://127.0.0.1:5000/",
+      process.env.REACT_APP_LOCAL_URI as string,
       {
         transportOptions: {
           polling: {
@@ -99,6 +99,7 @@ class AppNavigator extends React.Component<any> {
     });
 
     this.userSocket.on("connect", () => {
+      console.log("user connected");
       this.userSocket.emit("user", {
         activityType: "join",
         userIdentity: userInfo.userId
@@ -128,6 +129,7 @@ class AppNavigator extends React.Component<any> {
         }
       });
       this.userSocket.on("userOffline", (data: { leaveUserId: string }) => {
+        console.log("User offline now");
         const data1 = this.client.readQuery({
           query: getChatRoomQuery,
           variables: { Id: userInfo.userId }

@@ -52,7 +52,7 @@ class Content extends React.Component<any, any> {
 
   public componentWillMount() {
     this.messageSocket = io.connect(
-      "http://127.0.0.1:5000/message",
+      process.env.REACT_APP_LOCAL_URI + "message",
       {
         transportOptions: {
           polling: {

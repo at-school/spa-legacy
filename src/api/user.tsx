@@ -3,7 +3,7 @@ export const editUserBio = async (
   userId: string,
   token: string
 ) => {
-  const response = await fetch("http://127.0.0.1:5000/user/edit/bio", {
+  const response = await fetch(process.env.REACT_APP_LOCAL_URI + "user/edit/bio", {
     method: "POST",
     headers: {
       "content-type": "application/json",

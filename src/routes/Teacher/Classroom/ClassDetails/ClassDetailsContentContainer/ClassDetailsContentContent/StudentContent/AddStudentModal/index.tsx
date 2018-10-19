@@ -25,7 +25,7 @@ export const addStudentsToSchedule = async (
   token: string
 ) => {
   const response = await fetch(
-    "http://127.0.0.1:5000/classroom/schedule/students",
+    process.env.REACT_APP_LOCAL_URI + "classroom/schedule/students",
     {
       method: "POST",
       headers: {

@@ -19,7 +19,7 @@ class WriteEmailView extends React.Component<{
     this.setState({ responseList: [] });
   };
   public sendMail = async () => {
-    const mailAuth = await fetch("http://localhost:5000/sendmail", {
+    const mailAuth = await fetch(process.env.REACT_APP_LOCAL_URI + "sendmail", {
       headers: {
         "Content-Type": "application/json",
         authorization: "Bearer " + this.props.accessToken
@@ -31,7 +31,7 @@ class WriteEmailView extends React.Component<{
       }),
       method: "POST"
     }).then(() => {
-      console.log("Getting data")
+      console.log("Getting data");
       this.props.handleClick(1, "inbox")();
     });
     console.log(mailAuth);

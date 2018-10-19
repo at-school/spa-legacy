@@ -1,5 +1,5 @@
 export const searchUsers = async (searchPattern: string, token: string) => {
-  const response = await fetch("http://127.0.0.1:5000/user/search", {
+  const response = await fetch(process.env.REACT_APP_LOCAL_URI + "user/search", {
     method: "POST",
     headers: {
       "content-type": "application/json",
