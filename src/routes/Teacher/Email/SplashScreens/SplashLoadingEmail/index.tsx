@@ -1,30 +1,23 @@
 import { Icon, Spin } from "antd";
-import { css, StyleSheet } from "aphrodite";
 import React from "react";
+import "./index.css"
 
-const Loading = () => (
+const Loading = ({ tipText }: { tipText: string }) => (
   <div
-    className={css(styles.mainContainer)}
     style={{
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      height: "100%"
     }}
   >
-    <span style={{ fontSize: "30px" }}>Loading</span>
-    <br />
     <Spin
+      tip={tipText}
+      style={{width: "auto", height: "auto"}}
       indicator={<Icon type="loading" style={{ fontSize: 50 }} spin={true} />}
     />
   </div>
 );
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    margin: "-48px -24px",
-    height: "calc(100vh - 64px)"
-  }
-});
 
 export default Loading;

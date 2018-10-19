@@ -1,17 +1,12 @@
+import { Icon, Spin } from "antd";
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { compose, graphql } from "react-apollo";
 import { withRouter } from "react-router-dom";
-import Spinner from "../../../components/Spinner";
 import AppContext from "../../../contexts/AppContext";
 import BasicUserInfo from "./BasicUserInfo";
 import DetailsUserInfo from "./DetailsUserInfo";
-import {
-  IUser,
-  IUserProps,
-  IUserWithContextProps,
-  IUserWithGraphQlProps
-} from "./interfaces";
+import { IUser, IUserProps, IUserWithContextProps, IUserWithGraphQlProps } from "./interfaces";
 import { getUserInfoQuery } from "./queries";
 
 class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
@@ -85,6 +80,16 @@ class User extends React.Component<IUserProps, { self: boolean; bio: string }> {
   }
 }
 
+const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin={true} />;
+
+const Spinner = () => (
+  <Spin
+    style={{ display: "block", position: "relative", top: "40%" }}
+    indicator={antIcon}
+    tip="Loading user information"
+  />
+);
+
 const styles = StyleSheet.create({
   mainContainer: {
     padding: "12px",
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
     maxWidth: "300px",
     marginRight: "48px",
     backgroundColor: "white",
-    padding: 24,
+    padding: 24
   },
   detailsUserInfo: {
     flex: 0.7,

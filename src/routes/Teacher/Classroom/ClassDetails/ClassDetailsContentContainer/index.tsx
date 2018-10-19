@@ -20,6 +20,7 @@ export default class ClassDetailsContentContainer extends React.Component<
 const styles = StyleSheet.create({
   rowDirectionFlex: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    flexGrow: 1
   }
 });

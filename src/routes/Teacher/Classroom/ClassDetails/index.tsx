@@ -39,7 +39,9 @@ const styles = StyleSheet.create({
   mainStyle: {
     height: "100%",
     backgroundColor: "rgb(255, 255, 255)",
-    padding: "12px"
+    padding: "12px",
+    display: "flex",
+    flexDirection: "column"
   }
 });
 

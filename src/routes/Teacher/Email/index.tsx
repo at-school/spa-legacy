@@ -1,10 +1,8 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import AppContext from "../../../contexts/AppContext";
-import EmailAuth from "./EmailAuth";
 import MainMail from "./MainMail";
 import SplashLoadingEmail from "./SplashScreens/SplashLoadingEmail";
-import SplashSetup from "./SplashScreens/SplashSetup";
 
 const months = [
   "Jan",
@@ -29,14 +27,37 @@ class Email extends React.Component<any> {
     activeInbox: 1,
     activeMail: 0,
     mailData: [],
-    selectedMail: ""
+    selectedMail: "",
+    auth: false
   };
 
   public componentDidMount() {
-    this.getMailData();
+    this.checkAuth();
     this.props.userSocket.on("email", (data: any) => {
-      this.getMailData();
+      this.checkAuth();
     });
+  }
+
+  public checkAuth() {
+    fetch("http://localhost:5000/hasauth", {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + this.props.accessToken
+      },
+      body: JSON.stringify({}),
+      method: "POST"
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.auth) {
+          window.location.replace(
+            "http://localhost:5000/authorize?id=" + this.props.userId
+          );
+        }
+        if (res.auth) {
+          this.setState({ setup: res.setup, auth: res.auth, loading: false });
+        }
+      });
   }
 
   public getMailData = async (visited = false) => {
@@ -95,23 +116,21 @@ class Email extends React.Component<any> {
       <div className={css(styles.mainContainer)}>
         {(() => {
           if (this.state.loading === true) {
-            return <SplashLoadingEmail />;
-          } else if (this.state.setup === true) {
-            return <SplashSetup />;
-          } else if (this.state.addMailbox) {
-            return <EmailAuth getToken={this.getToken} />;
-          } else {
-            return (
-              <MainMail
-                getDate={this.getDate}
-                mailData={this.state.mailData}
-                activeMail={this.state.selectedMail}
-                activeInbox={this.state.activeInbox}
-                handleClick={this.handleClick}
-                accessToken={this.props.accessToken}
-              />
-            );
-          }
+            return <SplashLoadingEmail tipText="Checking identity" />;
+          } 
+          return (
+            <MainMail
+              userSocket={this.props.userSocket}
+              getDate={this.getDate}
+              mailData={this.state.mailData}
+              activeMail={this.state.selectedMail}
+              activeInbox={this.state.activeInbox}
+              handleClick={this.handleClick}
+              accessToken={this.props.accessToken}
+              setup={this.state.setup}
+              userId={this.props.userId}
+            />
+          );
         })()}
       </div>
     );

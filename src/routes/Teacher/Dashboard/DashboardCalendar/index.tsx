@@ -57,7 +57,7 @@ class CalendarDashboard extends React.Component<{
       <div className={css(styles.mainContainer)}>
         <h2 className={css(styles.heading)}>This week calendar</h2>
         {this.props.everydaySchedule.loading && (
-          <Spin>
+          <Spin tip="Getting calendar">
             <table className={css(styles.table)}>
               <CalendarHeader />
               <CalendarBody schedule={[]} />

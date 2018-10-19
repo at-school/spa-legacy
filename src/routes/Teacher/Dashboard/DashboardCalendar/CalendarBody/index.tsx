@@ -102,10 +102,10 @@ class CalendarBody extends React.Component<{ schedule: any; history: any }> {
         <tbody>
           {dataTranpose.map((row, index) => {
             return (
-              <tr key={index}>
+              <tr key={index + "asd"}>
                 {row.map((record: any, idx) => {
                   return record ? (
-                    <td onClick={this.goToClass(record.Id)} key={idx}>
+                    <td onClick={this.goToClass(record.Id)} key={idx + "asdf"}>
                       <div
                         className={css(
                           styles.rowDataContainer,

@@ -2,6 +2,7 @@ import {
   Button,
   Checkbox,
   DatePicker,
+  Drawer,
   Form,
   Input,
   message as notification,
@@ -55,7 +56,8 @@ class RegisterForm extends React.Component<any> {
       errMessage: "",
       status: undefined,
       success: false
-    }
+    },
+    drawerVisible: false
   };
   public handleSubmit = (e: React.FormEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -133,146 +135,183 @@ class RegisterForm extends React.Component<any> {
     );
 
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormItem label="E-mail">
-          {getFieldDecorator("email", {
-            rules: [
-              {
-                type: "email",
-                message: "The input is not valid E-mail!"
-              },
-              {
-                required: true,
-                message: "Please input your E-mail!"
-              }
-            ]
-          })(<Input />)}
-        </FormItem>
-        <FormItem
-          label="Username"
-          help={this.state.usernameValidate.errMessage}
-          validateStatus={this.state.usernameValidate.status}
+      <React.Fragment>
+        <Drawer
+          title="Terms and Conditions"
+          placement="right"
+          closable={false}
+          onClose={this.toggleDrawer}
+          visible={this.state.drawerVisible}
+          width="30%"
         >
-          {getFieldDecorator("username", {
-            rules: [
-              {
-                required: true,
-                message: "Please type in the username!"
-              }
-            ]
-          })(<Input type="text" onChange={this.checkDuplicatedUsername} />)}
-        </FormItem>
-        <FormItem label="Password">
-          {getFieldDecorator("password", {
-            rules: [
-              {
-                required: true,
-                message: "Please input your password!",
-              },
-              {
-                min: 8,
-                message: "Your password must be at least 8 characters"
-              },
-              {
-                validator: this.validateToNextPassword
-              }
-            ]
-          })(<Input type="password" />)}
-        </FormItem>
-        <FormItem label="Confirm Password">
-          {getFieldDecorator("password1", {
-            rules: [
-              {
-                required: true,
-                message: "Please confirm your password!"
-              },
-              {
-                validator: this.compareToFirstPassword
-              }
-            ]
-          })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-        </FormItem>
-        <FormItem label="First name">
-          {getFieldDecorator("firstname", {
-            rules: [
-              {
-                required: true,
-                message: "Please enter your first name!"
-              }
-            ]
-          })(<Input type="text" />)}
-        </FormItem>
-        <FormItem label="Last name">
-          {getFieldDecorator("lastname", {
-            rules: [
-              {
-                required: true,
-                message: "Please enter your last name!"
-              }
-            ]
-          })(<Input type="text" />)}
-        </FormItem>
-        <FormItem label="Date of Birth">
-          {getFieldDecorator("dob", {
-            rules: [
-              {
-                required: true,
-                message: "Please enter your date of birth!"
-              }
-            ]
-          })(
-            <DatePicker
-              onChange={consoleItem}
-              defaultValue={moment("01/01/2000", dateFormat)}
-              format={dateFormat}
-            />
-          )}
-        </FormItem>
-        <FormItem label="Gender">
-          {getFieldDecorator("gender", {
-            rules: [{ required: true, message: "Please select your gender!" }]
-          })(
-            <Select>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Phone Number">
-          {getFieldDecorator("phone", {
-            rules: [
-              { required: true, message: "Please input your phone number!" }
-            ]
-          })(<Input addonBefore={prefixSelector} />)}
-        </FormItem>
-        <FormItem label="Role">
-          {getFieldDecorator("accessLevel", {
-            rules: [{ required: true, message: "Please choose a role!" }]
-          })(
-            <Select>
-              <Option value="1">Student</Option>
-              <Option value="2">Teacher</Option>
-            </Select>
-          )}
-        </FormItem>
+          <div style={{ fontSize: 18 }}>
+            <div style={{ marginBottom: 16 }}>
+              Please read the terms and conditions carefully before making an
+              account, by accessing atschool you are agreeing to abide by the
+              terms and conditions below
+            </div>
+            <ul>
+              <li style={{marginBottom: 8}}>
+                We didn't spend a lot of security on this app. It's not our
+                responsibility to ensure that you won't get hacked. So, please
+                learn to protect yourself on the internet first before using @
+                School.
+              </li>
+              <li>
+                Since you don't read these, so you won't know that you're just
+                getting a potentical data breach. Yes, we are not responsible
+                for any sort of data breach.
+              </li>
+            </ul>
+          </div>
+        </Drawer>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem label="E-mail">
+            {getFieldDecorator("email", {
+              rules: [
+                {
+                  type: "email",
+                  message: "The input is not valid E-mail!"
+                },
+                {
+                  required: true,
+                  message: "Please input your E-mail!"
+                }
+              ]
+            })(<Input />)}
+          </FormItem>
+          <FormItem
+            label="Username"
+            help={this.state.usernameValidate.errMessage}
+            validateStatus={this.state.usernameValidate.status}
+          >
+            {getFieldDecorator("username", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please type in the username!"
+                }
+              ]
+            })(<Input type="text" onChange={this.checkDuplicatedUsername} />)}
+          </FormItem>
+          <FormItem label="Password">
+            {getFieldDecorator("password", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please input your password!"
+                },
+                {
+                  min: 8,
+                  message: "Your password must be at least 8 characters"
+                },
+                {
+                  validator: this.validateToNextPassword
+                }
+              ]
+            })(<Input type="password" />)}
+          </FormItem>
+          <FormItem label="Confirm Password">
+            {getFieldDecorator("password1", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please confirm your password!"
+                },
+                {
+                  validator: this.compareToFirstPassword
+                }
+              ]
+            })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+          </FormItem>
+          <FormItem label="First name">
+            {getFieldDecorator("firstname", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please enter your first name!"
+                }
+              ]
+            })(<Input type="text" />)}
+          </FormItem>
+          <FormItem label="Last name">
+            {getFieldDecorator("lastname", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please enter your last name!"
+                }
+              ]
+            })(<Input type="text" />)}
+          </FormItem>
+          <FormItem label="Date of Birth">
+            {getFieldDecorator("dob", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please enter your date of birth!"
+                }
+              ],
+              initialValue: moment("01/01/2000", dateFormat)
+            })(<DatePicker onChange={consoleItem} format={dateFormat} />)}
+          </FormItem>
+          <FormItem label="Gender">
+            {getFieldDecorator("gender", {
+              rules: [{ required: true, message: "Please select your gender!" }]
+            })(
+              <Select>
+                <Option value="male">Male</Option>
+                <Option value="female">Female</Option>
+              </Select>
+            )}
+          </FormItem>
+          <FormItem label="Phone Number">
+            {getFieldDecorator("phone", {
+              rules: [
+                { required: true, message: "Please input your phone number!" }
+              ]
+            })(<Input addonBefore={prefixSelector} />)}
+          </FormItem>
+          <FormItem label="Role">
+            {getFieldDecorator("accessLevel", {
+              rules: [{ required: true, message: "Please choose a role!" }]
+            })(
+              <Select>
+                <Option value="1">Student</Option>
+                <Option value="2">Teacher</Option>
+              </Select>
+            )}
+          </FormItem>
 
-        <FormItem>
-          {getFieldDecorator("agreement", {
-            valuePropName: "checked"
-          })(
-            <Checkbox>
-              I have read the <a href="">agreement</a>
-            </Checkbox>
-          )}
-        </FormItem>
-        <FormItem>
-          <Button type="primary" htmlType="submit">
-            Register
-          </Button>
-        </FormItem>
-      </Form>
+          <FormItem>
+            {getFieldDecorator("agreement", {
+              valuePropName: "checked"
+            })(
+              <Checkbox>
+                I have read the <a onClick={this.toggleDrawer}>agreement</a>
+              </Checkbox>
+            )}
+          </FormItem>
+          <FormItem>
+            <Button type="primary" htmlType="submit">
+              Register
+            </Button>
+          </FormItem>
+        </Form>
+      </React.Fragment>
     );
   }
+
+  private toggleDrawer = () => {
+    if (!this.state.drawerVisible) {
+      this.props.form.setFieldsValue({
+        agreement: !this.props.form.getFieldValue("agreement")
+      });
+    }
+    this.setState((prevState: any) => ({
+      drawerVisible: !prevState.drawerVisible
+    }));
+  };
 
   private checkDuplicatedUsername = async (
     e: React.ChangeEvent<HTMLInputElement>

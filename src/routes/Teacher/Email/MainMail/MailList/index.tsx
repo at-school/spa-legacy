@@ -17,7 +17,7 @@ const MailList = ({ mailData, activeMail, date, handleClick }: any) => {
           <div>{item.timeDate}</div>
           <div>
             <span>
-              <strong>{item.From ? item.From : (item["From-email"] ? item["From-email"] : "")}</strong>
+              <strong>{item.From ? item.From : (item.FromEmail ? item.FromEmail : "")}</strong>
             </span>
             <span style={{ float: "right" }} className={css(styles.date)}>
               {date(item.dateTime)}
@@ -30,7 +30,7 @@ const MailList = ({ mailData, activeMail, date, handleClick }: any) => {
           </div>
           <div>
             <div className={css(styles.subject)}>
-              <div className={css(styles.subjectSpan)}>{item.Subject ? item.Subject : "No Subject"}</div>
+              <div className={css(styles.subjectSpan)}>{item.subject ? item.subject : "No Subject"}</div>
             </div>
           </div>
           <span>{item.plain}</span>

@@ -1,15 +1,26 @@
-import { Button, Input, List } from "antd";
+import { Button, Icon, Input, List, Spin } from "antd";
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { graphql } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { branch, compose, renderComponent } from "recompose";
-import Spinner from "../../../../../../../components/Spinner";
 import AppContext from "../../../../../../../contexts/AppContext";
 import { withClassroomContext } from "../../../../../../../contexts/Teacher/ClassroomContext";
 import { getStudentsQuery } from "../../../../../queries";
 import AddStudentModal from "./AddStudentModal";
 import { removeStudentMutation } from "./queries";
+
+const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin={true} />;
+
+const Spinner = () => (
+  <div style={{width: "100%"}}>
+    <Spin
+      style={{ display: "block", position: "relative", top: "30%" }}
+      indicator={antIcon}
+      tip="Loading students"
+    />
+  </div>
+);
 
 class StudentContent extends React.Component<any, any> {
   public state = {
@@ -27,7 +38,6 @@ class StudentContent extends React.Component<any, any> {
 
   public render() {
     let noStudent = false;
-    console.log(this.props.data.classroom);
     let dataSource = [];
     try {
       const numOfClasses = this.props.data.classroom[0].students.length;
@@ -62,6 +72,7 @@ class StudentContent extends React.Component<any, any> {
         </Button>
       </List.Item>
     );
+
 
     return (
       <div className={css(styles.mainContainer)}>
@@ -124,9 +135,7 @@ class StudentContent extends React.Component<any, any> {
   };
 
   private removeStudent = (studentId: string) => () => {
-    console.log(studentId);
     const classId = this.props.match.params.id;
-    console.log(classId);
     this.props
       .mutate({
         variables: { classId, studentId },

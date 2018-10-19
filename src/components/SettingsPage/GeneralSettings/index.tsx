@@ -53,7 +53,7 @@ class GeneralSettings extends React.Component<
     return (
       <div className={css(styles.mainContainer)}>
         {this.state.loading ? (
-          <Spin className={css(styles.spinner)} />
+          <Spin tip="Getting user data" className={css(styles.spinner)} />
         ) : (
           <React.Fragment>
             <div className={css(styles.form)}>
