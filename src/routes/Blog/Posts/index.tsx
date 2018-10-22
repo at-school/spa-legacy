@@ -50,7 +50,19 @@ const Post00010 = Loadable({
   loading: () => null
 });
 
+const Post00011 = Loadable({
+	loader: () => import("./Post00011"),
+	loading: () => null
+  });
+
 export const posts = [
+	{
+		title: "Week 10 Update",
+		author: ["Anh Pham, ", "Charl Kruger"],
+		date: "21 October 2018",
+		postId: "00011",
+		component: Post00011
+	},
   {
     title: "Week 9 Update",
     author: ["Anh Pham, ", "Charl Kruger"],
