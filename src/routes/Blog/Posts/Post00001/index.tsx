@@ -14,6 +14,11 @@ const Content = () => (
     <Issues />
     <SuccessProbability />
     <Risks />
+	<div>
+		<div>Timeline:</div>
+		<img width="50%" src="/timeline.png" />
+		Up-to-date timeline can be seeen in here: https://atschool.live/about/company
+	</div>
   </div>
 );
 
